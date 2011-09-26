@@ -5,89 +5,45 @@ import org.junit.*;
 import java.text.*;
 import java.util.*;
 
-import static java.util.TimeZone.*;
-import static ixcode.platform.text.StringPadding.padRight;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
-/**
- * http://en.wikipedia.org/wiki/ISO_8601 http://www.timeanddate.com/worldclock/
- */
 public class UtcDateFormatTest {
 
-    private TimeZone timeZoneBeforeTest;
-
-    private TimeZone systemTimeZone = getDefault();
-    private TimeZone istTimeZone = getTimeZone("IST");
-    private TimeZone utcTimeZone = getTimeZone("UTC");
-    private TimeZone gmtTimeZone = getTimeZone("GMT");
-
-    DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    private Date someDateAndTime;
+    private TimeZone systemTimeZone;
 
     @Before
-    public void setUp() throws Exception {
-        someDateAndTime = simpleDateFormat.parse("2011-09-25 10:27:46");
-    }
-
-    @Before
-    public void rememberTimeZone() {
-        timeZoneBeforeTest = getDefault();
+    public void remember_system_time_zone() {
+        systemTimeZone = TimeZone.getDefault();
     }
 
     @After
-    public void resetTimeZone() {
-        TimeZone.setDefault(timeZoneBeforeTest);
+    public void reset_system_time_zone() {
+        TimeZone.setDefault(systemTimeZone);
     }
 
     @Test
-    public void simple_date_format_is_initialised_to_default_timezone() throws Exception {
-        DateFormat dateFormatSystem = dateFormatWithUtcOffsetAndTimeZoneDisplayed();
-
+    public void provides_utc_offset_output() throws Exception {
+        TimeZone istTimeZone = TimeZone.getTimeZone("IST");
         TimeZone.setDefault(istTimeZone);
-        DateFormat dateFormatIst = dateFormatWithUtcOffsetAndTimeZoneDisplayed();
 
-        TimeZone.setDefault(utcTimeZone);
-        DateFormat dateFormatUtc = dateFormatWithUtcOffsetAndTimeZoneDisplayed();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-        TimeZone.setDefault(gmtTimeZone);
-        DateFormat dateFormatGmt = dateFormatWithUtcOffsetAndTimeZoneDisplayed();
+        Date someDate = simpleDateFormat.parse("2011-01-23 06:30:45");
 
-        logTimeZone(systemTimeZone);
-        logTimeZone(istTimeZone);
-        logTimeZone(utcTimeZone);
+        String result = new UtcDateFormat().format(someDate);
 
-        logFormattedDate(utcTimeZone, dateFormatUtc, someDateAndTime);
-        logFormattedDate(gmtTimeZone, dateFormatGmt, someDateAndTime);
-        logFormattedDate(systemTimeZone, dateFormatSystem, someDateAndTime);
-        logFormattedDate(istTimeZone, dateFormatIst, someDateAndTime);
-
+        assertThat(result, is("2011-01-23T01:00:45+0000"));
     }
-
 
     @Test
-    public void what_happens_if_you_re_parse_a_converted_time() throws Exception {
-        DateFormat dateFormatSystem = dateFormatWithUtcOffsetAndTimeZoneDisplayed();
+    public void parses_back_into_appropriate_timezone() {
+        Date parsedDate = new UtcDateFormat().parseString("2011-01-23T06:30:36+0530");
 
-        TimeZone.setDefault(istTimeZone);
-        DateFormat dateFormatIst = dateFormatWithUtcOffsetAndTimeZoneDisplayed();
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss Z z");
 
-        String istDateAsString = dateFormatIst.format(someDateAndTime);
-
-
-
+        String result = simpleDateFormat.format(parsedDate);
+        assertThat(result, is("2011-01-23 01:00:36 +0000 UTC"));
     }
-
-    private static SimpleDateFormat dateFormatWithUtcOffsetAndTimeZoneDisplayed() {
-        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss z '(UTC 'Z')'");
-    }
-
-    private static void logTimeZone(TimeZone systemTimeZone1) {
-        System.out.println(systemTimeZone1.getDisplayName() + "(" + systemTimeZone1.getID() + ")");
-    }
-
-    private static void logFormattedDate(TimeZone timeZone, DateFormat dateFormatUtc, Date dateAndTime) {
-        System.out.println(padRight(timeZone.getID(), 14) + ": "  + dateFormatUtc.format(dateAndTime));
-    }
-
-
-
 }
