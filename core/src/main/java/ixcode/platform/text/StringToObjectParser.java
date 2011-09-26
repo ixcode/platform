@@ -1,4 +1,4 @@
-package ixcode.platform.reflect;
+package ixcode.platform.text;
 
 
 import ixcode.platform.text.*;

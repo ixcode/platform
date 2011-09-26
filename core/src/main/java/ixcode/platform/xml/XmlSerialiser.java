@@ -1,11 +1,14 @@
 package ixcode.platform.xml;
 
+import ixcode.platform.text.*;
+
 import java.lang.reflect.*;
 
-import static java.lang.String.format;
+import static java.lang.String.*;
 
 public class XmlSerialiser {
     private final XmlStringBuilder xb = new XmlStringBuilder();
+    private final ObjectFormatter formatter = new ObjectFormatter();
 
     public String toXml(Object objectToSerialise) {
         appendObject(objectToSerialise);
@@ -34,7 +37,8 @@ public class XmlSerialiser {
             xb.openValueNode(f.getName());
 
             try {
-                xb.appendText(f.get(simpleObject).toString().trim());
+                Object objValue = f.get(simpleObject);
+                xb.appendText(formatter.format(objValue).trim());
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
@@ -43,4 +47,6 @@ public class XmlSerialiser {
             xb.newline();
         }
     }
+
+
 }

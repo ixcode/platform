@@ -40,9 +40,7 @@ public class SystemProcess {
                PrintWriter writer = new PrintWriter(new OutputStreamWriter(out));
                writer.println(processId);
                writer.flush();
-
-               LOG.info(format("Starting server with PID [%s] on [%s]", processId, hostName));
-               LOG.info(format("Process Id file is at [%s]", processIdFile.getAbsolutePath()));
+               LOG.info(format("Writing PID file for process with PID [%s] on [%s] (file is at [%s])", processId, hostName, processIdFile.getAbsolutePath()));
 
            } catch (Exception e) {
                throw new RuntimeException(format("Could not write process Id file [~/%s]", filename), e);

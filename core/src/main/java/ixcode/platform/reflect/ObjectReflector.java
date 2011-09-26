@@ -2,12 +2,15 @@ package ixcode.platform.reflect;
 
 import ixcode.platform.reflect.ConstructorMatrix.*;
 
+import ixcode.platform.text.*;
+
 import java.lang.reflect.*;
 import java.util.*;
 
 public class ObjectReflector {
     private Class<?> targetClass;
     private ConstructorMatrix constructorMatrix;
+    private StringToObjectParser parser = new StringToObjectParser();;
 
     public ObjectReflector(Class<?> targetClass) {
         this.targetClass = targetClass;
@@ -18,8 +21,6 @@ public class ObjectReflector {
         ParameterSet parameterSet = constructorMatrix.findMostSpecificMatchTo(valueMap.keySet());
 
         List<Object> values = new ArrayList<Object>();
-
-        StringToObjectParser parser = new StringToObjectParser();
 
         for (ParameterDefinition definition : parameterSet.parameterDefinitions) {
             Object value = parser.parse(valueMap.get(definition.name)).as(definition.type);
