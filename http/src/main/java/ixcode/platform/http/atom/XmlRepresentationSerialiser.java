@@ -6,11 +6,16 @@ import ixcode.platform.xml.*;
 import java.net.*;
 import java.util.*;
 
+import static ixcode.platform.http.protocol.UriFactory.externalFormOf;
+
 public class XmlRepresentationSerialiser extends XmlSerialiser {
 
+    public XmlRepresentationSerialiser() {
+        super();
+    }
 
     public XmlRepresentationSerialiser(int currentIndent) {
-
+        super(currentIndent);
     }
 
     @Override
@@ -29,6 +34,9 @@ public class XmlRepresentationSerialiser extends XmlSerialiser {
 
         for (String relation : relations) {
             Hyperlink hyperlink = representation.getRelationHyperlink(relation);
+            xb.openValueNode("link")
+              .withAttribute("rel", hyperlink.relation)
+              .withAttribute("href", externalFormOf(hyperlink.uri));
         }
     }
 }
