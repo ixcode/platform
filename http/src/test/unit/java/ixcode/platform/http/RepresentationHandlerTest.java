@@ -1,5 +1,6 @@
 package ixcode.platform.http;
 
+import ixcode.platform.http.representation.*;
 import org.junit.*;
 import ixcode.platform.xml.*;
 

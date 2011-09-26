@@ -1,5 +1,6 @@
 package ixcode.platform.http.atom;
 
+import ixcode.platform.http.representation.*;
 import ixcode.platform.xml.*;
 
 import java.util.*;
@@ -10,6 +11,10 @@ public class AtomFeedBuilder {
     public AtomFeedBuilder addItem(String jksShop) {
         items.add(jksShop);
         return this;
+    }
+
+    public AtomFeedBuilder addItem(Representation representation) {
+        return null;
     }
 
     public String asXml() {
@@ -30,4 +35,6 @@ public class AtomFeedBuilder {
         xb.newline();
         return xb.toString();
     }
+
+
 }
