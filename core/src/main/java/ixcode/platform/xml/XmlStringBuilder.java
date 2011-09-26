@@ -7,7 +7,15 @@ public class XmlStringBuilder {
     private static final String NEWLINE = System.getProperty("line.separator");
 
     private final StringBuilder sb = new StringBuilder();
-    private int indent = 0;
+    private int indent;
+
+    public XmlStringBuilder() {
+        this(0);
+    }
+
+    public XmlStringBuilder(int indent) {
+        this.indent = indent;
+    }
 
 
     public void openContainerNode(String nodeName) {
@@ -59,6 +67,10 @@ public class XmlStringBuilder {
 
     public String toString() {
         return sb.toString();
+    }
+
+    public int getCurrentIndent() {
+        return indent;
     }
 
 

@@ -21,8 +21,8 @@ public class Representation implements HypermediaType {
         return (E) entity;
     }
 
-    public URI getRelationHyperlink(String relation) {
-        return hyperlinks.get(relation).uri;
+    public Hyperlink getRelationHyperlink(String relation) {
+        return hyperlinks.get(relation);
     }
 
     private static Map<String, Hyperlink> mapHyperLinks(List<Hyperlink> hyperlinks) {
@@ -33,4 +33,7 @@ public class Representation implements HypermediaType {
         return hyperlinkMap;
     }
 
+    public Set<String> getSupportedRelations() {
+        return hyperlinks.keySet();
+    }
 }

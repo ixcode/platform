@@ -17,7 +17,8 @@ public class RepresentationBuilderTest {
                                             .linkingTo(uri("http://foo.com")).as("self").build();
 
         assertThat(representation, is(notNullValue()));
-        assertThat(representation.getRelationHyperlink("self").toURL().toExternalForm(), is("http://foo.com"));
+        assertThat(representation.<SomeEntity>getEntity(), is(anEntity));
+        assertThat(representation.getRelationHyperlink("self").uri.toURL().toExternalForm(), is("http://foo.com"));
     }
 
     private static class SomeEntity {

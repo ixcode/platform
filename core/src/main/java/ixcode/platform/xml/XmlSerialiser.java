@@ -7,21 +7,31 @@ import java.lang.reflect.*;
 import static java.lang.String.*;
 
 public class XmlSerialiser {
-    private final XmlStringBuilder xb = new XmlStringBuilder();
-    private final ObjectFormatter formatter = new ObjectFormatter();
+    protected final XmlStringBuilder xb;
+    private final ObjectFormatter formatter;
 
-    public String toXml(Object objectToSerialise) {
+    public XmlSerialiser() {
+        this(0);
+    }
+
+    public XmlSerialiser(int currentIndent) {
+        xb = new XmlStringBuilder(currentIndent);
+        formatter = new ObjectFormatter();
+    }
+
+
+    public <T> String toXml(T objectToSerialise) {
         appendObject(objectToSerialise);
         return xb.toString();
     }
 
-    private void appendObject(Object objectToSerialise) {
+    private <T> void appendObject(T objectToSerialise) {
         String nodeName = prettyName(objectToSerialise.getClass().getSimpleName());
 
         xb.openContainerNode(nodeName);
         xb.newline();
 
-        appendFields(objectToSerialise);
+        appendObjectGuts(objectToSerialise);
 
         xb.closeContainerNode(nodeName);
     }
@@ -30,7 +40,7 @@ public class XmlSerialiser {
         return format("%s%s", simpleName.substring(0, 1).toLowerCase(), simpleName.substring(1));
     }
 
-    private void appendFields(Object simpleObject) {
+    protected <T> void appendObjectGuts(T simpleObject) {
         Field[] declaredFields = simpleObject.getClass().getDeclaredFields();
 
         for (Field f : declaredFields) {

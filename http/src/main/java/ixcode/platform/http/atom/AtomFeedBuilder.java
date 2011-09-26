@@ -6,15 +6,12 @@ import ixcode.platform.xml.*;
 import java.util.*;
 
 public class AtomFeedBuilder {
-    List<String> items = new ArrayList<String>();
+    List<Representation> items = new ArrayList<Representation>();
 
-    public AtomFeedBuilder addItem(String jksShop) {
-        items.add(jksShop);
+
+    public AtomFeedBuilder addItem(Representation item) {
+        items.add(item);
         return this;
-    }
-
-    public AtomFeedBuilder addItem(Representation representation) {
-        return null;
     }
 
     public String asXml() {
@@ -24,8 +21,9 @@ public class AtomFeedBuilder {
         xb.newline();
         xb.openContainerNode("item");
         xb.newline();
-        for (String item : items) {
-            xb.appendText(item);
+        for (Representation item : items) {
+            XmlRepresentationSerialiser xrs = new XmlRepresentationSerialiser(xb.getCurrentIndent());
+            xb.appendText(xrs.toXml(item));
             xb.newline();
         }
 
