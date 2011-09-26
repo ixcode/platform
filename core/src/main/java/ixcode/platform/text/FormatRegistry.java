@@ -1,5 +1,6 @@
 package ixcode.platform.text;
 
+import java.net.*;
 import java.util.*;
 
 public class FormatRegistry {
@@ -16,6 +17,7 @@ public class FormatRegistry {
         addFormat(Integer.class, new IntegerFormat());
         addFormat(int.class, new IntegerFormat());
         addFormat(Date.class, new UtcDateFormat());
+        addFormat(URI.class, new UriFormat());
     }
 
     public <T> void  addFormat(Class<T> targetClass, Format<T> format) {

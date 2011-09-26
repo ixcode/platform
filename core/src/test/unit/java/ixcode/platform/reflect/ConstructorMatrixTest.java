@@ -5,9 +5,9 @@ import org.junit.*;
 import java.lang.reflect.*;
 import java.util.*;
 
+import static ixcode.platform.collection.SetManipulation.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
-import static ixcode.platform.collection.SetManipulation.*;
 
 public class ConstructorMatrixTest {
 
@@ -42,6 +42,23 @@ public class ConstructorMatrixTest {
 
         assertThat(parameterSet.constructor, is(notNullValue()));
         assertThat(parameterSet.constructor.getParameterTypes().length, is(4));
+
+    }
+
+    @Test
+    public void with_default_constructor() {
+        ConstructorMatrix matrix = new ConstructorMatrix(ObjectWithDefaultConstructor.class);
+
+        Set<String> names = hashSet("lastName", "age", "firstName", "placeOfBirth");
+
+        ConstructorMatrix.ParameterSet parameterSet = matrix.findMostSpecificMatchTo(names);
+
+        assertThat(parameterSet.constructor, is(notNullValue()));
+        assertThat(parameterSet.constructor.getParameterTypes().length, is(0));
+
+    }
+
+    private static class ObjectWithDefaultConstructor {
 
     }
 

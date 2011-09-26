@@ -32,7 +32,7 @@ public class ConstructorMatrix {
     }
 
     public ParameterSet findMostSpecificMatchTo(Set<String> propertyNames) {
-        int currentMatchCount = 0;
+        int currentMatchCount = -1;
         ParameterSet mostSpecificParameterSet = null;
 
         for (ParameterSet parameterSet : matrix.keySet()) {
