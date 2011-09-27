@@ -1,0 +1,10 @@
+This is a collection of java utilities that I use all the time, so I don't have to keep re-writing them.
+
+I've got bored of the number of times I've written the same code.
+
+They are probably going to be separated into modules, such that you can import just what you need.
+
+So far there is:
+
+core - low level building blocks
+http - java web application server and client utilities focused on REST and hypermedia
