@@ -6,7 +6,7 @@ import static java.util.Arrays.asList;
 
 public class SetManipulation {
 
-    public static <T> HashSet<T> hashSet(T... items) {
+    public static <T> HashSet<T> hashSetOf(T... items) {
         return new HashSet<T>(asList(items));
     }
 

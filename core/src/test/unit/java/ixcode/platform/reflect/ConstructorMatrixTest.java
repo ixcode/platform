@@ -16,9 +16,9 @@ public class ConstructorMatrixTest {
 
         ConstructorMatrix matrix = new ConstructorMatrix(ObjectWithAFewConstructors.class);
 
-        Set<String> names = hashSet("lastName", "age");
+        Set<String> names = hashSetOf("lastName", "age");
 
-        ConstructorMatrix.ParameterSet parameterSet = matrix.findMostSpecificMatchTo(names);
+        ParameterSet parameterSet = matrix.findMostSpecificMatchTo(names);
         Constructor constructor = parameterSet.constructor;
 
         assertThat(parameterSet, is(notNullValue()));
@@ -36,22 +36,31 @@ public class ConstructorMatrixTest {
     public void with_max_parameters() {
         ConstructorMatrix matrix = new ConstructorMatrix(ObjectWithAFewConstructors.class);
 
-        Set<String> names = hashSet("lastName", "age", "firstName", "placeOfBirth");
+        Set<String> names = hashSetOf("lastName", "age", "firstName", "placeOfBirth");
 
-        ConstructorMatrix.ParameterSet parameterSet = matrix.findMostSpecificMatchTo(names);
+        ParameterSet parameterSet = matrix.findMostSpecificMatchTo(names);
 
         assertThat(parameterSet.constructor, is(notNullValue()));
         assertThat(parameterSet.constructor.getParameterTypes().length, is(4));
 
     }
 
+    @Test(expected = NoConstructorMatchedException.class)
+    public void does_not_match_if_not_enough_parameters() {
+        ConstructorMatrix matrix = new ConstructorMatrix(ObjectWithAFewConstructors.class);
+
+        Set<String> names = hashSetOf("firstName", "placeOfBirth");
+
+        matrix.findMostSpecificMatchTo(names);
+    }
+
     @Test
     public void with_default_constructor() {
         ConstructorMatrix matrix = new ConstructorMatrix(ObjectWithDefaultConstructor.class);
 
-        Set<String> names = hashSet("lastName", "age", "firstName", "placeOfBirth");
+        Set<String> names = hashSetOf("lastName", "age", "firstName", "placeOfBirth");
 
-        ConstructorMatrix.ParameterSet parameterSet = matrix.findMostSpecificMatchTo(names);
+        ParameterSet parameterSet = matrix.findMostSpecificMatchTo(names);
 
         assertThat(parameterSet.constructor, is(notNullValue()));
         assertThat(parameterSet.constructor.getParameterTypes().length, is(0));

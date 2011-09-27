@@ -1,7 +1,5 @@
 package ixcode.platform.reflect;
 
-import ixcode.platform.reflect.ConstructorMatrix.*;
-
 import ixcode.platform.text.*;
 
 import java.lang.reflect.*;
@@ -22,7 +20,7 @@ public class ObjectReflector {
 
         List<Object> values = new ArrayList<Object>();
 
-        for (ParameterDefinition definition : parameterSet.parameterDefinitions) {
+        for (ParameterSet.ParameterDefinition definition : parameterSet.parameterDefinitions) {
             Object value = parser.parse(valueMap.get(definition.name)).as(definition.type);
             values.add(value);
         }
