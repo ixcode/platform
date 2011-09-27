@@ -10,7 +10,8 @@ import static ixcode.platform.collection.SetManipulation.intersectionOf;
 
 public class ParameterSet {
     public final Constructor constructor;
-    public final Set<ParameterDefinition> parameterDefinitions = new HashSet<ParameterDefinition>();
+    public final List<ParameterDefinition> parameterDefinitions = new ArrayList<ParameterDefinition>();
+    public final Set<String> parameterNameSet = new HashSet<String>();
 
     public ParameterSet(Constructor constructor, Paranamer paranamer) {
         this.constructor = constructor;
@@ -28,15 +29,11 @@ public class ParameterSet {
 
     void add(String name, Class<?> type) {
         parameterDefinitions.add(new ParameterDefinition(name, type));
+        parameterNameSet.add(name);
     }
 
-    public int numberOfMatchesTo(Set<String> propertyNames) {
-        Set<ParameterDefinition> intersection = intersectionOf(propertyNames, parameterDefinitions, new ItemMatcher<String, ParameterDefinition>() {
-            public boolean matches(String propertyName, ParameterDefinition parameterDefinition) {
-                return propertyName.equals(parameterDefinition.name);
-            }
-        });
-        return intersection.size();
+    public int numberOfMatchesTo(Set<String> parameterNames) {
+        return intersectionOf(parameterNames, parameterNameSet).size();
     }
 
     public int numberOfParameters() {
