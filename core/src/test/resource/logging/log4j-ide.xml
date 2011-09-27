@@ -5,7 +5,7 @@
 
     <appender name="consoleAppender" class="org.apache.log4j.ConsoleAppender">
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{HH:mm:ss 'GMT'Z} [%-10t] %-6p %-30c{1} %x : %m%n" />
+            <param name="ConversionPattern" value="%d{HH:mm:ss 'GMT'Z} [%-10t] %-6p %-30c{1} %x - %m%n" />
         </layout>
     </appender>
 

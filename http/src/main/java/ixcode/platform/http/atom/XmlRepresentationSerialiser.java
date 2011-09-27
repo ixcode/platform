@@ -3,10 +3,9 @@ package ixcode.platform.http.atom;
 import ixcode.platform.http.representation.*;
 import ixcode.platform.xml.*;
 
-import java.net.*;
 import java.util.*;
 
-import static ixcode.platform.http.protocol.UriFactory.externalFormOf;
+import static ixcode.platform.http.protocol.UriFactory.*;
 
 public class XmlRepresentationSerialiser extends XmlSerialiser {
 
@@ -16,6 +15,14 @@ public class XmlRepresentationSerialiser extends XmlSerialiser {
 
     public XmlRepresentationSerialiser(int currentIndent) {
         super(currentIndent);
+    }
+
+    @Override protected <T> String formatNodeName(T objectToSerialise) {
+        if (objectToSerialise instanceof Representation) {
+            Representation representation = (Representation) objectToSerialise;
+            return super.formatNodeName(representation.<Object>getEntity());
+        }
+        return super.formatNodeName(objectToSerialise);
     }
 
     @Override
@@ -30,13 +37,15 @@ public class XmlRepresentationSerialiser extends XmlSerialiser {
     }
 
     private void appendLinksFrom(Representation representation) {
-        Set<String> relations = representation.getSupportedRelations();
+        Set<String> relations = representation.getAvailableRelations();
 
         for (String relation : relations) {
             Hyperlink hyperlink = representation.getRelationHyperlink(relation);
-            xb.openValueNode("link")
-              .withAttribute("rel", hyperlink.relation)
-              .withAttribute("href", externalFormOf(hyperlink.uri));
+            xb.node("link")
+                .attribute("rel", hyperlink.relation)
+                .attribute("href", externalFormOf(hyperlink.uri))
+            . closeNode("link");
+            xb.newline();
         }
     }
 }

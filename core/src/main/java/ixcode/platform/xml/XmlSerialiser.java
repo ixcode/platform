@@ -26,7 +26,7 @@ public class XmlSerialiser {
     }
 
     private <T> void appendObject(T objectToSerialise) {
-        String nodeName = prettyName(objectToSerialise.getClass().getSimpleName());
+        String nodeName = formatNodeName(objectToSerialise);
 
         xb.openContainerNode(nodeName);
         xb.newline();
@@ -34,6 +34,10 @@ public class XmlSerialiser {
         appendObjectGuts(objectToSerialise);
 
         xb.closeContainerNode(nodeName);
+    }
+
+    protected <T> String formatNodeName(T objectToSerialise) {
+        return prettyName(objectToSerialise.getClass().getSimpleName());
     }
 
     private static String prettyName(String simpleName) {
@@ -44,7 +48,7 @@ public class XmlSerialiser {
         Field[] declaredFields = simpleObject.getClass().getDeclaredFields();
 
         for (Field f : declaredFields) {
-            xb.openValueNode(f.getName());
+            xb.node(f.getName());
 
             try {
                 Object objValue = f.get(simpleObject);
@@ -53,7 +57,7 @@ public class XmlSerialiser {
                 throw new RuntimeException(e);
             }
 
-            xb.closeValueNode(f.getName());
+            xb.closeNode(f.getName());
             xb.newline();
         }
     }

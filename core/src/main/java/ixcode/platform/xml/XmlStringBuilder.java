@@ -1,5 +1,7 @@
 package ixcode.platform.xml;
 
+import java.util.*;
+
 import static java.lang.String.*;
 
 public class XmlStringBuilder {
@@ -21,26 +23,27 @@ public class XmlStringBuilder {
 
     public void openContainerNode(String nodeName) {
         processPendingNodeRequests();
-        addNodeRequest(format("<%s>", nodeName), true);
+        addNodeRequest(nodeName, true);
     }
 
-    public XmlStringBuilder openValueNode(String nodeName) {
+    public XmlStringBuilder node(String nodeName) {
         processPendingNodeRequests();
-        addNodeRequest(format("<%s>", nodeName), false);
+        addNodeRequest(nodeName, false);
         return this;
     }
 
-    public XmlStringBuilder withAttribute(String rel, String relation) {
-        return null;
+    public XmlStringBuilder attribute(String name, String value) {
+        currentNodeRequest.addAttribute(name, value);
+        return this;
     }
 
     public void closeContainerNode(String nodeName) {
         outdent();
-        append(format("</%s>", nodeName));
+        appendIndentedText(format("</%s>", nodeName));
     }
 
 
-    public void closeValueNode(String nodeName) {
+    public void closeNode(String nodeName) {
         appendText(format("</%s>", nodeName));
     }
 
@@ -54,7 +57,7 @@ public class XmlStringBuilder {
         sb.append(text);
     }
 
-    private void append(String text) {
+    private void appendIndentedText(String text) {
         sb.append(format("%s%s", createTabbedString(indent), text));
     }
 
@@ -91,7 +94,14 @@ public class XmlStringBuilder {
         if (currentNodeRequest == null) {
             return;
         }
-        append(currentNodeRequest.nodeName);
+
+        appendIndentedText(format("<%s", currentNodeRequest.nodeName));
+
+        for (NodeRequest.Attribute attribute : currentNodeRequest.attributes) {
+            sb.append(format(" %s=\"%s\"", attribute.name, attribute.value));
+        }
+        sb.append(">");
+
         if (currentNodeRequest.indent) {
             indent();
         }
@@ -100,11 +110,27 @@ public class XmlStringBuilder {
 
     private static class NodeRequest {
         public final String nodeName;
+        public final List<Attribute> attributes = new ArrayList<Attribute>();
+
         private boolean indent;
 
         public NodeRequest(String nodeName, boolean indent) {
             this.nodeName = nodeName;
             this.indent = indent;
+        }
+
+        public void addAttribute(String name, String value) {
+            attributes.add(new Attribute(name, value));
+        }
+
+        public static class Attribute {
+            public final String name;
+            public final String value;
+
+            private Attribute(String name, String value) {
+                this.name = name;
+                this.value = value;
+            }
         }
     }
 

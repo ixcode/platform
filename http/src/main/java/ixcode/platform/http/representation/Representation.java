@@ -3,6 +3,8 @@ package ixcode.platform.http.representation;
 import java.net.*;
 import java.util.*;
 
+import static java.lang.String.format;
+
 public class Representation implements HypermediaType {
 
     private final Object entity;
@@ -22,6 +24,9 @@ public class Representation implements HypermediaType {
     }
 
     public Hyperlink getRelationHyperlink(String relation) {
+        if (!hyperlinks.containsKey(relation)) {
+            throw new RuntimeException(format("Could not find a relation [%s]", relation));
+        }
         return hyperlinks.get(relation);
     }
 
@@ -33,7 +38,7 @@ public class Representation implements HypermediaType {
         return hyperlinkMap;
     }
 
-    public Set<String> getSupportedRelations() {
+    public Set<String> getAvailableRelations() {
         return hyperlinks.keySet();
     }
 }
