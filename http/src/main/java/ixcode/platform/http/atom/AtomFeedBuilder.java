@@ -5,6 +5,8 @@ import ixcode.platform.xml.*;
 
 import java.util.*;
 
+import static ixcode.platform.http.atom.XmlRepresentationSerialiser.appendLink;
+
 public class AtomFeedBuilder {
     List<Representation> items = new ArrayList<Representation>();
 
@@ -26,7 +28,7 @@ public class AtomFeedBuilder {
             xb.newline();
 
             if (item.hasRelation("self")) {
-                XmlRepresentationSerialiser.appendLink(item.getRelationHyperlink("self"), xb);
+                appendLink(item.getRelationHyperlink("self"), xb);
             }
 
             XmlRepresentationSerialiser xrs = new XmlRepresentationSerialiser(xb.getCurrentIndent());

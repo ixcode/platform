@@ -47,9 +47,16 @@ public class XmlRepresentationSerialiser extends XmlSerialiser {
 
     public static void appendLink(Hyperlink hyperlink, XmlStringBuilder xb) {
         xb.node("link")
+            .attribute("title", hyperlink.title)
             .attribute("rel", hyperlink.relation)
             .attribute("href", externalFormOf(hyperlink.uri))
-        . closeNode("link");
+          .closeNode("link");
         xb.newline();
+    }
+
+    public XmlSerialiser appendHeader() {
+        xb.appendText("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+        xb.newline();
+        return this;
     }
 }

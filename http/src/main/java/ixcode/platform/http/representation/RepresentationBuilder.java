@@ -15,8 +15,8 @@ public class RepresentationBuilder<E> {
         this.entity = entity;
     }
 
-    private void addHyperlink(URI uri, String relation) {
-        this.hyperlinks.add(new Hyperlink(uri, relation));
+    private void addHyperlink(URI uri, String relation, String title) {
+        this.hyperlinks.add(new Hyperlink(uri, relation, title));
     }
 
     public Representation build() {
@@ -27,19 +27,31 @@ public class RepresentationBuilder<E> {
         return new LinkBuilder(this, uri);
     }
 
+
     public static class LinkBuilder {
         private RepresentationBuilder<?> parent;
         private URI uri;
+        private String relation;
 
         public LinkBuilder(RepresentationBuilder<?> parent, URI uri) {
             this.parent = parent;
             this.uri = uri;
         }
 
-        public RepresentationBuilder<?> as(String relation) {
-            parent.addHyperlink(uri, relation);
+        public LinkBuilder as(String relation) {
+            this.relation = relation;
+            return this;
+        }
+
+        public RepresentationBuilder<?>  withTitle(String title) {
+            parent.addHyperlink(uri, relation, title);
             return parent;
         }
+
+        public Representation build() {
+            return parent.build();
+        }
+
     }
 
 
