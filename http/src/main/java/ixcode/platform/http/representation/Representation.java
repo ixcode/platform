@@ -23,6 +23,10 @@ public class Representation implements HypermediaType {
         return (E) entity;
     }
 
+    public boolean hasRelation(String relation) {
+        return hyperlinks.containsKey(relation);
+    }
+
     public Hyperlink getRelationHyperlink(String relation) {
         if (!hyperlinks.containsKey(relation)) {
             throw new RuntimeException(format("Could not find a relation [%s]", relation));
@@ -41,4 +45,6 @@ public class Representation implements HypermediaType {
     public Set<String> getAvailableRelations() {
         return hyperlinks.keySet();
     }
+
+
 }

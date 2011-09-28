@@ -41,11 +41,15 @@ public class XmlRepresentationSerialiser extends XmlSerialiser {
 
         for (String relation : relations) {
             Hyperlink hyperlink = representation.getRelationHyperlink(relation);
-            xb.node("link")
-                .attribute("rel", hyperlink.relation)
-                .attribute("href", externalFormOf(hyperlink.uri))
-            . closeNode("link");
-            xb.newline();
+            appendLink(hyperlink, xb);
         }
+    }
+
+    public static void appendLink(Hyperlink hyperlink, XmlStringBuilder xb) {
+        xb.node("link")
+            .attribute("rel", hyperlink.relation)
+            .attribute("href", externalFormOf(hyperlink.uri))
+        . closeNode("link");
+        xb.newline();
     }
 }

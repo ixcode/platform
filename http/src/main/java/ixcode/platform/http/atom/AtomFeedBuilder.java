@@ -17,18 +17,27 @@ public class AtomFeedBuilder {
     public String asXml() {
         XmlStringBuilder xb = new XmlStringBuilder();
 
+        xb.appendText("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+        xb.newline();
         xb.openContainerNode("feed");
         xb.newline();
-        xb.openContainerNode("item");
-        xb.newline();
         for (Representation item : items) {
+            xb.openContainerNode("item");
+            xb.newline();
+
+            if (item.hasRelation("self")) {
+                XmlRepresentationSerialiser.appendLink(item.getRelationHyperlink("self"), xb);
+            }
+
             XmlRepresentationSerialiser xrs = new XmlRepresentationSerialiser(xb.getCurrentIndent());
             xb.appendText(xrs.toXml(item));
             xb.newline();
+
+            xb.closeContainerNode("item");
+            xb.newline();
+
         }
 
-        xb.closeContainerNode("item");
-        xb.newline();
         xb.closeContainerNode("feed");
         xb.newline();
         return xb.toString();
