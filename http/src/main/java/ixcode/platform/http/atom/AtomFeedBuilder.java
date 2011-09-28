@@ -28,7 +28,7 @@ public class AtomFeedBuilder {
             xb.newline();
 
             if (item.hasRelation("self")) {
-                appendLink(item.getRelationHyperlink("self"), xb);
+                appendLink(item.getRelationHyperlinks("self").get(0), xb);
             }
 
             XmlRepresentationSerialiser xrs = new XmlRepresentationSerialiser(xb.getCurrentIndent());

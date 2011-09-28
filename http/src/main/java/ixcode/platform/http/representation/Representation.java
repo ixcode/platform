@@ -1,6 +1,7 @@
 package ixcode.platform.http.representation;
 
-import java.net.*;
+import ixcode.platform.http.server.*;
+
 import java.util.*;
 
 import static java.lang.String.format;
@@ -8,7 +9,7 @@ import static java.lang.String.format;
 public class Representation implements HypermediaType {
 
     private final Object entity;
-    private final Map<String, Hyperlink> hyperlinks;
+    private final Map<String, List<Hyperlink>> hyperlinks;
 
     public Representation(Object entity) {
         this(entity, new ArrayList<Hyperlink>());
@@ -27,17 +28,23 @@ public class Representation implements HypermediaType {
         return hyperlinks.containsKey(relation);
     }
 
-    public Hyperlink getRelationHyperlink(String relation) {
+    public List<Hyperlink> getRelationHyperlinks(String relation) {
         if (!hyperlinks.containsKey(relation)) {
             throw new RuntimeException(format("Could not find a relation [%s]", relation));
         }
         return hyperlinks.get(relation);
     }
 
-    private static Map<String, Hyperlink> mapHyperLinks(List<Hyperlink> hyperlinks) {
-        Map<String, Hyperlink> hyperlinkMap = new HashMap<String, Hyperlink>();
+    private static Map<String, List<Hyperlink>> mapHyperLinks(List<Hyperlink> hyperlinks) {
+        Map<String, List<Hyperlink>> hyperlinkMap = new HashMap<String, List<Hyperlink>>();
         for (Hyperlink hyperlink : hyperlinks) {
-            hyperlinkMap.put(hyperlink.relation, hyperlink);
+
+            if (!hyperlinkMap.containsKey(hyperlink.relation)) {
+                List<Hyperlink> hyperlinksInMap = new ArrayList<Hyperlink>();
+                hyperlinkMap.put(hyperlink.relation, hyperlinksInMap);
+            }
+            List<Hyperlink> hyperlinksInMap = hyperlinkMap.get(hyperlink.relation);
+            hyperlinksInMap.add(hyperlink);
         }
         return hyperlinkMap;
     }
@@ -47,4 +54,15 @@ public class Representation implements HypermediaType {
     }
 
 
+    public Hyperlink getRelationHyperlinks(String relation, String title) {
+        List<Hyperlink> hyperlinks = getRelationHyperlinks(relation);
+
+        for (Hyperlink hyperlink : hyperlinks) {
+            if (hyperlink.title.equals(title)) {
+                return hyperlink;
+            }
+        }
+
+        throw new RuntimeException(format("Could not find a hyperlink for relation [%s] and with title [%s]", relation, title));
+    }
 }

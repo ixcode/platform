@@ -1,7 +1,8 @@
 package ixcode.platform.http.representation;
 
 import java.net.*;
+import java.util.*;
 
 public interface HypermediaType {
-    Hyperlink getRelationHyperlink(String type);
+    List<Hyperlink> getRelationHyperlinks(String type);
 }

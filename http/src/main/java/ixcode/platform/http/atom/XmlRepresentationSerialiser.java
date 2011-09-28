@@ -40,8 +40,10 @@ public class XmlRepresentationSerialiser extends XmlSerialiser {
         Set<String> relations = representation.getAvailableRelations();
 
         for (String relation : relations) {
-            Hyperlink hyperlink = representation.getRelationHyperlink(relation);
-            appendLink(hyperlink, xb);
+            List<Hyperlink> hyperlinks = representation.getRelationHyperlinks(relation);
+            for (Hyperlink hyperlink : hyperlinks) {
+                appendLink(hyperlink, xb);
+            }
         }
     }
 
