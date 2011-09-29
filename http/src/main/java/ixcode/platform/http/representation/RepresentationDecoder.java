@@ -18,7 +18,7 @@ public class RepresentationDecoder {
     }
 
     public <T> Representation representationFrom(String responseMessage) {
-        RepresentationHandler<T> handler = new RepresentationHandler<T>((Class<T>)entityClass);
+        RepresentationHandler handler = new RepresentationHandler(entityClass);
         new XmlParser().parse(responseMessage).using(handler);
         return handler.buildRepresentation();
     }

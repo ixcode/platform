@@ -13,7 +13,7 @@ public class RepresentationHandlerTest {
     @Test
     public void can_parse_a_representation() {
         String xml="<simpleObject><name>Johnny Foo</name><age>23</age></simpleObject>";
-        RepresentationHandler<SimpleObject> handler = new RepresentationHandler<SimpleObject>(SimpleObject.class);
+        RepresentationHandler handler = new RepresentationHandler(SimpleObject.class);
 
         new XmlParser().parse(xml).using(handler);
 
