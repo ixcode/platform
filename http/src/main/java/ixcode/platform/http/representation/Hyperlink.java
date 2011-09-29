@@ -16,4 +16,8 @@ public class Hyperlink {
         this.relation = relation;
         this.title = title;
     }
+
+    public boolean hasTitle() {
+        return title != null;
+    }
 }

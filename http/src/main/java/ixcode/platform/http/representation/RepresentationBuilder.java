@@ -32,24 +32,21 @@ public class RepresentationBuilder<E> {
         private RepresentationBuilder<?> parent;
         private URI uri;
         private String relation;
+        private String title;
 
         public LinkBuilder(RepresentationBuilder<?> parent, URI uri) {
             this.parent = parent;
             this.uri = uri;
         }
 
-        public LinkBuilder as(String relation) {
-            this.relation = relation;
-            return this;
-        }
-
-        public RepresentationBuilder<?>  withTitle(String title) {
+        public RepresentationBuilder<?>  as(String relation) {
             parent.addHyperlink(uri, relation, title);
             return parent;
         }
 
-        public Representation build() {
-            return parent.build();
+        public  LinkBuilder withTitle(String title) {
+            this.title = title;
+            return this;
         }
 
     }

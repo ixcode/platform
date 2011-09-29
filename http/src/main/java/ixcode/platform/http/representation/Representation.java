@@ -1,7 +1,5 @@
 package ixcode.platform.http.representation;
 
-import ixcode.platform.http.server.*;
-
 import java.util.*;
 
 import static java.lang.String.format;
@@ -28,7 +26,7 @@ public class Representation implements HypermediaType {
         return hyperlinks.containsKey(relation);
     }
 
-    public List<Hyperlink> getRelationHyperlinks(String relation) {
+    public List<Hyperlink> getHyperlinksMatching(String relation) {
         if (!hyperlinks.containsKey(relation)) {
             throw new RuntimeException(format("Could not find a relation [%s]", relation));
         }
@@ -54,11 +52,11 @@ public class Representation implements HypermediaType {
     }
 
 
-    public Hyperlink getRelationHyperlinks(String relation, String title) {
-        List<Hyperlink> hyperlinks = getRelationHyperlinks(relation);
+    public Hyperlink getHyperlinksMatching(String relation, String title) {
+        List<Hyperlink> hyperlinks = getHyperlinksMatching(relation);
 
         for (Hyperlink hyperlink : hyperlinks) {
-            if (hyperlink.title.equals(title)) {
+            if (hyperlink.hasTitle() && hyperlink.title.equals(title)) {
                 return hyperlink;
             }
         }
