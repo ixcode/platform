@@ -16,7 +16,9 @@
           <root url="jar://$MODULE_DIR$/../../http/lib/production/jetty-http-7.2.2.v20101205.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../http/lib/production/jetty-http-7.2.2.v20101205.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
@@ -25,7 +27,9 @@
           <root url="jar://$MODULE_DIR$/../../http/lib/production/jetty-io-7.2.2.v20101205.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../http/lib/production/jetty-io-7.2.2.v20101205.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
@@ -52,7 +56,9 @@
           <root url="jar://$MODULE_DIR$/../../http/lib/production/jetty-util-7.2.2.v20101205.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../http/lib/source/jetty-util-7.2.2.v20101205-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
@@ -70,7 +76,10 @@
           <root url="jar://$MODULE_DIR$/../../http/lib/production/jetty-server-7.2.2.v20101205.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../http/lib/production/jetty-server-7.2.2.v20101205.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../http/lib/source/jetty-server-7.2.2.v20101205-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
