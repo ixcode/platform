@@ -2,6 +2,10 @@ package ixcode.platform.http.protocol;
 
 import ixcode.platform.collection.*;
 
+import java.util.*;
+
+import static java.util.Arrays.asList;
+
 public class RequestParameterSerialiser {
     private RequestParameters requestParameters;
 
@@ -10,12 +14,64 @@ public class RequestParameterSerialiser {
     }
 
     public String toJson() {
-        requestParameters.apply(new Action<RequestParameter>() {
-            @Override public void to(RequestParameter item) {
+        final JsonBuilder json = new JsonBuilder();
 
+        requestParameters.apply(new Action<RequestParameter>() {
+            @Override public void to(RequestParameter parameter) {
+               json.appendParameter(parameter);
             }
         });
-        return null;
+
+        return json.toString();
+    }
+
+    private static class JsonBuilder {
+        private final StringBuilder json = new StringBuilder();
+
+        public JsonBuilder() {
+            json.append("{ \"httpRequest\" :\n");
+        }
+
+
+        public void appendParameter(RequestParameter parameter) {
+            json.append("    \"").append(parameter.name).append("\" : ");
+            appendValues(parameter.parameterValues);
+        }
+
+        private void appendValues(String[] parameterValues) {
+            if (parameterValues.length == 1) {
+                appendSingleParameterValue(parameterValues[0]);
+            } else {
+                appendArrayOfParameterValues(parameterValues);
+            }
+        }
+
+        private void appendArrayOfParameterValues(String... parameterValues) {
+            json.append("[\n");
+            for (Iterator<String> itr = asList(parameterValues).iterator(); itr.hasNext();) {
+                String value = itr.next();
+                json.append("        ");
+                appendParameterValue(value);
+                if (itr.hasNext()) { json.append(","); }
+                json.append("\n");
+            }
+            json.append("    ]\n");
+        }
+
+        private void appendSingleParameterValue(String parameterValue) {
+            appendParameterValue(parameterValue);
+            json.append("\n");
+        }
+        private void appendParameterValue(String parameterValue) {
+            json.append("\"").append(parameterValue).append("\"");
+        }
+
+
+        public String toString() {
+            json.append("}");
+            return json.toString();
+        }
+
     }
 
 }

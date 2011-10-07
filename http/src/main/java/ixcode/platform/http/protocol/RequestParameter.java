@@ -1,15 +1,15 @@
 package ixcode.platform.http.protocol;
 
 public class RequestParameter {
-    private final String parameterName;
-    private final String[] parameterValues;
-    private final boolean queryParameter;
+    public final String name;
+    public final String[] parameterValues;
+    public final boolean queryParameter;
 
-    public RequestParameter(String parameterName,
+    public RequestParameter(String name,
                             String[] parameterValues,
                             boolean queryParameter) {
 
-        this.parameterName = parameterName;
+        this.name = name;
         this.parameterValues = parameterValues;
         this.queryParameter = queryParameter;
     }
