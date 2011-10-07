@@ -25,7 +25,7 @@ public class HttpServer {
     private int httpPort;
     private String webrootDir;
 
-    public HttpServer(String serverName, int port, ixcode.platform.http.RequestDispatcher rootServlet) {
+    public HttpServer(String serverName, int port, RequestDispatcher rootServlet) {
         this(serverName, "web", port, "/", rootServlet);
     }
 

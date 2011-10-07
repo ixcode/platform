@@ -1,6 +1,7 @@
 package ixcode.platform.http.server;
 
 import ixcode.platform.http.protocol.*;
+import ixcode.platform.http.resource.*;
 
 import javax.servlet.http.*;
 import java.util.*;
@@ -20,7 +21,7 @@ public class ResourceMap implements ResourceLookup {
         return new EntryBuilder(this, path);
     }
 
-    public Resource findTheResourceMappedToThe(HttpServletRequest httpServletRequest) {
+    public HttpResource findTheResourceMappedToThe(HttpServletRequest httpServletRequest) {
         String path = httpServletRequest.getPathInfo();
         if (!resources.containsKey(path)) {
             throw new RuntimeException(format("Could not find a resource mapped to [%s]", path));
@@ -34,14 +35,14 @@ public class ResourceMap implements ResourceLookup {
         throw new RuntimeException(format("Resource does not support the [%s] method", httpServletRequest.getMethod()));
     }
 
-    private void registerMapping(String path, Resource resource, HttpVerb[] verbs) {
-        resources.put(path, new ResourceMapping(resource, verbs));
+    private void registerMapping(String path, HttpResource resource, Method[] methods) {
+        resources.put(path, new ResourceMapping(resource, methods));
     }
 
     public static class EntryBuilder {
         private final ResourceMap parent;
         private String path;
-        private Resource resource;
+        private HttpResource resource;
 
 
         private EntryBuilder(ResourceMap parent, String path) {
@@ -49,29 +50,29 @@ public class ResourceMap implements ResourceLookup {
             this.path = path;
         }
 
-        public EntryBuilder toA(Resource resource) {
+        public EntryBuilder toA(HttpResource resource) {
             this.resource = resource;
             return this;
         }
 
-        public ResourceMap supporting(HttpVerb... verbs) {
-            parent.registerMapping(path, resource, verbs);
+        public ResourceMap supporting(Method... methods) {
+            parent.registerMapping(path, resource, methods);
             return parent;
         }
     }
 
 
     private static class ResourceMapping {
-        public final Resource resource;
-        public Set<HttpVerb> allowedVerbs;
+        public final HttpResource resource;
+        public Set<Method> allowedMethods;
 
-        private ResourceMapping(Resource resource, HttpVerb[] verbs) {
+        private ResourceMapping(HttpResource resource, Method[] methods) {
             this.resource = resource;
-            this.allowedVerbs = new HashSet<HttpVerb>(asList(verbs));
+            this.allowedMethods = new HashSet<Method>(asList(methods));
         }
 
         public boolean allowsVerb(String method) {
-            return allowedVerbs.contains(HttpVerb.valueOf(method.toUpperCase()));
+            return allowedMethods.contains(Method.valueOf(method.toUpperCase()));
         }
 
 

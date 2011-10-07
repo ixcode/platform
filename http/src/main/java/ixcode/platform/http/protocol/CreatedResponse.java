@@ -1,8 +1,8 @@
-package ixcode.platform.http;
+package ixcode.platform.http.protocol;
 
 import java.net.*;
 
-public class CreatedResponse extends Response {
+public class CreatedResponse {
     private URI locationHeader;
 
     public URI getLocationHeader() {

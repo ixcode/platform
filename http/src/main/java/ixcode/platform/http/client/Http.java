@@ -1,4 +1,4 @@
-package ixcode.platform.http;
+package ixcode.platform.http.client;
 
 
 import ixcode.platform.http.representation.*;
@@ -59,7 +59,7 @@ public class Http {
 
         }
 
-        public <T extends Response> T to(URI productCatalogLink) {
+        public <T> T to(URI productCatalogLink) {
             return null;
         }
     }
