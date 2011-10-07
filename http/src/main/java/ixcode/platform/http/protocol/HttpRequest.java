@@ -2,15 +2,17 @@ package ixcode.platform.http.protocol;
 
 import javax.servlet.http.*;
 
-public class HttpRequest {
+import static ixcode.platform.http.protocol.RequestParameters.requestParametersFrom;
 
-    private RequestParameters requestParameters;
+public class HttpRequest {
+    public final RequestParameters parameters;
+
+    public HttpRequest(RequestParameters parameters) {
+        this.parameters = parameters;
+    }
 
     public static HttpRequest httpRequestFrom(HttpServletRequest httpServletRequest) {
-        return new HttpRequest();
+        return new HttpRequest(requestParametersFrom(httpServletRequest));
     }
 
-    public RequestParameters getRequestParameters() {
-        return requestParameters;
-    }
 }

@@ -9,7 +9,7 @@ public class HttpResponseBuilder {
     private ContentType contentType;
 
     public void translateTo(HttpServletResponse httpServletResponse) {
-        httpServletResponse.setStatus(status.code);
+        httpServletResponse.setStatus(status.code());
         try {
             httpServletResponse.getWriter().print(responseBody);
         } catch (IOException e) {

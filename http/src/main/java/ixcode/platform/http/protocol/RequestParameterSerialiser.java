@@ -1,11 +1,21 @@
 package ixcode.platform.http.protocol;
 
-public class RequestParameterSerialiser {
-    public RequestParameterSerialiser(HttpRequest httpRequest) {
+import ixcode.platform.collection.*;
 
+public class RequestParameterSerialiser {
+    private RequestParameters requestParameters;
+
+    public RequestParameterSerialiser(RequestParameters requestParameters) {
+        this.requestParameters = requestParameters;
     }
 
     public String toJson() {
+        requestParameters.apply(new Action<RequestParameter>() {
+            @Override public void to(RequestParameter item) {
+
+            }
+        });
         return null;
     }
+
 }
