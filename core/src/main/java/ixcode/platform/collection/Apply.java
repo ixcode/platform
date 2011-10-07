@@ -14,8 +14,12 @@ class Apply<T> {
     }
 
     public void to(Collection<T> collection) {
-        for (T item : collection) {
-            action.to(item);
+        List<T> items = new ArrayList<T>(collection);
+
+        while(items.size() > 0) {
+            List<T> remaining = items.size() == 1 ? new ArrayList<T>() : items.subList(1, items.size());
+            action.to(items.get(0), remaining);
+            items = remaining;
         }
     }
 }
