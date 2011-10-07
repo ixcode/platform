@@ -29,7 +29,7 @@ public class RequestParameterSerialiser {
         private final StringBuilder json = new StringBuilder();
 
         public JsonBuilder() {
-            json.append("{ \"httpRequest\" :\n");
+            json.append("{ \n\"httpRequest\" : {\n");
         }
 
 
@@ -68,7 +68,7 @@ public class RequestParameterSerialiser {
 
 
         public String toString() {
-            json.append("}");
+            json.append(" }\n}");
             return json.toString();
         }
 

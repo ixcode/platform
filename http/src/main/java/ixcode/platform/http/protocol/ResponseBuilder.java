@@ -18,7 +18,7 @@ public class ResponseBuilder {
     }
 
     public ResponseBuilder statusCode(Status status) {
-        this.status = this.status;
+        this.status = status;
         return this;
     }
 
