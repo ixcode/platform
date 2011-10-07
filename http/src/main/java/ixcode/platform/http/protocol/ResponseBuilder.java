@@ -3,7 +3,7 @@ package ixcode.platform.http.protocol;
 import javax.servlet.http.*;
 import java.io.*;
 
-public class HttpResponseBuilder {
+public class ResponseBuilder {
     private Status status;
     private String responseBody;
     private ContentType contentType;
@@ -17,17 +17,17 @@ public class HttpResponseBuilder {
         }
     }
 
-    public HttpResponseBuilder statusCode(Status status) {
+    public ResponseBuilder statusCode(Status status) {
         this.status = this.status;
         return this;
     }
 
-    public HttpResponseBuilder body(String responseBody) {
+    public ResponseBuilder body(String responseBody) {
         this.responseBody = responseBody;
         return this;
     }
 
-    public HttpResponseBuilder contentType(ContentType contentType) {
+    public ResponseBuilder contentType(ContentType contentType) {
         this.contentType = contentType;
         return this;
     }

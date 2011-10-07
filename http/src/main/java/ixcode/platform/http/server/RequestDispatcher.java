@@ -8,7 +8,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
 
-import static ixcode.platform.http.protocol.HttpRequest.*;
+import static ixcode.platform.http.protocol.Request.*;
 
 public class RequestDispatcher extends HttpServlet {
 
@@ -22,12 +22,12 @@ public class RequestDispatcher extends HttpServlet {
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
         HttpResource resource = resourceLookup.findTheResourceMappedToThe(httpServletRequest);
 
-        HttpRequest httpRequest = httpRequestFrom(httpServletRequest);
-        HttpResponseBuilder httpResponseBuilder = new HttpResponseBuilder();
+        Request request = httpRequestFrom(httpServletRequest);
+        ResponseBuilder responseBuilder = new ResponseBuilder();
 
-        resource.GET(httpRequest, httpResponseBuilder);
+        resource.GET(request, responseBuilder);
 
-        httpResponseBuilder.translateTo(httpServletResponse);
+        responseBuilder.translateTo(httpServletResponse);
     }
 
 
