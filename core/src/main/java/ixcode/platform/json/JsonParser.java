@@ -51,8 +51,9 @@ public class JsonParser {
             return (T) jsonArrayFrom((List) value);
         } else if (String.class.isAssignableFrom(valueClass)) {
             return (T) jsonStringFrom((String) value);
-        } else if (Integer.class.isAssignableFrom(valueClass)) {
-            return (T) jsonNumberFrom((Integer) value);
+        } else if (Integer.class.isAssignableFrom(valueClass)
+                || Double.class.isAssignableFrom(valueClass)) {
+            return (T) jsonNumberFrom((Number)value);
         }
 
         throw new RuntimeException("Could not parse a JsonObject or a JsonArray from valueClass " + valueClass.getName());
@@ -88,7 +89,7 @@ public class JsonParser {
         return new JsonString(value);
     }
 
-    private static JsonNumber jsonNumberFrom(Integer value) {
+    private static JsonNumber jsonNumberFrom(Number value) {
         return new JsonNumber(value);
     }
 

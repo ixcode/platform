@@ -35,7 +35,7 @@ public class JsonNumber extends Number implements JsonValue {
 
         JsonNumber that = (JsonNumber) o;
 
-        if (value != that.value) return false;
+        if (!value.equals(that.value)) return false;
 
         return true;
     }
