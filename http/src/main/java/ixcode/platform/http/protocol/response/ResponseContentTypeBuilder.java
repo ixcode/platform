@@ -1,7 +1,6 @@
 package ixcode.platform.http.protocol.response;
 
 import ixcode.platform.http.protocol.*;
-import ixcode.platform.http.protocol.response.*;
 
 import static ixcode.platform.http.protocol.IanaContentType.vendorJson;
 
@@ -18,8 +17,14 @@ public class ResponseContentTypeBuilder {
         return parent;
     }
 
+    public ResponseBuilder xml() {
+        parent.contentTypeHeader(IanaContentType.XML);
+        return parent;
+    }
+
     public ResponseBuilder jsonVendor(String vendortType) {
         parent.contentTypeHeader(vendorJson(vendortType));
         return parent;
     }
+
 }
