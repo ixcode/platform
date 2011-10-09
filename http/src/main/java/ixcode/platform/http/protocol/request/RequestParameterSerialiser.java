@@ -1,4 +1,4 @@
-package ixcode.platform.http.protocol;
+package ixcode.platform.http.protocol.request;
 
 import ixcode.platform.collection.*;
 
@@ -9,16 +9,23 @@ import static java.util.Arrays.asList;
 public class RequestParameterSerialiser {
     private RequestParameters requestParameters;
 
+    public static RequestParameterSerialiser serialise(RequestParameters requestParameters) {
+        return new RequestParameterSerialiser(requestParameters);
+    }
+
     public RequestParameterSerialiser(RequestParameters requestParameters) {
-        this.requestParameters = requestParameters;
+        this.requestParameters = this.requestParameters;
     }
 
     public String toJson() {
         final JsonBuilder json = new JsonBuilder();
 
         requestParameters.apply(new Action<RequestParameter>() {
-            @Override public void to(RequestParameter parameter) {
+            @Override public void to(RequestParameter parameter, Collection<RequestParameter> tail) {
                json.appendParameter(parameter);
+               if (!tail.isEmpty()) {
+                json.append(", ");
+               }
             }
         });
 
@@ -72,6 +79,9 @@ public class RequestParameterSerialiser {
             return json.toString();
         }
 
+        public void append(String text) {
+            json.append(text);
+        }
     }
 
 }

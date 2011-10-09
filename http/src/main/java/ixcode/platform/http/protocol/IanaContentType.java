@@ -4,7 +4,7 @@ import static java.lang.String.format;
 
 public enum IanaContentType implements ContentType {
 
-    html("text/html"), json("application/json"), xhtml("application/xhtml"), xml("application/xml");
+    html("text/html"), JSON("application/json"), xhtml("application/xhtml"), xml("application/xml");
 
 
     private String identitfier;
@@ -17,7 +17,7 @@ public enum IanaContentType implements ContentType {
         return identitfier;
     }
 
-    public static ContentType customXmlType(final String customName) {
+    public static ContentType vendorXml(final String customName) {
         return new ContentType() {
             @Override public String getIdentifier() {
                 return format("application/xml+%s.vnd");
@@ -25,4 +25,11 @@ public enum IanaContentType implements ContentType {
         };
     }
 
+    public static ContentType vendorJson(final String vendortType) {
+        return new ContentType() {
+            @Override public String getIdentifier() {
+                return format("application/json+%s.vnd");
+            }
+        };
+    }
 }

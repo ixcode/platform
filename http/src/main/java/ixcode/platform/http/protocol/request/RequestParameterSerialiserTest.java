@@ -1,4 +1,4 @@
-package ixcode.platform.http.protocol;
+package ixcode.platform.http.protocol.request;
 
 import org.apache.log4j.*;
 import org.junit.*;

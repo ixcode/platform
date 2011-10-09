@@ -1,4 +1,4 @@
-package ixcode.platform.http.protocol;
+package ixcode.platform.http.protocol.request;
 
 public class RequestParameter {
     public final String name;

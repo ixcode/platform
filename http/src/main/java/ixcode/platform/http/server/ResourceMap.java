@@ -21,7 +21,7 @@ public class ResourceMap implements ResourceLookup {
         return new EntryBuilder(this, path);
     }
 
-    public HttpResource findTheResourceMappedToThe(HttpServletRequest httpServletRequest) {
+    public Resource findTheResourceMappedToThe(HttpServletRequest httpServletRequest) {
         String path = httpServletRequest.getPathInfo();
         if (!resources.containsKey(path)) {
             throw new RuntimeException(format("Could not find a resource mapped to [%s]", path));
@@ -35,14 +35,14 @@ public class ResourceMap implements ResourceLookup {
         throw new RuntimeException(format("Resource does not support the [%s] method", httpServletRequest.getMethod()));
     }
 
-    private void registerMapping(String path, HttpResource resource, Method[] methods) {
+    private void registerMapping(String path, Resource resource, Method[] methods) {
         resources.put(path, new ResourceMapping(resource, methods));
     }
 
     public static class EntryBuilder {
         private final ResourceMap parent;
         private String path;
-        private HttpResource resource;
+        private Resource resource;
 
 
         private EntryBuilder(ResourceMap parent, String path) {
@@ -50,7 +50,7 @@ public class ResourceMap implements ResourceLookup {
             this.path = path;
         }
 
-        public EntryBuilder toA(HttpResource resource) {
+        public EntryBuilder toA(Resource resource) {
             this.resource = resource;
             return this;
         }
@@ -63,10 +63,10 @@ public class ResourceMap implements ResourceLookup {
 
 
     private static class ResourceMapping {
-        public final HttpResource resource;
+        public final Resource resource;
         public Set<Method> allowedMethods;
 
-        private ResourceMapping(HttpResource resource, Method[] methods) {
+        private ResourceMapping(Resource resource, Method[] methods) {
             this.resource = resource;
             this.allowedMethods = new HashSet<Method>(asList(methods));
         }

@@ -1,8 +1,6 @@
-package ixcode.platform.http.protocol;
+package ixcode.platform.http.protocol.request;
 
 import javax.servlet.http.*;
-
-import static ixcode.platform.http.protocol.RequestParameters.requestParametersFrom;
 
 public class Request {
     public final RequestParameters parameters;
@@ -12,7 +10,7 @@ public class Request {
     }
 
     public static Request httpRequestFrom(HttpServletRequest httpServletRequest) {
-        return new Request(requestParametersFrom(httpServletRequest));
+        return new Request(RequestParameters.requestParametersFrom(httpServletRequest));
     }
 
 }

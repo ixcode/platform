@@ -5,5 +5,5 @@ import ixcode.platform.http.resource.*;
 import javax.servlet.http.*;
 
 public interface ResourceLookup {
-    HttpResource findTheResourceMappedToThe(HttpServletRequest httpServletRequest);
+    Resource findTheResourceMappedToThe(HttpServletRequest httpServletRequest);
 }
