@@ -1,7 +1,7 @@
 package ixcode.platform.json;
 
 public class JsonString implements JsonValue {
-    public final String value;
+    private final String value;
 
     public static JsonString jsonString(String value) {
         return new JsonString(value);
@@ -9,6 +9,10 @@ public class JsonString implements JsonValue {
 
     public JsonString(String value) {
         this.value = value;
+    }
+
+    public String toString() {
+        return value;
     }
 
     @Override
