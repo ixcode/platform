@@ -43,6 +43,10 @@ public class JsonParser {
     }
 
     private static <T> T parseObject(Object value) {
+        if (value == null) {
+            return (T)new JsonNull();
+        }
+
         Class<?> valueClass = value.getClass();
 
         if (Map.class.isAssignableFrom(valueClass)) {
@@ -54,10 +58,13 @@ public class JsonParser {
         } else if (Integer.class.isAssignableFrom(valueClass)
                 || Double.class.isAssignableFrom(valueClass)) {
             return (T) jsonNumberFrom((Number)value);
+        } else if (Boolean.class.isAssignableFrom(valueClass)) {
+            return (T) jsonBooleanFrom((Boolean)value);
         }
 
         throw new RuntimeException("Could not parse a JsonObject or a JsonArray from valueClass " + valueClass.getName());
     }
+
 
 
     private static JSONTree createTreeFrom(CommonTokenStream tokens, JSONParser.value_return r) {
@@ -91,6 +98,10 @@ public class JsonParser {
 
     private static JsonNumber jsonNumberFrom(Number value) {
         return new JsonNumber(value);
+    }
+
+    private static JsonBoolean jsonBooleanFrom(Boolean value) {
+        return new JsonBoolean(value);
     }
 
 }

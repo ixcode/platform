@@ -2,6 +2,8 @@ package ixcode.platform.json;
 
 import org.junit.*;
 
+import static ixcode.platform.json.JsonBoolean.jsonBoolean;
+import static ixcode.platform.json.JsonNull.jsonNull;
 import static ixcode.platform.json.JsonNumber.jsonNumber;
 import static ixcode.platform.json.JsonString.jsonString;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -48,5 +50,32 @@ public class JsonParserTest {
         JsonObject jsonObject = jsonParser.parse(json);
 
         assertThat(jsonObject.<JsonNumber>valueOf("someObject"), is(jsonNumber(345)));
+    }
+
+    @Test
+    public void true_value() {
+        String json = "{ \"someObject\" : true }";
+
+        JsonObject jsonObject = jsonParser.parse(json);
+
+        assertThat(jsonObject.<JsonBoolean>valueOf("someObject"), is(jsonBoolean(true)));
+    }
+
+    @Test
+    public void false_value() {
+        String json = "{ \"someObject\" : false }";
+
+        JsonObject jsonObject = jsonParser.parse(json);
+
+        assertThat(jsonObject.<JsonBoolean>valueOf("someObject"), is(jsonBoolean(false)));
+    }
+
+    @Test
+    public void null_value() {
+        String json = "{ \"someObject\" : null }";
+
+        JsonObject jsonObject = jsonParser.parse(json);
+
+        assertThat(jsonObject.<JsonNull>valueOf("someObject"), is(jsonNull()));
     }
 }
