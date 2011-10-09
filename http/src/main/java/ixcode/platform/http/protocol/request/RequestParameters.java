@@ -9,6 +9,10 @@ public class RequestParameters  {
 
     private final FList<RequestParameter> parameters = new FArrayList<RequestParameter>();
 
+    public static RequestParameters requestParameters() {
+        return new RequestParameters();
+    }
+
     public static RequestParameters requestParametersFrom(HttpServletRequest httpServletRequest) {
         Set<String> parameterNames = httpServletRequest.getParameterMap().keySet();
         RequestParameters requestParameters = new RequestParameters();

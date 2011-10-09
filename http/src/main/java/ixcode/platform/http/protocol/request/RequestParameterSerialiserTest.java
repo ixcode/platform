@@ -3,6 +3,7 @@ package ixcode.platform.http.protocol.request;
 import org.apache.log4j.*;
 import org.junit.*;
 
+import static ixcode.platform.http.protocol.request.RequestParameters.*;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
@@ -11,8 +12,9 @@ public class RequestParameterSerialiserTest {
 
     @Test
     public void formats_nice_json() {
-        RequestParameters parameters = new RequestParameters().withQueryParameter("foobar", "Jim", "John", "bar")
-                                                              .withQueryParameter("blob", "mcblag");
+        RequestParameters parameters = requestParameters()
+                .withQueryParameter("foobar", "Jim", "John", "bar")
+                .withQueryParameter("blob", "mcblag");
 
         String json = new RequestParameterSerialiser(parameters).toJson();
 

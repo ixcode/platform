@@ -14,7 +14,7 @@ public class RequestParameterSerialiser {
     }
 
     public RequestParameterSerialiser(RequestParameters requestParameters) {
-        this.requestParameters = this.requestParameters;
+        this.requestParameters = requestParameters;
     }
 
     public String toJson() {
