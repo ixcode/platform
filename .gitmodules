@@ -1,3 +1,0 @@
-[submodule "external/json-antlr"]
-	path = external/json-antlr
-	url = https://github.com/rdclark/json-antlr.git
