@@ -9,7 +9,7 @@ public class JsonObject implements JsonValue {
         this.valueMap = valueMap;
     }
 
-    public <T extends JsonValue> T valueOf(String name) {
+    public <T> T valueOf(String name) {
         return (T) valueMap.get(name);
     }
 }

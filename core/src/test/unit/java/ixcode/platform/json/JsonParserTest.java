@@ -2,6 +2,7 @@ package ixcode.platform.json;
 
 import org.junit.*;
 
+import static ixcode.platform.json.JsonString.jsonString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -10,7 +11,7 @@ import static org.hamcrest.Matchers.nullValue;
 public class JsonParserTest {
 
     @Test
-    public void named_array() {
+    public void object_containing_an_array() {
         String json = "{ \"anArray\" : [ { \"child\" : \"foo\" } ] }";
 
         JsonObject rootObject = new JsonParser().parse(json);
@@ -21,7 +22,7 @@ public class JsonParserTest {
 
         JsonObject childObject = jsonArray.valueAt(0);
 
-        assertThat(((JsonString)childObject.valueOf("child")).value, is("foo"));
+        assertThat(childObject.<JsonString>valueOf("child"), is(jsonString("foo")));
 
     }
 
@@ -35,6 +36,6 @@ public class JsonParserTest {
 
         JsonObject childObject = jsonArray.valueAt(0);
 
-        assertThat(((JsonString)childObject.valueOf("child")).value, is("foo"));
+        assertThat(childObject.<JsonString>valueOf("child"), is(jsonString("foo")));
     }
 }
