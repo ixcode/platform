@@ -2,6 +2,8 @@ package ixcode.platform.json;
 
 import org.junit.*;
 
+import java.util.*;
+
 import static ixcode.platform.json.JsonBoolean.jsonBoolean;
 import static ixcode.platform.json.JsonNull.jsonNull;
 import static ixcode.platform.json.JsonNumber.jsonNumber;
@@ -77,5 +79,14 @@ public class JsonParserTest {
         JsonObject jsonObject = jsonParser.parse(json);
 
         assertThat(jsonObject.<JsonNull>valueOf("someObject"), is(jsonNull()));
+    }
+
+    @Test
+    public void empty_object_value() {
+        String json = "{ \"someObject\" : {} }";
+
+        JsonObject jsonObject = jsonParser.parse(json);
+
+        assertThat(jsonObject.<JsonObject>valueOf("someObject"), is(new JsonObject(new LinkedHashMap<String, JsonValue>())));
     }
 }
