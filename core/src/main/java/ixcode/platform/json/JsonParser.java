@@ -6,6 +6,8 @@ import org.antlr.runtime.tree.*;
 
 import java.util.*;
 
+import static java.lang.String.format;
+
 public class JsonParser {
     public <T> T parse(String jsonString) {
         return parseFromLexer(stringLexerFor(jsonString));

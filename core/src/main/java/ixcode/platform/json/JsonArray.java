@@ -6,12 +6,16 @@ import ixcode.platform.collection.FList;
 
 import java.util.List;
 
-public class JsonArray  {
+public class JsonArray {
 
     private FList<Object> items;
 
     public JsonArray(List<Object> items) {
         this.items = new FArrayList<Object>(items);
+    }
+
+    public static boolean isJsonArray(Object source) {
+        return JsonArray.class.isAssignableFrom(source.getClass());
     }
 
     public <T> T valueAt(int index) {
@@ -23,6 +27,6 @@ public class JsonArray  {
     }
 
     public void apply(Action<Object> action) {
-
+        items.apply(action);
     }
 }

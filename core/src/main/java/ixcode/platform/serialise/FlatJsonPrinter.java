@@ -7,6 +7,8 @@ import ixcode.platform.json.JsonPair;
 
 import java.util.Collection;
 
+import static ixcode.platform.json.JsonArray.isJsonArray;
+import static ixcode.platform.json.JsonObject.isJsonObject;
 import static java.lang.String.format;
 
 public class FlatJsonPrinter extends AbstractJsonPrinter {
@@ -33,7 +35,7 @@ public class FlatJsonPrinter extends AbstractJsonPrinter {
 
         source.apply(new Action<Object>() {
             @Override public void to(Object item, Collection<Object> tail) {
-                print(item);
+                print(item, printTarget);
                 addComma(tail);
             }
         });
@@ -47,7 +49,7 @@ public class FlatJsonPrinter extends AbstractJsonPrinter {
         source.apply(new Action<JsonPair>() {
             @Override public void to(JsonPair item, Collection<JsonPair> tail) {
                 if (isJsonArray(item) || isJsonObject(item)) {
-                    print(item);
+                    print(item, printTarget);
                 } else {
                     printTarget.print("\"%s\" : %s", item.key, jsonFormat.format(item.value));
                 }
@@ -57,14 +59,6 @@ public class FlatJsonPrinter extends AbstractJsonPrinter {
 
         printTarget.print(" }");
 
-    }
-
-    private static boolean isJsonObject(Object source) {
-        return JsonObject.class.isAssignableFrom(source.getClass());
-    }
-
-    private static boolean isJsonArray(Object source) {
-        return JsonArray.class.isAssignableFrom(source.getClass());
     }
 
     private void addComma(Collection<?> tail) {

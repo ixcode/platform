@@ -4,7 +4,6 @@ import ixcode.platform.collection.Action;
 import ixcode.platform.collection.FArrayList;
 import ixcode.platform.collection.FList;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -19,6 +18,10 @@ public class JsonObject {
     public JsonObject(Map<String, Object> valueMap) {
         this.valueMap = valueMap;
         this.pairs = extractPairsFrom(this.valueMap);
+    }
+
+    public static boolean isJsonObject(Object source) {
+        return JsonObject.class.isAssignableFrom(source.getClass());
     }
 
     public boolean hasValue(String name) {
