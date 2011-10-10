@@ -8,7 +8,7 @@ import java.util.*;
 
 public class JsonParser {
     public <T> T parse(String jsonString) {
-        return parseFromLexer(createStringLexer(jsonString));
+        return parseFromLexer(stringLexerFor(jsonString));
     }
 
     private static <T> T parseFromLexer(JSONLexer jsonLexer) {
@@ -34,13 +34,20 @@ public class JsonParser {
 
     }
 
-    private static Map<String, Object> parseMap(Map<Object, Object> valueMap) {
-        Map<String, Object> resultingMap = new LinkedHashMap<String, Object>();
-        for (Map.Entry<Object, Object> entry : valueMap.entrySet()) {
-            resultingMap.put((String) entry.getKey(), parseObject(entry.getValue()));
-        }
-        return resultingMap;
+    private static JSONTree createTreeFrom(CommonTokenStream tokens, JSONParser.value_return r) {
+        CommonTree t = (CommonTree) r.getTree();
+        CommonTreeNodeStream nodes = new CommonTreeNodeStream(t);
+        nodes.setTokenStream(tokens);
+
+        return new JSONTree(nodes);
     }
+
+    private static JSONLexer stringLexerFor(String text) {
+        return new JSONLexer(new ANTLRStringStream(text));
+    }
+
+
+
 
     private static <T> T parseObject(Object value) {
         if (value == null) {
@@ -53,31 +60,28 @@ public class JsonParser {
             return (T) jsonObjectFrom((Map) value);
         } else if (List.class.isAssignableFrom(valueClass)) {
             return (T) jsonArrayFrom((List) value);
-        } else if (String.class.isAssignableFrom(valueClass)) {
-            return (T) value;
         } else if (Integer.class.isAssignableFrom(valueClass)
-                || Double.class.isAssignableFrom(valueClass)) {
+                || Double.class.isAssignableFrom(valueClass)
+                || String.class.isAssignableFrom(valueClass)
+                || Boolean.class.isAssignableFrom(valueClass)) {
             return (T) value;
-        } else if (Boolean.class.isAssignableFrom(valueClass)) {
-            return (T) (Boolean)value;
         }
 
-        throw new RuntimeException("Could not parse a JsonObject or a JsonArray from valueClass " + valueClass.getName());
+        throw new RuntimeException("Could not parse valueClass (Json should not have this kind of object) " + valueClass.getName());
     }
 
-
-
-    private static JSONTree createTreeFrom(CommonTokenStream tokens, JSONParser.value_return r) {
-        CommonTree t = (CommonTree) r.getTree();
-        CommonTreeNodeStream nodes = new CommonTreeNodeStream(t);
-        nodes.setTokenStream(tokens);
-
-        return new JSONTree(nodes);
+    private static JsonObject jsonObjectFrom(Map valueMap) {
+        return new JsonObject(parseMap(valueMap));
     }
 
-    private static JSONLexer createStringLexer(String text) {
-        return new JSONLexer(new ANTLRStringStream(text));
-    }
+    private static Map<String, Object> parseMap(Map<Object, Object> valueMap) {
+           Map<String, Object> resultingMap = new LinkedHashMap<String, Object>();
+           for (Map.Entry<Object, Object> entry : valueMap.entrySet()) {
+               resultingMap.put((String) entry.getKey(), parseObject(entry.getValue()));
+           }
+           return resultingMap;
+       }
+
 
     private static JsonArray jsonArrayFrom(List values) {
         List<Object> jsonValues = new ArrayList<Object>();
@@ -86,10 +90,4 @@ public class JsonParser {
         }
         return new JsonArray(jsonValues);
     }
-
-    private static JsonObject jsonObjectFrom(Map valueMap) {
-        return new JsonObject(parseMap(valueMap));
-    }
-
-
 }
