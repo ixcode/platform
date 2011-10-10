@@ -2,11 +2,10 @@ package ixcode.platform.json;
 
 import org.junit.*;
 
-import java.util.*;
-
 import static ixcode.platform.json.JsonBoolean.jsonBoolean;
 import static ixcode.platform.json.JsonNull.jsonNull;
 import static ixcode.platform.json.JsonNumber.jsonNumber;
+import static ixcode.platform.json.JsonObject.emptyJsonObject;
 import static ixcode.platform.json.JsonString.jsonString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -87,6 +86,6 @@ public class JsonParserTest {
 
         JsonObject jsonObject = jsonParser.parse(json);
 
-        assertThat(jsonObject.<JsonObject>valueOf("someObject"), is(new JsonObject(new LinkedHashMap<String, JsonValue>())));
+        assertThat(jsonObject.<JsonObject>valueOf("someObject"), is(emptyJsonObject()));
     }
 }

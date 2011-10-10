@@ -5,6 +5,10 @@ import java.util.*;
 public class JsonObject implements JsonValue {
     private Map<String, JsonValue> valueMap;
 
+    public static JsonObject emptyJsonObject() {
+        return new JsonObject(new LinkedHashMap<String, JsonValue>());
+    }
+
     public JsonObject(Map<String, JsonValue> valueMap) {
         this.valueMap = valueMap;
     }

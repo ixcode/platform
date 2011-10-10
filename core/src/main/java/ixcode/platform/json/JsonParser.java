@@ -88,8 +88,7 @@ public class JsonParser {
     }
 
     private static JsonObject jsonObjectFrom(Map valueMap) {
-        Map<String, JsonValue> childs = parseMap(valueMap);
-        return new JsonObject(childs);
+        return new JsonObject(parseMap(valueMap));
     }
 
     private static JsonString jsonStringFrom(String value) {
