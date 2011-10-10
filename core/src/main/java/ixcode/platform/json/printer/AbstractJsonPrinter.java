@@ -1,4 +1,4 @@
-package ixcode.platform.serialise;
+package ixcode.platform.json.printer;
 
 public abstract class AbstractJsonPrinter implements JsonPrinter, PrintSource {
 

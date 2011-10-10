@@ -9,8 +9,8 @@ import java.util.*;
 import static ixcode.platform.reflect.ObjectReflector.*;
 import static ixcode.platform.reflect.TypeChecks.*;
 
-public class JsonBuilder {
-    public <T, R> R buildFrom(T object) {
+class TransformToJson {
+    public <T, R> R from(T object) {
         return (isCollection(object))
                 ? (R)buildJsonArrayFrom(object)
                 : (R)buildJsonObjectFrom(object);

@@ -1,19 +1,20 @@
 package ixcode.platform.serialise;
 
 import ixcode.platform.json.JsonObject;
+import ixcode.platform.serialise.TransformToJson;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 
-public class JsonBuilderTest {
+public class TransformToJsonTest {
 
     @Test
     public void builds_a_json_object() {
         SimpleObject simpleObject = new SimpleObject("johnny", 56);
 
-        JsonObject jsonRoot = new JsonBuilder().buildFrom(simpleObject);
+        JsonObject jsonRoot = new TransformToJson().from(simpleObject);
 
         assertThat(jsonRoot.<String>valueOf("name"), is("johnny"));
         assertThat(jsonRoot.<Integer>valueOf("age"), is(56));

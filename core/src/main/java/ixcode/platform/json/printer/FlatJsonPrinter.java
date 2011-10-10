@@ -1,4 +1,4 @@
-package ixcode.platform.serialise;
+package ixcode.platform.json.printer;
 
 import ixcode.platform.collection.Action;
 import ixcode.platform.json.JsonArray;

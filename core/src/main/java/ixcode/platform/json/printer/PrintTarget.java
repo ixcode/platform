@@ -1,4 +1,4 @@
-package ixcode.platform.serialise;
+package ixcode.platform.json.printer;
 
 public interface PrintTarget {
     PrintTarget print(String text);

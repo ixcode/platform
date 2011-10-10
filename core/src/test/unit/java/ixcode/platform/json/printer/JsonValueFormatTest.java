@@ -1,5 +1,6 @@
-package ixcode.platform.serialise;
+package ixcode.platform.json.printer;
 
+import ixcode.platform.json.printer.JsonValueFormat;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

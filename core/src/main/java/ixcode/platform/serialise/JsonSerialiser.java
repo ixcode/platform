@@ -1,12 +1,17 @@
 package ixcode.platform.serialise;
 
+import ixcode.platform.json.printer.FlatJsonPrinter;
+import ixcode.platform.json.printer.JsonPrinter;
+
 public class JsonSerialiser {
 
-    private final JsonBuilder builder = new JsonBuilder();
-    private final JsonPrinter printer = new FlatJsonPrinter();
+    private final TransformToJson transformToJson = new TransformToJson();
+    private final JsonPrinter jsonPrinter = new FlatJsonPrinter();
 
     public <T> String toJson(T object) {
-        return printer.print(builder.buildFrom(object)).toString();
+        return jsonPrinter
+                .print(transformToJson.from(object))
+                .toString();
     }
 
 }

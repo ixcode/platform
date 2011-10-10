@@ -1,4 +1,4 @@
-package ixcode.platform.serialise;
+package ixcode.platform.json.printer;
 
 import ixcode.platform.json.JsonArray;
 import ixcode.platform.json.JsonObject;
@@ -17,7 +17,6 @@ public class FlatJsonPrinterTest {
     private static final Logger log = Logger.getLogger(FlatJsonPrinterTest.class);
 
     private FlatJsonPrinter printer = new FlatJsonPrinter();
-    ;
 
     @Test
     public void json_object() {
