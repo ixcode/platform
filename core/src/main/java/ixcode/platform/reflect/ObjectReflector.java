@@ -6,11 +6,14 @@ import ixcode.platform.text.*;
 import java.lang.reflect.*;
 import java.util.*;
 
+import static java.lang.reflect.Modifier.isTransient;
+
 public class ObjectReflector {
-    private Class<?> targetClass;
-    private ConstructorMatrix constructorMatrix;
-    private StringToObjectParser parser = new StringToObjectParser();
-    public FArrayList<FieldReflector> nonTransientFields;
+    public final FList<FieldReflector> nonTransientFields;
+
+    private final Class<?> targetClass;
+    private final ConstructorMatrix constructorMatrix;
+    private final StringToObjectParser parser = new StringToObjectParser();
 
     public static ObjectReflector reflect(Class<?> targetClass) {
         return new ObjectReflector(targetClass);
@@ -19,6 +22,7 @@ public class ObjectReflector {
     private ObjectReflector(Class<?> targetClass) {
         this.targetClass = targetClass;
         this.constructorMatrix = new ConstructorMatrix(targetClass);
+        this.nonTransientFields = extractNonTransientFields(targetClass);
     }
 
     public <T> T invokeMostSpecificConstructorFor(Map<String, String> valueMap) {
@@ -43,7 +47,17 @@ public class ObjectReflector {
         }
     }
 
-    public void withEachNonTransientField(Action<Field> action) {
+    private FList<FieldReflector> extractNonTransientFields(Class<?> targetClass) {
+        FList<FieldReflector> fieldReflectors = new FArrayList<FieldReflector>();
+        for (Field field : targetClass.getDeclaredFields()) {
+            if (!isTransient(field.getModifiers())) {
+                fieldReflectors.add(new FieldReflector(field));
+            }
+        }
+        return fieldReflectors;
+    }
 
+    public void withEachNonTransientField(Action<FieldReflector> action) {
+        this.nonTransientFields.apply(action);
     }
 }

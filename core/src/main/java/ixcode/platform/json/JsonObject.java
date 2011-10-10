@@ -13,6 +13,10 @@ public class JsonObject {
         this.valueMap = valueMap;
     }
 
+    public boolean hasValue(String name) {
+        return valueMap.containsKey(name);
+    }
+
     public <T> T valueOf(String name) {
         return (T) valueMap.get(name);
     }
@@ -33,4 +37,6 @@ public class JsonObject {
     public int hashCode() {
         return valueMap != null ? valueMap.hashCode() : 0;
     }
+
+
 }
