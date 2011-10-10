@@ -4,7 +4,7 @@ import org.mockito.internal.matchers.*;
 
 import java.util.*;
 
-public class CollectionFormat implements Format<Collection<?>> {
+public class CollectionFormat extends AbstractFormat<Collection<?>> {
 
     public static String collectionToString(Collection<?> source) {
         return new CollectionFormat().format(source);

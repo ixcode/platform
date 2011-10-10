@@ -4,17 +4,17 @@ import java.util.*;
 
 public class JsonArray  {
 
-    private List<Object> jsonValues;
+    private List<Object> items;
 
-    public JsonArray(List<Object> jsonValues) {
-        this.jsonValues = jsonValues;
+    public JsonArray(List<Object> items) {
+        this.items = items;
     }
 
     public <T> T valueAt(int index) {
-        return (T)jsonValues.get(index);
+        return (T) items.get(index);
     }
 
     public int size() {
-        return jsonValues.size();
+        return items.size();
     }
 }

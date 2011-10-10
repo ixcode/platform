@@ -5,7 +5,7 @@ import java.util.*;
 
 import static java.util.TimeZone.getTimeZone;
 
-public class UtcDateFormat implements Format<Date> {
+public class UtcDateFormat extends AbstractFormat<Date> {
 
     private final DateFormat utcDateFormat;
 

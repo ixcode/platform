@@ -1,5 +1,6 @@
 package ixcode.platform.reflect;
 
+import ixcode.platform.collection.*;
 import ixcode.platform.text.*;
 
 import java.lang.reflect.*;
@@ -8,9 +9,14 @@ import java.util.*;
 public class ObjectReflector {
     private Class<?> targetClass;
     private ConstructorMatrix constructorMatrix;
-    private StringToObjectParser parser = new StringToObjectParser();;
+    private StringToObjectParser parser = new StringToObjectParser();
+    public FArrayList<FieldReflector> nonTransientFields;
 
-    public ObjectReflector(Class<?> targetClass) {
+    public static ObjectReflector reflect(Class<?> targetClass) {
+        return new ObjectReflector(targetClass);
+    }
+
+    private ObjectReflector(Class<?> targetClass) {
         this.targetClass = targetClass;
         this.constructorMatrix = new ConstructorMatrix(targetClass);
     }
@@ -35,5 +41,9 @@ public class ObjectReflector {
         } catch (InvocationTargetException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void withEachNonTransientField(Action<Field> action) {
+
     }
 }

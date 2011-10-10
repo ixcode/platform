@@ -9,10 +9,10 @@ import static org.mockito.MockitoAnnotations.*;
 
 public class SerialiseTest {
 
-    private Serialise serialise;
-
     @Mock private XmlSerialiser xmlSerialiser;
     @Mock private JsonSerialiser jsonSerialiser;
+
+    private Serialise serialise;
 
     @Before
     public void setup() {

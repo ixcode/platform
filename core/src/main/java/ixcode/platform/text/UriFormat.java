@@ -2,7 +2,7 @@ package ixcode.platform.text;
 
 import java.net.*;
 
-public class UriFormat implements Format<URI> {
+public class UriFormat extends AbstractFormat<URI> {
     @Override
     public URI parseString(String source) {
         try {

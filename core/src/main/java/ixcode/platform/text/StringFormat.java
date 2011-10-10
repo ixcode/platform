@@ -1,6 +1,6 @@
 package ixcode.platform.text;
 
-public class StringFormat implements Format<String> {
+public class StringFormat extends AbstractFormat<String> {
 
     public String parseString(String value) {
         return value;

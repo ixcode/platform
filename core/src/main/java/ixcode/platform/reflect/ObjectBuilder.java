@@ -2,6 +2,8 @@ package ixcode.platform.reflect;
 
 import java.util.*;
 
+import static ixcode.platform.reflect.ObjectReflector.reflect;
+
 public class ObjectBuilder {
 
     private final ObjectReflector objectReflector;
@@ -10,7 +12,7 @@ public class ObjectBuilder {
     private Map<String, String> propertyValues = new HashMap<String, String>();
 
     public ObjectBuilder(Class<?> rootEntityClass) {
-        this.objectReflector = new ObjectReflector(rootEntityClass);
+        this.objectReflector = reflect(rootEntityClass);
     }
 
     public <T> T build() {

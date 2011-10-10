@@ -2,7 +2,7 @@ package ixcode.platform.text;
 
 import static java.lang.Integer.parseInt;
 
-public class IntegerFormat implements Format<Integer> {
+public class IntegerFormat extends AbstractFormat<Integer> {
     public Integer parseString(String value) {
         return parseInt(value);
     }
