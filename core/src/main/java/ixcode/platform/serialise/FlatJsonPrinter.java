@@ -9,7 +9,6 @@ import java.util.Collection;
 
 import static ixcode.platform.json.JsonArray.isJsonArray;
 import static ixcode.platform.json.JsonObject.isJsonObject;
-import static java.lang.String.format;
 
 public class FlatJsonPrinter extends AbstractJsonPrinter {
 
@@ -21,12 +20,13 @@ public class FlatJsonPrinter extends AbstractJsonPrinter {
     @Override
     public void print(Object source, PrintTarget printTarget) {
         this.printTarget = printTarget;
+
         if (isJsonArray(source)) {
             printJsonArray((JsonArray) source);
         } else if (isJsonObject(source)) {
             printJsonObject((JsonObject) source);
         } else {
-            throw new RuntimeException(format("Could not print object of type [%s], did not recognise it.", source.getClass()));
+            printSimpleValue(source);
         }
     }
 
@@ -48,8 +48,9 @@ public class FlatJsonPrinter extends AbstractJsonPrinter {
 
         source.apply(new Action<JsonPair>() {
             @Override public void to(JsonPair item, Collection<JsonPair> tail) {
-                if (isJsonArray(item) || isJsonObject(item)) {
-                    print(item, printTarget);
+                if (isJsonArray(item.value) || isJsonObject(item.value)) {
+                    printTarget.print("\"%s\" : ", item.key);
+                    print(item.value, printTarget);
                 } else {
                     printTarget.print("\"%s\" : %s", item.key, jsonFormat.format(item.value));
                 }
@@ -60,6 +61,11 @@ public class FlatJsonPrinter extends AbstractJsonPrinter {
         printTarget.print(" }");
 
     }
+
+    private void printSimpleValue(Object source) {
+        printTarget.print(jsonFormat.format(source));
+    }
+
 
     private void addComma(Collection<?> tail) {
         if (tail.size() > 0) {

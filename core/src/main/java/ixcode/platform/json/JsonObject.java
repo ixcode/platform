@@ -4,6 +4,7 @@ import ixcode.platform.collection.Action;
 import ixcode.platform.collection.FArrayList;
 import ixcode.platform.collection.FList;
 
+import javax.xml.transform.Source;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class JsonObject {
     }
 
     public static boolean isJsonObject(Object source) {
-        return JsonObject.class.isAssignableFrom(source.getClass());
+        return (source != null) && JsonObject.class.isAssignableFrom(source.getClass());
     }
 
     public boolean hasValue(String name) {

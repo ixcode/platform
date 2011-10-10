@@ -15,7 +15,7 @@ public class JsonArray {
     }
 
     public static boolean isJsonArray(Object source) {
-        return JsonArray.class.isAssignableFrom(source.getClass());
+        return (source != null) && JsonArray.class.isAssignableFrom(source.getClass());
     }
 
     public <T> T valueAt(int index) {
