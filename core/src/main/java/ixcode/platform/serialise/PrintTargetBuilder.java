@@ -1,22 +1,27 @@
 package ixcode.platform.serialise;
 
+import static java.lang.String.format;
+
 public class PrintTargetBuilder {
 
-    private PrintSource source;
+    private final PrintSource source;
+    private final Object objectToPrint;
 
-    public PrintTargetBuilder(PrintSource source) {
+    public PrintTargetBuilder(PrintSource source, Object objectToPrint) {
         this.source = source;
+        this.objectToPrint = objectToPrint;
     }
 
     public String toString() {
         StringBuilderTarget sbt = new StringBuilderTarget();
 
-        source.print(source, sbt);
+        source.print(objectToPrint, sbt);
 
         return sbt.toString();
     }
 
     private static class StringBuilderTarget implements PrintTarget {
+        private int currentIndent = 0;
         private final StringBuilder sb = new StringBuilder();
 
         public String toString() {
@@ -24,23 +29,28 @@ public class PrintTargetBuilder {
         }
 
         @Override public PrintTarget print(String text) {
-            return null;
+            sb.append(text);
+            return this;
         }
 
         @Override public PrintTarget print(String formatString, String... parameters) {
-            return null;
+            sb.append(format(formatString, parameters));
+            return this;
         }
 
-        @Override public PrintTarget println(String s) {
-            return null;
+        @Override public PrintTarget println(String text) {
+            sb.append(text).append("\n");
+            return this;
         }
 
         @Override public PrintTarget indent() {
-            return null;
+            currentIndent++;
+            return this;
         }
 
         @Override public PrintTarget outdent() {
-            return null;
+            currentIndent--;
+            return this;
         }
     }
 }

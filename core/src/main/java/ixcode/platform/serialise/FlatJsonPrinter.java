@@ -9,7 +9,7 @@ import java.util.Collection;
 
 import static java.lang.String.format;
 
-public class TreeStyleJsonPrinter extends AbstractJsonPrinter {
+public class FlatJsonPrinter extends AbstractJsonPrinter {
 
     private final JsonValueFormat jsonFormat = new JsonValueFormat();
 
@@ -23,32 +23,26 @@ public class TreeStyleJsonPrinter extends AbstractJsonPrinter {
             printJsonArray((JsonArray) source);
         } else if (isJsonObject(source)) {
             printJsonObject((JsonObject) source);
+        } else {
+            throw new RuntimeException(format("Could not print object of type [%s], did not recognise it.", source.getClass()));
         }
-        throw new RuntimeException(format("Could not print object of type [%s], did not recognise it.", source.getClass()));
     }
 
     private void printJsonArray(JsonArray source) {
-        printTarget.println("[")
-                   .indent();
+        printTarget.print("[ ");
 
         source.apply(new Action<Object>() {
             @Override public void to(Object item, Collection<Object> tail) {
                 print(item);
-                if (tail.size() > 0) {
-                    printTarget.println(",");
-                } else {
-                    printTarget.println("");
-                }
+                addComma(tail);
             }
         });
 
-        printTarget.outdent()
-                   .println("]");
+        printTarget.print(" ]");
     }
 
     private void printJsonObject(JsonObject source) {
-        printTarget.println("{")
-                   .indent();
+        printTarget.print("{ ");
 
         source.apply(new Action<JsonPair>() {
             @Override public void to(JsonPair item, Collection<JsonPair> tail) {
@@ -57,17 +51,28 @@ public class TreeStyleJsonPrinter extends AbstractJsonPrinter {
                 } else {
                     printTarget.print("\"%s\" : %s", item.key, jsonFormat.format(item.value));
                 }
+                addComma(tail);
             }
         });
 
-        printTarget.outdent()
-                   .println("}");
+        printTarget.print(" }");
 
     }
 
-    private static boolean isJsonObject(Object source) {return JsonObject.class.isAssignableFrom(source.getClass());}
+    private static boolean isJsonObject(Object source) {
+        return JsonObject.class.isAssignableFrom(source.getClass());
+    }
 
-    private static boolean isJsonArray(Object source) {return JsonArray.class.isAssignableFrom(source.getClass());}
+    private static boolean isJsonArray(Object source) {
+        return JsonArray.class.isAssignableFrom(source.getClass());
+    }
 
+    private void addComma(Collection<?> tail) {
+        if (tail.size() > 0) {
+            printTarget.print(", ");
+        } else {
+            printTarget.print("");
+        }
+    }
 
 }
