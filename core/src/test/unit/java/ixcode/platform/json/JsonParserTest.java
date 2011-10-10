@@ -2,15 +2,9 @@ package ixcode.platform.json;
 
 import org.junit.*;
 
-import static ixcode.platform.json.JsonBoolean.jsonBoolean;
-import static ixcode.platform.json.JsonNull.jsonNull;
-import static ixcode.platform.json.JsonNumber.jsonNumber;
-import static ixcode.platform.json.JsonObject.emptyJsonObject;
-import static ixcode.platform.json.JsonString.jsonString;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
+import static ixcode.platform.json.JsonObject.*;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
 
 public class JsonParserTest {
 
@@ -28,7 +22,7 @@ public class JsonParserTest {
 
         JsonObject childObject = jsonArray.valueAt(0);
 
-        assertThat(childObject.<JsonString>valueOf("child"), is(jsonString("foo")));
+        assertThat(childObject.<String>valueOf("child"), is("foo"));
     }
 
     @Test
@@ -41,16 +35,25 @@ public class JsonParserTest {
 
         JsonObject childObject = jsonArray.valueAt(0);
 
-        assertThat(childObject.<JsonString>valueOf("child"), is(jsonString("foo")));
+        assertThat(childObject.<String>valueOf("child"), is("foo"));
     }
 
     @Test
-    public void number_value() {
+    public void integer_value() {
         String json = "{ \"someObject\" : 345 }";
 
         JsonObject jsonObject = jsonParser.parse(json);
 
-        assertThat(jsonObject.<JsonNumber>valueOf("someObject"), is(jsonNumber(345)));
+        assertThat(jsonObject.<Integer>valueOf("someObject"), is(345));
+    }
+
+    @Test
+    public void double_value() {
+        String json = "{ \"someObject\" : 4356.455 }";
+
+        JsonObject jsonObject = jsonParser.parse(json);
+
+        assertThat(jsonObject.<Double>valueOf("someObject"), is(4356.455));
     }
 
     @Test
@@ -59,7 +62,7 @@ public class JsonParserTest {
 
         JsonObject jsonObject = jsonParser.parse(json);
 
-        assertThat(jsonObject.<JsonBoolean>valueOf("someObject"), is(jsonBoolean(true)));
+        assertThat(jsonObject.<Boolean>valueOf("someObject"), is(true));
     }
 
     @Test
@@ -68,7 +71,7 @@ public class JsonParserTest {
 
         JsonObject jsonObject = jsonParser.parse(json);
 
-        assertThat(jsonObject.<JsonBoolean>valueOf("someObject"), is(jsonBoolean(false)));
+        assertThat(jsonObject.<Boolean>valueOf("someObject"), is(false));
     }
 
     @Test
@@ -77,7 +80,7 @@ public class JsonParserTest {
 
         JsonObject jsonObject = jsonParser.parse(json);
 
-        assertThat(jsonObject.<JsonNull>valueOf("someObject"), is(jsonNull()));
+        assertThat(jsonObject.valueOf("someObject"), is(nullValue()));
     }
 
     @Test

@@ -34,17 +34,17 @@ public class JsonParser {
 
     }
 
-    private static Map<String, JsonValue> parseMap(Map<Object, Object> valueMap) {
-        Map<String, JsonValue> resultingMap = new LinkedHashMap<String, JsonValue>();
+    private static Map<String, Object> parseMap(Map<Object, Object> valueMap) {
+        Map<String, Object> resultingMap = new LinkedHashMap<String, Object>();
         for (Map.Entry<Object, Object> entry : valueMap.entrySet()) {
-            resultingMap.put((String) entry.getKey(), (JsonValue) parseObject(entry.getValue()));
+            resultingMap.put((String) entry.getKey(), parseObject(entry.getValue()));
         }
         return resultingMap;
     }
 
     private static <T> T parseObject(Object value) {
         if (value == null) {
-            return (T)new JsonNull();
+            return null;
         }
 
         Class<?> valueClass = value.getClass();
@@ -54,12 +54,12 @@ public class JsonParser {
         } else if (List.class.isAssignableFrom(valueClass)) {
             return (T) jsonArrayFrom((List) value);
         } else if (String.class.isAssignableFrom(valueClass)) {
-            return (T) jsonStringFrom((String) value);
+            return (T) value;
         } else if (Integer.class.isAssignableFrom(valueClass)
                 || Double.class.isAssignableFrom(valueClass)) {
-            return (T) jsonNumberFrom((Number)value);
+            return (T) value;
         } else if (Boolean.class.isAssignableFrom(valueClass)) {
-            return (T) jsonBooleanFrom((Boolean)value);
+            return (T) (Boolean)value;
         }
 
         throw new RuntimeException("Could not parse a JsonObject or a JsonArray from valueClass " + valueClass.getName());
@@ -80,9 +80,9 @@ public class JsonParser {
     }
 
     private static JsonArray jsonArrayFrom(List values) {
-        List<JsonValue> jsonValues = new ArrayList<JsonValue>();
+        List<Object> jsonValues = new ArrayList<Object>();
         for (Object value : values) {
-            jsonValues.add((JsonValue) parseObject(value));
+            jsonValues.add(parseObject(value));
         }
         return new JsonArray(jsonValues);
     }
@@ -91,16 +91,5 @@ public class JsonParser {
         return new JsonObject(parseMap(valueMap));
     }
 
-    private static JsonString jsonStringFrom(String value) {
-        return new JsonString(value);
-    }
-
-    private static JsonNumber jsonNumberFrom(Number value) {
-        return new JsonNumber(value);
-    }
-
-    private static JsonBoolean jsonBooleanFrom(Boolean value) {
-        return new JsonBoolean(value);
-    }
 
 }

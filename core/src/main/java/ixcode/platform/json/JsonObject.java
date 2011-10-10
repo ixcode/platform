@@ -2,14 +2,14 @@ package ixcode.platform.json;
 
 import java.util.*;
 
-public class JsonObject implements JsonValue {
-    private Map<String, JsonValue> valueMap;
+public class JsonObject {
+    private Map<String, Object> valueMap;
 
     public static JsonObject emptyJsonObject() {
-        return new JsonObject(new LinkedHashMap<String, JsonValue>());
+        return new JsonObject(new LinkedHashMap<String, Object>());
     }
 
-    public JsonObject(Map<String, JsonValue> valueMap) {
+    public JsonObject(Map<String, Object> valueMap) {
         this.valueMap = valueMap;
     }
 

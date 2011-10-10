@@ -2,15 +2,15 @@ package ixcode.platform.json;
 
 import java.util.*;
 
-public class JsonArray implements JsonValue {
+public class JsonArray  {
 
-    private List<JsonValue> jsonValues;
+    private List<Object> jsonValues;
 
-    public JsonArray(List<JsonValue> jsonValues) {
+    public JsonArray(List<Object> jsonValues) {
         this.jsonValues = jsonValues;
     }
 
-    public <T extends JsonValue> T valueAt(int index) {
+    public <T> T valueAt(int index) {
         return (T)jsonValues.get(index);
     }
 
