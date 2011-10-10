@@ -1,6 +1,7 @@
-package ixcode.platform.xml;
+package ixcode.platform.serialise;
 
 import ixcode.platform.text.*;
+import ixcode.platform.xml.*;
 
 import java.lang.reflect.*;
 
@@ -20,8 +21,8 @@ public class XmlSerialiser {
     }
 
 
-    public <T> String toXml(T objectToSerialise) {
-        appendObject(objectToSerialise);
+    public <T> String toXml(T object) {
+        appendObject(object);
         return xb.toString();
     }
 

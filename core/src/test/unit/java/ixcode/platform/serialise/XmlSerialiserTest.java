@@ -1,5 +1,6 @@
-package ixcode.platform.xml;
+package ixcode.platform.serialise;
 
+import ixcode.platform.serialise.*;
 import org.junit.*;
 
 import java.util.*;

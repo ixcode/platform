@@ -1,6 +1,7 @@
 package ixcode.platform.http.atom;
 
 import ixcode.platform.http.representation.*;
+import ixcode.platform.serialise.*;
 import ixcode.platform.xml.*;
 
 import java.util.*;
