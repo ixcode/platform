@@ -1,9 +1,16 @@
 package ixcode.platform.json;
 
-import java.util.*;
+import ixcode.platform.collection.Action;
+import ixcode.platform.collection.FArrayList;
+import ixcode.platform.collection.FList;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class JsonObject {
-    private Map<String, Object> valueMap;
+    private final Map<String, Object> valueMap;
+    private final FList<JsonPair> pairs;
 
     public static JsonObject emptyJsonObject() {
         return new JsonObject(new LinkedHashMap<String, Object>());
@@ -11,6 +18,7 @@ public class JsonObject {
 
     public JsonObject(Map<String, Object> valueMap) {
         this.valueMap = valueMap;
+        this.pairs = extractPairsFrom(this.valueMap);
     }
 
     public boolean hasValue(String name) {
@@ -20,6 +28,11 @@ public class JsonObject {
     public <T> T valueOf(String name) {
         return (T) valueMap.get(name);
     }
+
+    public void apply(Action<JsonPair> action) {
+        pairs.apply(action);
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -38,5 +51,12 @@ public class JsonObject {
         return valueMap != null ? valueMap.hashCode() : 0;
     }
 
+    private static FList<JsonPair> extractPairsFrom(Map<String, Object> valueMap) {
+        FList<JsonPair> pairs = new FArrayList<JsonPair>();
+        for (Map.Entry<String, Object> entry : valueMap.entrySet()) {
+            pairs.add(new JsonPair(entry.getKey(), entry.getValue()));
+        }
+        return pairs;
+    }
 
 }
