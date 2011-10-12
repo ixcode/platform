@@ -17,7 +17,14 @@ public class TransformRepresentationToJson extends TransformToJson {
     }
 
     public JsonObject buildJsonObjectFrom(Representation representation) {
-        JsonObject jsonObject = super.buildJsonObjectFrom(representation.getEntity());
+
+        JsonObject entityJson = super.buildJsonObjectFrom(representation.getEntity());
+
+        String entityName = representation.<Object>getEntity().getClass().getSimpleName().toLowerCase();
+        JsonObject container = jsonObjectWith()
+                .key(entityName).value(entityJson)
+                .build();
+
 
         for (String relation : representation.getAvailableRelations()) {
             List<Hyperlink> hyperlink = representation.getHyperlinksMatching(relation);
@@ -25,10 +32,10 @@ public class TransformRepresentationToJson extends TransformToJson {
                     .key("href").value(hyperlink.get(0).uri)
                     .build();
 
-            jsonObject.appendJsonObject(hyperlink.get(0).relation, linkObject);
+            entityJson.appendJsonObject(hyperlink.get(0).relation, linkObject);
         }
 
-        return jsonObject;
+        return container;
 
     }
 }
