@@ -23,6 +23,7 @@ public class ResourceMap implements ResourceLookup {
 
     public Resource findTheResourceMappedToThe(HttpServletRequest httpServletRequest) {
         String path = httpServletRequest.getPathInfo();
+
         if (!resources.containsKey(path)) {
             throw new RuntimeException(format("Could not find a resource mapped to [%s]", path));
         }
