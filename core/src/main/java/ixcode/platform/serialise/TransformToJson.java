@@ -12,13 +12,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ixcode.platform.json.JsonObjectBuilder.jsonObjectWith;
 import static ixcode.platform.reflect.ObjectReflector.reflect;
 import static ixcode.platform.reflect.TypeChecks.isCollection;
 
 public class TransformToJson {
     public <T, R> R from(T object) {
         return (isCollection(object))
-                ? (R) buildJsonArrayFrom((Collection<?>)object)
+                ? (R) buildJsonArrayFrom((Collection<?>) object)
                 : (R) buildJsonObjectFrom(object);
     }
 
@@ -32,7 +33,15 @@ public class TransformToJson {
             }
         });
 
-        return new JsonObject(valueMap);
+        JsonObject jsonObject = new JsonObject(valueMap);
+        return jsonObjectWith()
+                .key(jsonObjectNameFor(object)).value(jsonObject)
+                .build();
+    }
+
+    public static String jsonObjectNameFor(Object object) {
+        String simpleName = object.getClass().getSimpleName();
+        return String.format("%s%s", simpleName.substring(0, 1).toLowerCase(), simpleName.substring(1));
     }
 
 
