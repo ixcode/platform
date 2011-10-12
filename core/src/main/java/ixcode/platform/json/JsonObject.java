@@ -21,6 +21,10 @@ public class JsonObject {
         this.pairs = extractPairsFrom(this.valueMap);
     }
 
+    public void appendJsonObject(String key, JsonObject linkObject) {
+        this.pairs.add(new JsonPair(key, linkObject));
+    }
+
     public static boolean isJsonObject(Object source) {
         return (source != null) && JsonObject.class.isAssignableFrom(source.getClass());
     }

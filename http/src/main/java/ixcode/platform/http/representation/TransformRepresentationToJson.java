@@ -1,0 +1,34 @@
+package ixcode.platform.http.representation;
+
+import ixcode.platform.json.JsonObject;
+import ixcode.platform.serialise.TransformToJson;
+
+import java.util.List;
+
+import static ixcode.platform.json.JsonObjectBuilder.jsonObjectWith;
+
+public class TransformRepresentationToJson extends TransformToJson {
+
+    @Override public <T, R> R from(T object) {
+        if (object instanceof Representation) {
+            return (R) buildJsonObjectFrom((Representation) object);
+        }
+        return super.from(object);
+    }
+
+    public JsonObject buildJsonObjectFrom(Representation representation) {
+        JsonObject jsonObject = super.buildJsonObjectFrom(representation.getEntity());
+
+        for (String relation : representation.getAvailableRelations()) {
+            List<Hyperlink> hyperlink = representation.getHyperlinksMatching(relation);
+            JsonObject linkObject = jsonObjectWith()
+                    .key("href").value(hyperlink.get(0).uri)
+                    .build();
+
+            jsonObject.appendJsonObject(hyperlink.get(0).relation, linkObject);
+        }
+
+        return jsonObject;
+
+    }
+}

@@ -1,4 +1,4 @@
-package ixcode.platform.http.atom;
+package ixcode.platform.http.representation;
 
 import ixcode.platform.http.representation.*;
 import ixcode.platform.serialise.*;

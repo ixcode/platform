@@ -5,7 +5,7 @@ import ixcode.platform.xml.*;
 
 import java.util.*;
 
-import static ixcode.platform.http.atom.XmlRepresentationSerialiser.appendLink;
+import static ixcode.platform.http.representation.XmlRepresentationSerialiser.appendLink;
 
 public class AtomFeedBuilder {
     List<Representation> items = new ArrayList<Representation>();

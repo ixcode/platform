@@ -1,30 +1,28 @@
 package ixcode.platform.serialise;
 
-import ixcode.platform.collection.*;
-import ixcode.platform.json.*;
-import ixcode.platform.reflect.*;
+import ixcode.platform.collection.Action;
+import ixcode.platform.json.JsonArray;
+import ixcode.platform.json.JsonObject;
+import ixcode.platform.reflect.FieldReflector;
+import ixcode.platform.reflect.ObjectReflector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-import static ixcode.platform.reflect.ObjectReflector.*;
-import static ixcode.platform.reflect.TypeChecks.*;
+import static ixcode.platform.reflect.ObjectReflector.reflect;
+import static ixcode.platform.reflect.TypeChecks.isCollection;
 
-class TransformToJson {
+public class TransformToJson {
     public <T, R> R from(T object) {
         return (isCollection(object))
-                ? (R)buildJsonArrayFrom(object)
-                : (R)buildJsonObjectFrom(object);
+                ? (R) buildJsonArrayFrom((Collection<?>)object)
+                : (R) buildJsonObjectFrom(object);
     }
 
-    private static Object buildJsonArrayFrom(Object object) {
-        List<Object> items = new ArrayList<Object>();
-
-        items.add(buildJsonObjectFrom(object));
-
-        return new JsonArray(items);
-    }
-
-    private static Object buildJsonObjectFrom(final Object object) {
+    protected JsonObject buildJsonObjectFrom(final Object object) {
         final Map<String, Object> valueMap = new LinkedHashMap<String, Object>();
 
         ObjectReflector objectReflector = reflect(object.getClass());
@@ -36,5 +34,15 @@ class TransformToJson {
 
         return new JsonObject(valueMap);
     }
+
+
+    private JsonArray buildJsonArrayFrom(Collection<?> object) {
+        List<Object> items = new ArrayList<Object>();
+
+        items.add(buildJsonObjectFrom(object));
+
+        return new JsonArray(items);
+    }
+
 
 }
