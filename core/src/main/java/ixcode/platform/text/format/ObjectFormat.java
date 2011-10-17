@@ -1,4 +1,4 @@
-package ixcode.platform.text;
+package ixcode.platform.text.format;
 
 public class ObjectFormat extends AbstractFormat<Object> {
     public Object parseString(String value) {

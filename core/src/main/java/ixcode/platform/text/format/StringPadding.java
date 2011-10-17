@@ -1,4 +1,4 @@
-package ixcode.platform.text;
+package ixcode.platform.text.format;
 
 public class StringPadding {
 

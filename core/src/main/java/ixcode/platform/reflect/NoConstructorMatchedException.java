@@ -1,10 +1,8 @@
 package ixcode.platform.reflect;
 
-import ixcode.platform.text.*;
-
 import java.util.*;
 
-import static ixcode.platform.text.CollectionFormat.collectionToString;
+import static ixcode.platform.text.format.CollectionFormat.collectionToString;
 import static java.lang.String.format;
 
 public class NoConstructorMatchedException extends RuntimeException {

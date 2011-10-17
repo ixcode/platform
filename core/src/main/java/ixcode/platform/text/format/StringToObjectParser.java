@@ -1,7 +1,5 @@
-package ixcode.platform.text;
+package ixcode.platform.text.format;
 
-
-import ixcode.platform.text.*;
 
 public class StringToObjectParser {
     public Parser parse(String value) {

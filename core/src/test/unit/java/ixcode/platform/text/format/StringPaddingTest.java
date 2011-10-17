@@ -1,10 +1,10 @@
-package ixcode.platform.text;
+package ixcode.platform.text.format;
 
 import org.junit.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static ixcode.platform.text.StringPadding.padRight;
+import static ixcode.platform.text.format.StringPadding.padRight;
 
 public class StringPaddingTest {
 

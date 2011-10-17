@@ -1,4 +1,4 @@
-package ixcode.platform.text;
+package ixcode.platform.text.format;
 
 public abstract class AbstractFormat<T> implements Format<T> {
     @Override public abstract T parseString(String source);

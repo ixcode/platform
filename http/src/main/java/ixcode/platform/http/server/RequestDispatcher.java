@@ -1,14 +1,18 @@
 package ixcode.platform.http.server;
 
 
-import ixcode.platform.http.protocol.request.*;
-import ixcode.platform.http.protocol.response.*;
+import ixcode.platform.http.protocol.request.Request;
+import ixcode.platform.http.protocol.response.ResponseBuilder;
+import ixcode.platform.http.server.resource.ResourceInvocation;
+import ixcode.platform.http.server.resource.ResourceLookup;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-import static ixcode.platform.http.protocol.request.Request.*;
+import static ixcode.platform.http.protocol.request.Request.httpRequestFrom;
 
 public class RequestDispatcher extends HttpServlet {
 
@@ -20,10 +24,10 @@ public class RequestDispatcher extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
-        Resource resource = resourceLookup.findTheResourceMappedToThe(httpServletRequest);
-
         Request request = httpRequestFrom(httpServletRequest);
         ResponseBuilder responseBuilder = new ResponseBuilder();
+
+        ResourceInvocation resource = resourceLookup.resourceMappedTo(request);
 
         resource.GET(request, responseBuilder);
 

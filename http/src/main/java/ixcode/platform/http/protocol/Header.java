@@ -1,6 +1,6 @@
 package ixcode.platform.http.protocol;
 
-import ixcode.platform.text.*;
+import ixcode.platform.text.format.UriFormat;
 
 import javax.servlet.http.*;
 import java.net.*;

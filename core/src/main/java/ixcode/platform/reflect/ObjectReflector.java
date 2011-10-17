@@ -1,7 +1,7 @@
 package ixcode.platform.reflect;
 
 import ixcode.platform.collection.*;
-import ixcode.platform.text.*;
+import ixcode.platform.text.format.StringToObjectParser;
 
 import java.lang.reflect.*;
 import java.util.*;

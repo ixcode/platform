@@ -1,4 +1,4 @@
-package ixcode.platform.text;
+package ixcode.platform.text.format;
 
 import org.junit.*;
 
@@ -6,7 +6,7 @@ import java.text.*;
 import java.util.*;
 
 import static java.util.TimeZone.*;
-import static ixcode.platform.text.StringPadding.padRight;
+import static ixcode.platform.text.format.StringPadding.padRight;
 
 /**
  * http://en.wikipedia.org/wiki/ISO_8601 http://www.timeanddate.com/worldclock/

@@ -1,6 +1,6 @@
 package ixcode.platform.serialise;
 
-import ixcode.platform.text.*;
+import ixcode.platform.text.format.ObjectFormatter;
 import ixcode.platform.xml.*;
 
 import java.lang.reflect.*;
