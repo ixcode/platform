@@ -24,7 +24,7 @@ public class MatcherPrinter {
         }
         sb.append("Group Count  : ").append( matcher.groupCount()).append("\n");
         for (int i = 0; i <= matcher.groupCount(); i++) {
-            sb.append("Group [" + i + "]  :" + matcher.group(i)).append("\n");
+            sb.append("Group [" + i + "]    : " + matcher.group(i)).append("\n");
         }
 
         return sb.toString();

@@ -34,14 +34,21 @@ public class PathPatternTest {
         assertThat(match.level, is(0));
     }
 
-
-
     @Test
-    public void matchesWithParameters() {
+    public void matches_with_parameters() {
         PathPattern pathPattern = pathPatternFrom("/some/path/{userId}");
 
         PathMatch match = pathPattern.match("/some/path/PARAM_VALUE");
 
         assertThat(match.level, is(3));
+    }
+
+    @Test
+    public void extracts_parameter_map() {
+        PathPattern pathPattern = pathPatternFrom("/some/path/{userId}/foo");
+
+        PathMatch match = pathPattern.match("/some/path/PARAM_VALUE/foo");
+
+        assertThat(match.parameters.get("userId"), is("PARAM_VALUE"));
     }
 }

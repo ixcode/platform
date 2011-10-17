@@ -23,7 +23,7 @@ public class RegexExamplesTest {
 
         List<String> parameterNames = new ArrayList<String>();
         while (matcher.find()) {
-            String parameterName = matcher.group().replaceAll("\\{|\\}", "");
+            String parameterName = matcher.group().replaceAll("[\\{\\}]", "");
             log.info("Found parameter: [" + parameterName + "]");
             parameterNames.add(parameterName);
         }
@@ -51,6 +51,8 @@ public class RegexExamplesTest {
         assertThat(matcher.group(1), is("VALUE1"));
         assertThat(matcher.group(2), is("VALUE2"));
     }
+
+
 
 
 }
