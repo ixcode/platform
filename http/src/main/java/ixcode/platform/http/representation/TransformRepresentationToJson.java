@@ -22,7 +22,7 @@ public class TransformRepresentationToJson extends TransformToJson {
 
     public JsonObject buildJsonObjectFrom(Representation representation) {
 
-        JsonObject containerJson = super.buildJsonObjectFrom(representation.getEntity());
+        JsonObject containerJson = super.from(representation.getEntity());
         JsonObject entityJson = containerJson.valueOf(jsonObjectNameFor(representation.getEntity()));
 
         for (String relation : representation.getAvailableRelations()) {

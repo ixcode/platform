@@ -58,7 +58,7 @@ public class TransformToJson {
         return new JsonArray(items);
     }
 
-    private Object jsonValueOf(Object value) {
+    protected Object jsonValueOf(Object value) {
         if (value == null) {
             return null;
         }
@@ -67,15 +67,16 @@ public class TransformToJson {
 
         if (Map.class.isAssignableFrom(valueClass)) {
             return buildJsonObjectFrom((Map) value);
-        } else if (List.class.isAssignableFrom(valueClass)) {
+        } else if (Collection.class.isAssignableFrom(valueClass)) {
             return buildJsonArrayFrom((List) value);
         } else if (Integer.class.isAssignableFrom(valueClass)
+                || Long.class.isAssignableFrom(valueClass)
                 || Double.class.isAssignableFrom(valueClass)
                 || String.class.isAssignableFrom(valueClass)
                 || Boolean.class.isAssignableFrom(valueClass)) {
             return value;
         }
-        throw new RuntimeException("Could not format value of " + value);
+        return buildJsonObjectFrom(value);
     }
 
     public static String jsonObjectNameFor(Object object) {

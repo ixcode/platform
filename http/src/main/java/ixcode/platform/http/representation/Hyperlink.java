@@ -7,6 +7,10 @@ public class Hyperlink {
     public final String relation;
     public final String title;
 
+    public Hyperlink(URI uri) {
+        this(uri, null);
+    }
+
     public Hyperlink(URI uri, String relation) {
         this(uri, relation, null);
     }
