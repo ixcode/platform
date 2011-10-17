@@ -63,4 +63,8 @@ public class Representation implements HypermediaType {
 
         throw new RuntimeException(format("Could not find a hyperlink for relation [%s] and with title [%s]", relation, title));
     }
+
+    public Representation asJson() {
+        return null;
+    }
 }

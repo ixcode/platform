@@ -20,7 +20,7 @@ public class JsonParserTest {
 
         assertThat(jsonArray.size(), is(1));
 
-        JsonObject childObject = jsonArray.valueAt(0);
+        JsonObject childObject = jsonArray.get(0);
 
         assertThat(childObject.<String>valueOf("child"), is("foo"));
     }
@@ -33,7 +33,7 @@ public class JsonParserTest {
 
         assertThat(jsonArray.size(), is(1));
 
-        JsonObject childObject = jsonArray.valueAt(0);
+        JsonObject childObject = jsonArray.get(0);
 
         assertThat(childObject.<String>valueOf("child"), is("foo"));
     }

@@ -18,7 +18,7 @@ public class JsonArray {
         return (source != null) && JsonArray.class.isAssignableFrom(source.getClass());
     }
 
-    public <T> T valueAt(int index) {
+    public <T> T get(int index) {
         return (T) items.get(index);
     }
 
@@ -29,4 +29,6 @@ public class JsonArray {
     public void apply(Action<Object> action) {
         items.apply(action);
     }
+
+
 }
