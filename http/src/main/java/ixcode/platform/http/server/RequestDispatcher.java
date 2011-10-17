@@ -3,7 +3,6 @@ package ixcode.platform.http.server;
 
 import ixcode.platform.http.protocol.request.*;
 import ixcode.platform.http.protocol.response.*;
-import ixcode.platform.http.resource.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
