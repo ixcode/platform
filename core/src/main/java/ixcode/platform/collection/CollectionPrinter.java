@@ -6,13 +6,19 @@ import java.util.List;
 public class CollectionPrinter<T> {
 
     private final FList<T> list;
+    private final String separator;
 
     public static <T> String printCollection(Collection<T> collection) {
-        return new CollectionPrinter<T>(collection).toString();
+        return printCollection(collection, ", ");
     }
 
-    public CollectionPrinter(Collection<T> collection) {
+    public static <T> String printCollection(Collection<T> collection, String separator) {
+        return new CollectionPrinter<T>(collection, separator).toString();
+    }
+
+    private CollectionPrinter(Collection<T> collection, String separator) {
         this.list = new FArrayList<T>(collection);
+        this.separator = separator;
     }
 
     public String toString() {
@@ -20,9 +26,8 @@ public class CollectionPrinter<T> {
         list.apply(new Action<T>() {
             @Override public void to(T item, Collection<T> tail) {
                 String value = (item == null) ? "<null>" : item.toString();
-                String separator = (tail.size() == 0) ? "" : ", ";
-
-                sb.append(value).append(separator);
+                sb.append(value)
+                  .append((tail.size() == 0) ? "" : separator);
             }
         });
         return sb.toString();

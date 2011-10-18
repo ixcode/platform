@@ -12,16 +12,18 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static ixcode.platform.json.JsonObjectBuilder.jsonObjectWith;
 import static ixcode.platform.reflect.ObjectReflector.reflect;
-import static ixcode.platform.reflect.TypeChecks.isCollection;
+import static ixcode.platform.reflect.TypeChecks.isList;
+import static ixcode.platform.reflect.TypeChecks.isMap;
 
 public class TransformToJson {
     public <T, R> R from(T object) {
-        return (isCollection(object))
+        return (isList(object))
                 ? (R) buildJsonArrayFrom((Collection<?>) object)
-                : (R) buildJsonObjectFrom(object);
+                : (R) jsonValueOf(object);
     }
 
     protected JsonObject buildJsonObjectFrom(final Object object) {
@@ -65,7 +67,7 @@ public class TransformToJson {
 
         Class<?> valueClass = value.getClass();
 
-        if (Map.class.isAssignableFrom(valueClass)) {
+        if (isMap(valueClass)) {
             return buildJsonObjectFrom((Map) value);
         } else if (Collection.class.isAssignableFrom(valueClass)) {
             return buildJsonArrayFrom((List) value);
@@ -73,7 +75,8 @@ public class TransformToJson {
                 || Long.class.isAssignableFrom(valueClass)
                 || Double.class.isAssignableFrom(valueClass)
                 || String.class.isAssignableFrom(valueClass)
-                || Boolean.class.isAssignableFrom(valueClass)) {
+                || Boolean.class.isAssignableFrom(valueClass)
+                || UUID.class.isAssignableFrom(valueClass)) {
             return value;
         }
         return buildJsonObjectFrom(value);

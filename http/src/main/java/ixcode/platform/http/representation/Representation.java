@@ -4,7 +4,7 @@ import java.util.*;
 
 import static java.lang.String.format;
 
-public class Representation implements HypermediaType {
+public class Representation implements HypermediaLinks {
 
     private final Object entity;
     private final Map<String, List<Hyperlink>> hyperlinks;
