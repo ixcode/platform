@@ -30,7 +30,7 @@ public class PathPattern {
             parameterNames.add(removeCurlyBraces(matcher.group()));
         }
 
-        String pathWithParametersSubstituted = matcher.replaceAll("(.*)");
+        String pathWithParametersSubstituted = matcher.replaceAll("([^./]*)");
         return new PathPattern(compile(pathWithParametersSubstituted), parameterNames);
     }
 

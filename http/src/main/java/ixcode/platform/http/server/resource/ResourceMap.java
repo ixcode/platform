@@ -31,7 +31,7 @@ public class ResourceMap implements ResourceLookup {
         for (ResourceMapping resourceMapping : resourceMappings) {
             PathMatch match = resourceMapping.match(path);
             if (match.level > 0 && match.level == closestMatch) {
-                throw new RuntimeException(format("Two resources match the same path [%s] (%s, %s]", path, matched.resource.getClass().getSimpleName(), resourceMapping.resource.getClass().getSimpleName()));
+                throw new MultipleResourceMatchedException(path, matched.resource, resourceMapping.resource);
             }
             if (match.level > closestMatch) {
                 matched = resourceMapping;
@@ -40,7 +40,7 @@ public class ResourceMap implements ResourceLookup {
         }
 
         if (matched == null) {
-            throw new RuntimeException(format("Could not find a resource mapped to [%s]", path));
+            throw new ResourceNotFoundException(path);
         }
 
         if (matched.allowsHttpMethod(request.getMethod())) {

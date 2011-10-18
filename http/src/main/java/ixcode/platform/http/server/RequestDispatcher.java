@@ -5,6 +5,9 @@ import ixcode.platform.http.protocol.request.Request;
 import ixcode.platform.http.protocol.response.ResponseBuilder;
 import ixcode.platform.http.server.resource.ResourceInvocation;
 import ixcode.platform.http.server.resource.ResourceLookup;
+import ixcode.platform.http.server.resource.ResourceNotFoundException;
+import ixcode.platform.json.JsonObject;
+import ixcode.platform.json.printer.JsonPrinter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,9 +30,15 @@ public class RequestDispatcher extends HttpServlet {
         Request request = httpRequestFrom(httpServletRequest);
         ResponseBuilder responseBuilder = new ResponseBuilder();
 
-        ResourceInvocation resource = resourceLookup.resourceMappedTo(request);
-
-        resource.GET(request, responseBuilder);
+        try {
+            ResourceInvocation resource = resourceLookup.resourceMappedTo(request);
+            resource.GET(request, responseBuilder);
+        } catch (ResourceNotFoundException e) {
+            responseBuilder
+                    .status().notFound()
+                    .contentType().json()
+                    .body(String.format("{ \"is\" : \"problem\",  \"code\" : \"%s\", \"HTTP/1.1 Status\" : \"404\", \"description\" : \"Resource not found\", \"path\" : \"%s\"}", e.getSystemErrorCode(), e.getPath()));
+        }
 
         responseBuilder.translateTo(httpServletResponse);
     }

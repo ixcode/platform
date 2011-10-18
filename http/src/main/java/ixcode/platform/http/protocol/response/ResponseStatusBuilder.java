@@ -4,6 +4,7 @@ import java.net.*;
 
 import static ixcode.platform.http.protocol.Header.locationHeader;
 import static ixcode.platform.http.protocol.response.ResponseStatusCodes.created;
+import static ixcode.platform.http.protocol.response.ResponseStatusCodes.not_found;
 import static ixcode.platform.http.protocol.response.ResponseStatusCodes.ok;
 
 public class ResponseStatusBuilder {
@@ -15,6 +16,10 @@ public class ResponseStatusBuilder {
 
     public ResponseBuilder ok() {
         return parent.responseStatus(ok);
+    }
+
+    public ResponseBuilder notFound() {
+        return parent.responseStatus(not_found);
     }
 
     public ResponseBuilder created(URI location) {

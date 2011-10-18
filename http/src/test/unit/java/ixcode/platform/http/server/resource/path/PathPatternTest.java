@@ -35,6 +35,15 @@ public class PathPatternTest {
     }
 
     @Test
+    public void no_match_with_parameters() {
+        PathPattern pathPattern = pathPatternFrom("/some/{param}");
+
+        PathMatch match = pathPattern.match("/some/VALUE/foo");
+
+        assertThat(match.level, is(0));
+    }
+
+    @Test
     public void matches_with_parameters() {
         PathPattern pathPattern = pathPatternFrom("/some/path/{userId}");
 
