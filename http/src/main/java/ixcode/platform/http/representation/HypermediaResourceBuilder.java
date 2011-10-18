@@ -1,20 +1,20 @@
 package ixcode.platform.http.representation;
 
-import com.sun.tools.internal.xjc.reader.xmlschema.WildcardNameClassBuilder;
-import ixcode.platform.collection.CollectionPrinter;
-
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static ixcode.platform.collection.CollectionPrinter.printCollection;
 import static java.util.Arrays.asList;
 
-public class HypermediaResourceBuilder {
+public class HypermediaResourceBuilder<T extends LinkCollection> implements LinkCollection {
     private ReflectiveMapBuilder mapBuilder = new ReflectiveMapBuilder();
+    private transient List<Hyperlink> hyperlinks = new ArrayList<Hyperlink>();
+    private String[] types;
 
-    public static HypermediaResourceBuilder hypermedia() {
-        return new HypermediaResourceBuilder();
+    public HypermediaResourceBuilder(String... types) {
+        this.types = types;
     }
 
     public HypermediaResourceBuilder withTypes(String... types) {
@@ -27,7 +27,16 @@ public class HypermediaResourceBuilder {
         return this;
     }
 
+
     public Map<String, Object> build() {
+        return withTypes(types)
+                .havingValuesFrom(this)
+                .excludingNulls()
+                .linkingTo(hyperlinks)
+                .buildMap();
+    }
+
+    private Map<String, Object> buildMap() {
         return mapBuilder.build();
     }
 
@@ -45,5 +54,13 @@ public class HypermediaResourceBuilder {
             mapBuilder.key(hyperlink.relation).value(hyperlink.uri);
         }
         return this;
+    }
+
+    public LinkBuilder<T> linkingTo(URI uri) {
+        return new LinkBuilder(this, uri);
+    }
+
+    public void addHyperlink(URI uri, String relation, String title) {
+        hyperlinks.add(new Hyperlink(uri, relation, title));
     }
 }
