@@ -9,6 +9,7 @@ import java.net.*;
 import java.util.*;
 
 import static ixcode.platform.http.protocol.UriFactory.uri;
+import static ixcode.platform.http.representation.Hyperlink.hyperlinkTo;
 
 public class RepresentationHandler extends DefaultHandler {
 
@@ -54,7 +55,7 @@ public class RepresentationHandler extends DefaultHandler {
         String relation = attributes.getValue("rel");
         String title = attributes.getValue("title");
 
-        hyperlinks.add(new Hyperlink(uri(href), relation, title));
+        hyperlinks.add(hyperlinkTo(uri(href), relation, title));
     }
 
     private boolean hasContent() {

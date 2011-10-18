@@ -3,6 +3,8 @@ package ixcode.platform.http.representation;
 import java.net.*;
 import java.util.*;
 
+import static ixcode.platform.http.representation.Hyperlink.hyperlinkTo;
+
 public class RepresentationBuilder<E> {
     private E entity;
     private List<Hyperlink> hyperlinks = new ArrayList<Hyperlink>();
@@ -16,7 +18,7 @@ public class RepresentationBuilder<E> {
     }
 
     private void addHyperlink(URI uri, String relation, String title) {
-        this.hyperlinks.add(new Hyperlink(uri, relation, title));
+        this.hyperlinks.add(hyperlinkTo(uri, relation, title));
     }
 
     public Representation build() {

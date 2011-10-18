@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class FormatRegistry {
 
@@ -20,6 +21,7 @@ public class FormatRegistry {
         addFormat(int.class, new IntegerFormat());
         addFormat(Date.class, new UtcDateFormat());
         addFormat(URI.class, new UriFormat());
+        addFormat(UUID.class, new UuidFormat());
     }
 
     public void addFormat(Class<?> targetClass, Format format) {

@@ -19,6 +19,6 @@ public class JsonValueFormat {
             return value.toString();
         }
 
-        return String.format("\"%s\"", value.toString());
+        return String.format("\"%s\"", formatRegistry.findFormatFor(value.getClass()).format(value));
     }
 }

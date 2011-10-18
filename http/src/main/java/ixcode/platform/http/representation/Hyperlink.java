@@ -7,15 +7,18 @@ public class Hyperlink {
     public final String relation;
     public final String title;
 
-    public Hyperlink(URI uri) {
-        this(uri, null);
+    public static Hyperlink hyperlinkTo(URI uri) {
+        return hyperlinkTo(uri, null);
     }
 
-    public Hyperlink(URI uri, String relation) {
-        this(uri, relation, null);
+    public static Hyperlink hyperlinkTo(URI uri, String relation) {
+        return hyperlinkTo(uri, relation, null);
+    }
+    public static Hyperlink hyperlinkTo(URI uri, String relation, String title) {
+        return new Hyperlink(uri, relation, title);
     }
 
-    public Hyperlink(URI uri, String relation, String title) {
+    private Hyperlink(URI uri, String relation, String title) {
         this.uri = uri;
         this.relation = relation;
         this.title = title;
