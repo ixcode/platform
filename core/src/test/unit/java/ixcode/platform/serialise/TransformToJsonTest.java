@@ -21,9 +21,7 @@ public class TransformToJsonTest {
     public void builds_a_json_object() {
         SimpleObject simpleObject = new SimpleObject("johnny", 56);
 
-        JsonObject jsonRoot = new TransformToJson().from(simpleObject);
-
-        JsonObject jsonEntity = jsonRoot.valueOf("simpleObject");
+        JsonObject jsonEntity = new TransformToJson().from(simpleObject);
 
         assertThat(jsonEntity, is(notNullValue()));
         assertThat(jsonEntity.<String>valueOf("name"), is("johnny"));

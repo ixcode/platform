@@ -15,8 +15,7 @@ public class StringToObjectParser {
         }
 
         public <T> T as(Class<T> targetClass) {
-            Format<T> format = formatRegistry.findFormatFor(targetClass);
-            return format.parseString(value);
+            return formatRegistry.findFormatFor(targetClass).parseString(value);
         }
     }
 }

@@ -5,7 +5,7 @@ import java.util.*;
 
 import static java.util.TimeZone.getTimeZone;
 
-public class UtcDateFormat extends AbstractFormat<Date> {
+public class UtcDateFormat extends AbstractFormat {
 
     private final DateFormat utcDateFormat;
 
@@ -32,7 +32,7 @@ public class UtcDateFormat extends AbstractFormat<Date> {
         }
     }
 
-    public String format(Date source) {
+    public String format(Object source) {
         return utcDateFormat.format(source);
     }
 

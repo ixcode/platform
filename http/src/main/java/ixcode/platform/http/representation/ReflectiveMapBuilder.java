@@ -22,7 +22,10 @@ public class ReflectiveMapBuilder  extends MapBuilder<String, Object> {
     public ReflectiveMapBuilder extractValuesFrom(Object source) {
         ObjectReflector reflector = reflect(source.getClass());
         for (FieldReflector fieldReflector : reflector.nonTransientFields) {
-            key(fieldReflector.name).value(fieldReflector.valueFrom(source));
+            Object value = fieldReflector.valueFrom(source);
+            if (value != null) {
+                key(fieldReflector.name).value(value);
+            }
         }
         return this;
     }

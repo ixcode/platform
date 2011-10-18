@@ -9,7 +9,6 @@ public class ObjectFormatter {
             return null;
         }
         Class<T> type = (Class<T>) source.getClass();
-        Format<T> format = formatRegistry.findFormatFor(type);
-        return format.format(source);
+        return formatRegistry.findFormatFor(type).format(source);
     }
 }

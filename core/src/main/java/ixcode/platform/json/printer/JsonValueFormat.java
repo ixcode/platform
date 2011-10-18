@@ -1,9 +1,14 @@
 package ixcode.platform.json.printer;
 
+import ixcode.platform.text.format.FormatRegistry;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 public class JsonValueFormat {
+
+    private FormatRegistry formatRegistry = new FormatRegistry();
+
     public String format(Object value) {
         if (value == null) {
             return "null";

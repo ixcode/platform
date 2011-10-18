@@ -36,10 +36,7 @@ public class TransformToJson {
             }
         });
 
-        JsonObject jsonObject = new JsonObject(valueMap);
-        return jsonObjectWith()
-                .key(jsonObjectNameFor(object)).value(jsonObject)
-                .build();
+        return new JsonObject(valueMap);
     }
 
     protected JsonObject buildJsonObjectFrom(final Map<?, ?> object) {

@@ -1,6 +1,6 @@
 package ixcode.platform.text.format;
 
-public class ObjectFormat extends AbstractFormat<Object> {
+public class ObjectFormat extends AbstractFormat {
     public Object parseString(String value) {
         throw new IllegalStateException("Cannot parse a random string to an object! not enough info " + value);
     }
