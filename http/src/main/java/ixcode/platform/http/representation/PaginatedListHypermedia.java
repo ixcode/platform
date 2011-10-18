@@ -63,4 +63,6 @@ public class PaginatedListHypermedia extends HypermediaResourceBuilder<Paginated
         this.previous = previousPage;
         return this;
     }
+
+
 }

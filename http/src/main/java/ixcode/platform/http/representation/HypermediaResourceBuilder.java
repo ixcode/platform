@@ -2,7 +2,6 @@ package ixcode.platform.http.representation;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -10,52 +9,64 @@ import static ixcode.platform.collection.CollectionPrinter.printCollection;
 import static ixcode.platform.http.representation.Hyperlink.hyperlinkTo;
 import static java.util.Arrays.asList;
 
-public class HypermediaResourceBuilder<T extends LinkCollection> implements LinkCollection {
+public class HypermediaResourceBuilder<T extends HypermediaResourceBuilder> implements LinkCollection {
     private ReflectiveMapBuilder mapBuilder = new ReflectiveMapBuilder();
     private transient List<Hyperlink> hyperlinks = new ArrayList<Hyperlink>();
     protected List<String> types;
+    private List<ValuePair> valuePairs = new ArrayList<ValuePair>();
 
     public HypermediaResourceBuilder(String... types) {
         this.types = new ArrayList<String>(asList(types));
     }
 
-    public HypermediaResourceBuilder withTypes(List<String> types) {
+    public T withTypes(List<String> types) {
         mapBuilder.key("is").value(printCollection(types, " "));
-        return this;
+        return (T) this;
     }
 
-    public HypermediaResourceBuilder havingValuesFrom(Object source) {
+    public T havingValuesFrom(Object source) {
         mapBuilder.extractValuesFrom(source);
-        return this;
+        return (T) this;
+    }
+
+    public KeyValueBuilder<T> havingValue(Object value) {
+        return new KeyValueBuilder<T>(this, value);
+    }
+
+    private void addValuePair(ValuePair valuePair) {
+        valuePairs.add(valuePair);
     }
 
 
     public Map<String, Object> build() {
         return withTypes(types)
                 .havingValuesFrom(this)
+                .havingValues(valuePairs)
                 .excludingNulls()
                 .linkingTo(hyperlinks)
                 .buildMap();
+    }
+
+    private HypermediaResourceBuilder havingValues(List<ValuePair> valuePairs) {
+        for (ValuePair valuePair : valuePairs) {
+            mapBuilder.key(valuePair.key).value(valuePair.value);
+        }
+        return this;
     }
 
     private Map<String, Object> buildMap() {
         return mapBuilder.build();
     }
 
-    public HypermediaResourceBuilder excludingNulls() {
-        return this;
+    public T excludingNulls() {
+        return (T) this;
     }
 
-    public HypermediaResourceBuilder withLink(URI uri, String relation, String title) {
-        mapBuilder.key(relation).value(hyperlinkTo(uri, relation, title));
-        return this;
-    }
-
-    public HypermediaResourceBuilder linkingTo(List<Hyperlink> hyperlinks) {
+    private T linkingTo(List<Hyperlink> hyperlinks) {
         for (Hyperlink hyperlink : hyperlinks) {
             mapBuilder.key(hyperlink.relation).value(hyperlink.uri);
         }
-        return this;
+        return (T) this;
     }
 
     public LinkBuilder<T> linkingTo(URI uri) {
@@ -64,5 +75,30 @@ public class HypermediaResourceBuilder<T extends LinkCollection> implements Link
 
     public void addHyperlink(URI uri, String relation, String title) {
         hyperlinks.add(hyperlinkTo(uri, relation, title));
+    }
+
+    public static class KeyValueBuilder<T extends HypermediaResourceBuilder> {
+        private final HypermediaResourceBuilder<T> parent;
+        private final Object value;
+
+        public KeyValueBuilder(HypermediaResourceBuilder<T> parent, Object value) {
+            this.parent = parent;
+            this.value = value;
+        }
+
+        public T as(String key) {
+            parent.addValuePair(new ValuePair(key, value));
+            return (T) parent;
+        }
+    }
+
+    private static class ValuePair {
+        public final String key;
+        public final Object value;
+
+        private ValuePair(String key, Object value) {
+            this.key = key;
+            this.value = value;
+        }
     }
 }
