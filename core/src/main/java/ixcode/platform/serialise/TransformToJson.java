@@ -9,6 +9,7 @@ import ixcode.platform.reflect.ObjectReflector;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,8 @@ public class TransformToJson {
                 || Double.class.isAssignableFrom(valueClass)
                 || String.class.isAssignableFrom(valueClass)
                 || Boolean.class.isAssignableFrom(valueClass)
-                || UUID.class.isAssignableFrom(valueClass)) {
+                || UUID.class.isAssignableFrom(valueClass)
+                || Date.class.isAssignableFrom(valueClass)) {
             return value;
         }
         return buildJsonObjectFrom(value);

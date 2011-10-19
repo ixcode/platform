@@ -13,7 +13,7 @@ public class UtcDateFormat extends AbstractFormat {
         TimeZone systemTimeZone = TimeZone.getDefault();
         try {
             TimeZone.setDefault(getTimeZone("UTC"));
-            this.utcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ");
+            this.utcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'");
         } finally {
             TimeZone.setDefault(systemTimeZone);
         }
