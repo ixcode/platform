@@ -33,7 +33,10 @@ public class TransformToJson {
         ObjectReflector objectReflector = reflect(object.getClass());
         objectReflector.nonTransientFields.apply(new Action<FieldReflector>() {
             @Override public void to(FieldReflector item, Collection<FieldReflector> tail) {
-                valueMap.put(item.name, jsonValueOf(item.valueFrom(object)));
+                Object value = item.valueFrom(object);
+                if (value != null) {
+                    valueMap.put(item.name, jsonValueOf(value));
+                }
             }
         });
 

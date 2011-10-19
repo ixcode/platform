@@ -24,10 +24,7 @@ public class HypermediaResourceBuilder<T extends HypermediaResourceBuilder> impl
         return (T) this;
     }
 
-    public T havingValuesFrom(Object source) {
-        mapBuilder.extractValuesFrom(source);
-        return (T) this;
-    }
+
 
     public KeyValueBuilder<T> havingValue(Object value) {
         return new KeyValueBuilder<T>(this, value);
@@ -40,11 +37,16 @@ public class HypermediaResourceBuilder<T extends HypermediaResourceBuilder> impl
 
     public Map<String, Object> build() {
         return withTypes(types)
-                .havingValuesFrom(this)
+                .addValuesFrom(this)
                 .havingValues(valuePairs)
                 .excludingNulls()
                 .linkingTo(hyperlinks)
                 .buildMap();
+    }
+
+    private T addValuesFrom(Object source) {
+        mapBuilder.extractValuesFrom(source);
+        return (T) this;
     }
 
     private HypermediaResourceBuilder havingValues(List<ValuePair> valuePairs) {
