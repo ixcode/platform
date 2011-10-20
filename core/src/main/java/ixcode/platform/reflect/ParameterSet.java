@@ -22,13 +22,17 @@ public class ParameterSet {
     }
 
     private void discoverParameters(Constructor constructor, Paranamer paranamer) {
-        String[] parameterNames = findParameterNames(constructor, paranamer);
-        int iParameter = 0;
-        for (Class<?> type : constructor.getParameterTypes()) {
-            add(parameterNames[iParameter], type);
-            ++iParameter;
-        }
+        try {
+            String[] parameterNames = findParameterNames(constructor, paranamer);
+            int iParameter = 0;
+            for (Class<?> type : constructor.getParameterTypes()) {
+                add(parameterNames[iParameter], type);
+                ++iParameter;
+            }
 
+        } catch (Throwable t) {
+            throw new RuntimeException(format("Could not discover parameters for Constructor [%s]", constructor));
+        }
     }
 
     private static String[] findParameterNames(Constructor constructor, Paranamer paranamer) {

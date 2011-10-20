@@ -5,6 +5,9 @@ import com.thoughtworks.paranamer.*;
 import java.lang.reflect.*;
 import java.util.*;
 
+/**
+ * @todo Doesn't work with non-static inner classes
+ */
 public class ConstructorMatrix {
 
     private static Paranamer paranamer = new AdaptiveParanamer();
