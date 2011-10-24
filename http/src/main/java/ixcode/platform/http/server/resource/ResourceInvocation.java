@@ -2,15 +2,15 @@ package ixcode.platform.http.server.resource;
 
 import ixcode.platform.http.protocol.request.Request;
 import ixcode.platform.http.protocol.response.ResponseBuilder;
-import ixcode.platform.http.server.resource.path.PathMatch;
+import ixcode.platform.http.server.resource.path.UriTemplateMatch;
 
 public class ResourceInvocation {
     private final Resource resource;
-    private final PathMatch pathMatch;
+    private final UriTemplateMatch uriTemplateMatch;
 
-    public ResourceInvocation(Resource resource, PathMatch pathMatch) {
+    public ResourceInvocation(Resource resource, UriTemplateMatch uriTemplateMatch) {
         this.resource = resource;
-        this.pathMatch = pathMatch;
+        this.uriTemplateMatch = uriTemplateMatch;
     }
 
     public void GET(Request request, ResponseBuilder responseBuilder) {

@@ -9,11 +9,13 @@ import static ixcode.platform.collection.CollectionPrinter.printCollection;
 import static ixcode.platform.http.representation.Hyperlink.hyperlinkTo;
 import static java.util.Arrays.asList;
 
-public class HypermediaResourceBuilder<T extends HypermediaResourceBuilder> implements LinkCollection {
+public abstract class HypermediaResourceBuilder<T extends HypermediaResourceBuilder> implements LinkCollection {
     private ReflectiveMapBuilder mapBuilder = new ReflectiveMapBuilder();
     private transient List<Hyperlink> hyperlinks = new ArrayList<Hyperlink>();
     protected List<String> types;
     private List<ValuePair> valuePairs = new ArrayList<ValuePair>();
+
+
 
     public HypermediaResourceBuilder(String... types) {
         this.types = new ArrayList<String>(asList(types));

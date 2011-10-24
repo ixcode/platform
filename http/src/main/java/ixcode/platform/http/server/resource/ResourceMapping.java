@@ -1,8 +1,8 @@
 package ixcode.platform.http.server.resource;
 
 import ixcode.platform.http.protocol.HttpMethod;
-import ixcode.platform.http.server.resource.path.PathMatch;
-import ixcode.platform.http.server.resource.path.PathPattern;
+import ixcode.platform.http.server.resource.path.UriTemplateMatch;
+import ixcode.platform.http.server.resource.path.UriTemplate;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,12 +11,12 @@ import static java.util.Arrays.asList;
 
 class ResourceMapping {
     public final Resource resource;
-    private PathPattern pathPattern;
+    private UriTemplate uriTemplate;
     public Set<HttpMethod> allowedHttpMethods;
 
-    ResourceMapping(Resource resource, HttpMethod[] httpMethods, PathPattern pathPattern) {
+    ResourceMapping(Resource resource, HttpMethod[] httpMethods, UriTemplate uriTemplate) {
         this.resource = resource;
-        this.pathPattern = pathPattern;
+        this.uriTemplate = uriTemplate;
         this.allowedHttpMethods = new HashSet<HttpMethod>(asList(httpMethods));
     }
 
@@ -25,7 +25,7 @@ class ResourceMapping {
     }
 
 
-    public PathMatch match(String path) {
-        return pathPattern.match(path);
+    public UriTemplateMatch match(String path) {
+        return uriTemplate.match(path);
     }
 }

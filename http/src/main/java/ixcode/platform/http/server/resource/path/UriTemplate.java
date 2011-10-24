@@ -11,17 +11,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static ixcode.platform.collection.CollectionPrinter.printCollection;
-import static ixcode.platform.http.server.resource.path.PathMatch.noMatch;
+import static ixcode.platform.http.server.resource.path.UriTemplateMatch.noMatch;
 import static java.util.regex.Pattern.compile;
 
-public class PathPattern {
+public class UriTemplate {
 
-    private static final Logger log = Logger.getLogger(PathPattern.class);
+    private static final Logger log = Logger.getLogger(UriTemplate.class);
 
     private final Pattern regexPattern;
     private List<String> parameterNames;
 
-    public static PathPattern pathPatternFrom(String path) {
+    public static UriTemplate uriTemplateFrom(String path) {
         List<String> parameterNames = new ArrayList<String>();
 
         Pattern parameterPattern = Pattern.compile("\\{\\w*\\}");
@@ -31,15 +31,15 @@ public class PathPattern {
         }
 
         String pathWithParametersSubstituted = matcher.replaceAll("([^./]*)");
-        return new PathPattern(compile(pathWithParametersSubstituted), parameterNames);
+        return new UriTemplate(compile(pathWithParametersSubstituted), parameterNames);
     }
 
-    private PathPattern(Pattern regexPattern, List<String> parameterNames) {
+    private UriTemplate(Pattern regexPattern, List<String> parameterNames) {
         this.regexPattern = regexPattern;
         this.parameterNames = parameterNames;
     }
 
-    public PathMatch match(String path) {
+    public UriTemplateMatch match(String path) {
         Matcher matcher = regexPattern.matcher(path);
 
         if (log.isDebugEnabled()) {
@@ -54,7 +54,8 @@ public class PathPattern {
         for (int i = 0; i < parameterNames.size(); ++i) {
             parameters.put(parameterNames.get(i), matcher.group(i + 1));
         }
-        return new PathMatch(path.split("/").length - 1, parameters);
+        int matchLevel = (path.split("/").length - 1) - parameters.size();
+        return new UriTemplateMatch(matchLevel, parameters);
     }
 
     private static String removeCurlyBraces(String parameter) {

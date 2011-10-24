@@ -2,12 +2,12 @@ package ixcode.platform.http.server.resource;
 
 import ixcode.platform.http.protocol.HttpMethod;
 import ixcode.platform.http.protocol.request.Request;
-import ixcode.platform.http.server.resource.path.PathMatch;
+import ixcode.platform.http.server.resource.path.UriTemplateMatch;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static ixcode.platform.http.server.resource.path.PathPattern.pathPatternFrom;
+import static ixcode.platform.http.server.resource.path.UriTemplate.uriTemplateFrom;
 import static java.lang.String.format;
 
 public class ResourceMap implements ResourceLookup {
@@ -25,17 +25,19 @@ public class ResourceMap implements ResourceLookup {
     public ResourceInvocation resourceMappedTo(Request request) {
         String path = request.getPath();
 
-        int closestMatch = 0;
+        int[] closestMatch = {0, 0};
         ResourceMapping matched = null;
-        PathMatch pathMatch = null;
+        UriTemplateMatch uriTemplateMatch = null;
         for (ResourceMapping resourceMapping : resourceMappings) {
-            PathMatch match = resourceMapping.match(path);
-            if (match.level > 0 && match.level == closestMatch) {
+            UriTemplateMatch match = resourceMapping.match(path);
+            if (match.level > 0) {
+                if (match.level == closestMatch[0]
+                        && match.parameters.size() == closestMatch[1])
                 throw new MultipleResourceMatchedException(path, matched.resource, resourceMapping.resource);
             }
-            if (match.level > closestMatch) {
+            if (match.level > closestMatch[0]) {
                 matched = resourceMapping;
-                pathMatch = match;
+                uriTemplateMatch = match;
             }
         }
 
@@ -44,14 +46,14 @@ public class ResourceMap implements ResourceLookup {
         }
 
         if (matched.allowsHttpMethod(request.getMethod())) {
-            return new ResourceInvocation(matched.resource, pathMatch);
+            return new ResourceInvocation(matched.resource, uriTemplateMatch);
         }
 
         throw new RuntimeException(format("Resource does not support the [%s] method", request.getMethod()));
     }
 
     private void registerMapping(String path, Resource resource, HttpMethod[] httpMethods) {
-        resourceMappings.add(new ResourceMapping(resource, httpMethods, pathPatternFrom(path)));
+        resourceMappings.add(new ResourceMapping(resource, httpMethods, uriTemplateFrom(path)));
     }
 
     public static class EntryBuilder {
