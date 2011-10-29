@@ -94,7 +94,7 @@ public class JsonParserTest {
 
     @Test
     public void value_with_uri() {
-        String json = "{ \"someUri\" : \"http://foo.bar.com\"";
+        String json = "{ \"someUri\" : \"http://foo.bar.com\" }";
 
         JsonObject jsonObject = jsonParser.parse(json);
 
