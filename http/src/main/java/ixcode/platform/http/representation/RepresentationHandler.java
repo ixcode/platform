@@ -17,14 +17,16 @@ public class RepresentationHandler extends DefaultHandler {
     private StringBuilder nodeContent;
     private List<Hyperlink> hyperlinks = new ArrayList<Hyperlink>();
     private Attributes attributes;
+    private Map<String, List<String>> httpHeaders;
 
 
-    public RepresentationHandler(Class<?> rootEntityClass) {
+    public RepresentationHandler(Class<?> rootEntityClass, Map<String, List<String>> httpHeaders) {
+        this.httpHeaders = httpHeaders;
         this.objectBuilder = new ObjectBuilder(rootEntityClass);
     }
 
     public Representation buildRepresentation() {
-        return new Representation(objectBuilder.build(), hyperlinks);
+        return new Representation(objectBuilder.build(), httpHeaders, hyperlinks);
     }
 
     @Override

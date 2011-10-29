@@ -8,13 +8,15 @@ public class Representation implements HypermediaLinks {
 
     private final Object entity;
     private final Map<String, List<Hyperlink>> hyperlinks;
+    public final Map<String, List<String>> httpHeaders;
 
-    public Representation(Object entity) {
-        this(entity, new ArrayList<Hyperlink>());
+    public Representation(Object entity, Map<String, List<String>> httpHeaders) {
+        this(entity, httpHeaders, new ArrayList<Hyperlink>());
     }
 
-    public Representation(Object entity, List<Hyperlink> hyperlinks) {
+    public Representation(Object entity, Map<String, List<String>> httpHeaders, List<Hyperlink> hyperlinks) {
         this.entity = entity;
+        this.httpHeaders = httpHeaders;
         this.hyperlinks = mapHyperLinks(hyperlinks);
     }
 
@@ -67,4 +69,6 @@ public class Representation implements HypermediaLinks {
     public Representation asJson() {
         return null;
     }
+
+
 }

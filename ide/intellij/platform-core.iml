@@ -60,7 +60,9 @@
           <root url="jar://$MODULE_DIR$/../../core/lib/production/json-parser.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../core/lib/production/json-parser.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">

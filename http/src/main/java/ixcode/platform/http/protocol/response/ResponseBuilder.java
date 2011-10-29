@@ -13,6 +13,7 @@ public class ResponseBuilder {
     private final List<Header> headers = new ArrayList<Header>();
 
     public void translateTo(HttpServletResponse httpServletResponse) {
+        httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
         httpServletResponse.setStatus(responseStatus.code());
         try {
             httpServletResponse.getWriter().print(responseBody);

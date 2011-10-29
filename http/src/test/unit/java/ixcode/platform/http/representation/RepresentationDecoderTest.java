@@ -16,7 +16,7 @@ public class RepresentationDecoderTest {
         RepresentationDecoder decoder = new RepresentationDecoder(SomeObject.class);
 
 
-        Representation representation = decoder.representationFrom(xml);
+        Representation representation = decoder.representationFrom(xml, null);
 
         assertThat(representation.getHyperlinksMatching("alternate", "foobar").uri.toURL().toExternalForm(), is("http://foobar.com"));
 

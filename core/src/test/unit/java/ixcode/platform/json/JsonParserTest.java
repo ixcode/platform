@@ -91,4 +91,13 @@ public class JsonParserTest {
 
         assertThat(jsonObject.<JsonObject>valueOf("someObject"), is(emptyJsonObject()));
     }
+
+    @Test
+    public void value_with_uri() {
+        String json = "{ \"someUri\" : \"http://foo.bar.com\"";
+
+        JsonObject jsonObject = jsonParser.parse(json);
+
+        assertThat(jsonObject.<String>valueOf("someUri"), is("http://foo.bar.com"));
+    }
 }

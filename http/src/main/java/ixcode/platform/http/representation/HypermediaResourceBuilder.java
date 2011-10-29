@@ -22,11 +22,14 @@ public abstract class HypermediaResourceBuilder<T extends HypermediaResourceBuil
     }
 
     public T withTypes(List<String> types) {
-        mapBuilder.key("is").value(printCollection(types, " "));
+        this.types = types;
         return (T) this;
     }
 
-
+    private T addTypesfrom(List<String> types) {
+        mapBuilder.key("is").value(printCollection(types, " "));
+        return (T) this;
+    }
 
     public KeyValueBuilder<T> havingValue(Object value) {
         return new KeyValueBuilder<T>(this, value);
@@ -36,9 +39,8 @@ public abstract class HypermediaResourceBuilder<T extends HypermediaResourceBuil
         valuePairs.add(valuePair);
     }
 
-
     public Map<String, Object> build() {
-        return withTypes(types)
+        return addTypesfrom(types)
                 .addValuesFrom(this)
                 .havingValues(valuePairs)
                 .excludingNulls()

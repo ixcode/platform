@@ -5,6 +5,8 @@ import ixcode.platform.http.representation.*;
 import org.apache.log4j.*;
 
 import java.net.*;
+import java.util.List;
+import java.util.Map;
 
 import static ixcode.platform.http.protocol.UriFactory.*;
 import static ixcode.platform.io.StreamHandling.*;
@@ -19,6 +21,10 @@ public class Http {
 
     public GetRepresentationRequest GET(Class<?> entityClass) {
         return new GetRepresentationRequest(entityClass);
+    }
+
+    public GetRepresentationRequest GET() {
+        return new GetRepresentationRequest(null);
     }
 
     public static class GetRepresentationRequest {
@@ -44,7 +50,11 @@ public class Http {
                 }
                 String responseBody = readFully(urlConnection.getInputStream(), "UTF-8");
                 log.info(responseCode + ": \n" + responseBody);
-                return new RepresentationDecoder(entityClass).representationFrom(responseBody);
+
+                Map<String, List<String>> httpHeaders = urlConnection.getHeaderFields();
+
+                return new RepresentationDecoder(entityClass).representationFrom(responseBody, httpHeaders);
+
             } catch (RuntimeException e) {
                 throw e;
             } catch (Exception e) {

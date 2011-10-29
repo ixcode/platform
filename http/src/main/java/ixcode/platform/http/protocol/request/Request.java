@@ -6,7 +6,7 @@ import static ixcode.platform.http.protocol.request.RequestParameters.requestPar
 
 public class Request {
     public final RequestParameters parameters;
-    private HttpServletRequest httpServletRequest;
+    private transient HttpServletRequest httpServletRequest;
 
     public static Request httpRequestFrom(HttpServletRequest httpServletRequest) {
         return new Request(requestParametersFrom(httpServletRequest), httpServletRequest);

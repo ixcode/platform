@@ -1,6 +1,7 @@
 package ixcode.platform.http.protocol.request;
 
 import ixcode.platform.collection.*;
+import ixcode.platform.text.format.StringPadding;
 
 import javax.servlet.http.*;
 import java.util.*;
@@ -8,6 +9,7 @@ import java.util.*;
 public class RequestParameters  {
 
     private final FList<RequestParameter> parameters = new FArrayList<RequestParameter>();
+    private final Map<String, RequestParameter> parameterMap = new LinkedHashMap<String, RequestParameter>();
 
     public static RequestParameters requestParameters() {
         return new RequestParameters();
@@ -35,9 +37,18 @@ public class RequestParameters  {
     }
 
     private RequestParameters withParameter(boolean isQueryParameter, String parameterName, String... parameterValues) {
-        parameters.add(new RequestParameter(parameterName, parameterValues, isQueryParameter));
+        RequestParameter parameter = new RequestParameter(parameterName, parameterValues, isQueryParameter);
+        parameters.add(parameter);
+        parameterMap.put(parameterName, parameter);
         return this;
     }
 
 
+    public String[] get(String key) {
+        return parameterMap.get(key).parameterValues;
+    }
+
+    public String getFirstValueOf(String key) {
+        return get(key)[0];
+    }
 }

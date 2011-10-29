@@ -4,6 +4,8 @@ import ixcode.platform.xml.*;
 import org.apache.log4j.*;
 
 import java.net.*;
+import java.util.List;
+import java.util.Map;
 
 import static ixcode.platform.http.protocol.UriFactory.*;
 import static ixcode.platform.io.StreamHandling.*;
@@ -17,12 +19,21 @@ public class RepresentationDecoder {
         this.entityClass = entityClass;
     }
 
-    public <T> Representation representationFrom(String responseMessage) {
-        RepresentationHandler handler = new RepresentationHandler(entityClass);
+    public <T> Representation representationFrom(String responseMessage, Map<String, List<String>> httpHeaders) {
+        if (entityClass == null) {
+            return new RawRepresentation(responseMessage, httpHeaders);
+        }
+        RepresentationHandler handler = new RepresentationHandler(entityClass, httpHeaders);
         new XmlParser().parse(responseMessage).using(handler);
         return handler.buildRepresentation();
     }
 
+    private static class RawRepresentation extends Representation {
+
+        public RawRepresentation(String response, Map<String, List<String>> httpHeaders) {
+            super(response, httpHeaders);
+        }
+    }
 
 
 }

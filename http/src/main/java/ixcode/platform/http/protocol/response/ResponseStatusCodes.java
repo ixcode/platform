@@ -2,13 +2,13 @@ package ixcode.platform.http.protocol.response;
 
 public enum ResponseStatusCodes implements ResponseStatus {
 
-    ok(200, "Ok."),
-    created(201, "Created."),
+    ok(200, "Ok"),
+    created(201, "Created"),
 
-    bad_request(400, "Bad request."),
-    not_found(404, "Not found."),
+    bad_request(400, "Bad request"),
+    not_found(404, "Not found"),
 
-    error(500, "Server error.");
+    server_error(500, "Server error.");
 
     private final int code;
     private final String message;
