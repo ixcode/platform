@@ -7,6 +7,8 @@ import ixcode.platform.json.JsonObjectBuilder;
 import ixcode.platform.reflect.FieldReflector;
 import ixcode.platform.reflect.ObjectReflector;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -78,6 +80,8 @@ public class TransformToJson {
                 || String.class.isAssignableFrom(valueClass)
                 || Boolean.class.isAssignableFrom(valueClass)
                 || UUID.class.isAssignableFrom(valueClass)
+                || URI.class.isAssignableFrom(valueClass)
+                || URL.class.isAssignableFrom(valueClass)
                 || Date.class.isAssignableFrom(valueClass)) {
             return value;
         }

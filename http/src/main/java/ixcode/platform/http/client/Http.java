@@ -41,7 +41,7 @@ public class Http {
 
         public Representation from(URI uri) {
             try {
-                log.info("GET: " + uri.toURL().toExternalForm());
+                log.info("GET " + uri.toURL().toExternalForm() + " HTTP/1.1");
                 HttpURLConnection urlConnection = (HttpURLConnection) uri.toURL().openConnection();
                 urlConnection.connect();
                 int responseCode = urlConnection.getResponseCode();
@@ -49,7 +49,12 @@ public class Http {
                     throw new RuntimeException("Could not complete request! Response code: " + responseCode);
                 }
                 String responseBody = readFully(urlConnection.getInputStream(), "UTF-8");
-                log.info(responseCode + ": \n" + responseBody);
+
+                log.info("HTTP/1.1 " + responseCode + " " + urlConnection.getResponseMessage());
+
+                if (log.isDebugEnabled()) {
+                    log.debug("\n" + responseBody);
+                }
 
                 Map<String, List<String>> httpHeaders = urlConnection.getHeaderFields();
 
