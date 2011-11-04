@@ -2,6 +2,8 @@ package ixcode.platform.reflect;
 
 import org.apache.log4j.*;
 
+import java.lang.reflect.Constructor;
+
 import static java.lang.Class.forName;
 import static java.lang.String.format;
 import static java.lang.Thread.*;
@@ -62,7 +64,9 @@ public class ObjectFactory<T> {
         Class[] argTypes = Parameter.extractParameterClasses(parameters);
         Object[] argValues = Parameter.extractArgValues(parameters);
         try {
-            return (T) classToInstantiate.getConstructor(argTypes).newInstance(argValues);
+            Constructor constructor = classToInstantiate.getConstructor(argTypes);
+            constructor.setAccessible(true);
+            return (T) constructor.newInstance(argValues);
         } catch (Exception e) {
             logNotInstantiated(classToInstantiate.getName(), e);
             return null;

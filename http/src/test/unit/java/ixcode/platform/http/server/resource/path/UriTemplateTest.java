@@ -14,7 +14,7 @@ public class UriTemplateTest {
 
     @Test
     public void simple_match() {
-        UriTemplate uriTemplate = uriTemplateFrom("/some/path");
+        UriTemplate uriTemplate = uriTemplateFrom(null, "/some/path");
 
         UriTemplateMatch match = uriTemplate.match("/some/path");
 
@@ -23,7 +23,7 @@ public class UriTemplateTest {
 
     @Test
     public void no_match() {
-        UriTemplate uriTemplate = uriTemplateFrom("/some/path");
+        UriTemplate uriTemplate = uriTemplateFrom(null, "/some/path");
 
         UriTemplateMatch match = uriTemplate.match("/some/other/path");
 
@@ -32,7 +32,7 @@ public class UriTemplateTest {
 
     @Test
     public void no_match_with_parameters() {
-        UriTemplate uriTemplate = uriTemplateFrom("/some/{param}");
+        UriTemplate uriTemplate = uriTemplateFrom(null, "/some/{param}");
 
         UriTemplateMatch match = uriTemplate.match("/some/VALUE/foo");
 
@@ -41,7 +41,7 @@ public class UriTemplateTest {
 
     @Test
     public void matches_with_parameters() {
-        UriTemplate uriTemplate = uriTemplateFrom("/some/path/{userId}");
+        UriTemplate uriTemplate = uriTemplateFrom(null, "/some/path/{userId}");
 
         UriTemplateMatch match = uriTemplate.match("/some/path/PARAM_VALUE");
 
@@ -51,7 +51,7 @@ public class UriTemplateTest {
 
     @Test
     public void extracts_parameter_map() {
-        UriTemplate uriTemplate = uriTemplateFrom("/some/path/{userId}/foo");
+        UriTemplate uriTemplate = uriTemplateFrom(null, "/some/path/{userId}/foo");
 
         UriTemplateMatch match = uriTemplate.match("/some/path/PARAM_VALUE/foo");
 

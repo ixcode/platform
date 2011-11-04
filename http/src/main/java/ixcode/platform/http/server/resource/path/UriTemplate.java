@@ -1,5 +1,6 @@
 package ixcode.platform.http.server.resource.path;
 
+import ixcode.platform.http.representation.Hyperlink;
 import ixcode.platform.text.regex.MatcherPrinter;
 import org.apache.log4j.Logger;
 
@@ -18,10 +19,11 @@ public class UriTemplate {
 
     private static final Logger log = Logger.getLogger(UriTemplate.class);
 
+    private final String uriRoot;
     private final Pattern regexPattern;
     private List<String> parameterNames;
 
-    public static UriTemplate uriTemplateFrom(String path) {
+    public static UriTemplate uriTemplateFrom(String uriRoot, String path) {
         List<String> parameterNames = new ArrayList<String>();
 
         Pattern parameterPattern = Pattern.compile("\\{\\w*\\}");
@@ -31,12 +33,21 @@ public class UriTemplate {
         }
 
         String pathWithParametersSubstituted = matcher.replaceAll("([^./]*)");
-        return new UriTemplate(compile(pathWithParametersSubstituted), parameterNames);
+        return new UriTemplate(uriRoot, compile(pathWithParametersSubstituted), parameterNames);
     }
 
-    private UriTemplate(Pattern regexPattern, List<String> parameterNames) {
+    private UriTemplate(String uriRoot, Pattern regexPattern, List<String> parameterNames) {
+        this.uriRoot = uriRoot;
         this.regexPattern = regexPattern;
         this.parameterNames = parameterNames;
+    }
+
+    public boolean matches(Map<String, String> properties) {
+        return parameterNames.containsAll(properties.keySet());
+    }
+
+    public Hyperlink hyperlinkFrom(Map<String, String> properties) {
+        return null;
     }
 
     public UriTemplateMatch match(String path) {
@@ -61,5 +72,7 @@ public class UriTemplate {
     private static String removeCurlyBraces(String parameter) {
         return parameter.replaceAll("[\\{\\}]", "");
     }
+
+
 
 }

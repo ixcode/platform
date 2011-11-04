@@ -57,7 +57,13 @@ public class ObjectReflector {
         return fieldReflectors;
     }
 
+    public Map<String, String> propertyValuesOf(Object anInstance) {
+        return null;
+    }
+
     public void withEachNonTransientField(Action<FieldReflector> action) {
         this.nonTransientFields.apply(action);
     }
+
+
 }

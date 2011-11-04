@@ -11,7 +11,7 @@ import static java.util.Arrays.asList;
 
 class ResourceMapping {
     public final Resource resource;
-    private UriTemplate uriTemplate;
+    public UriTemplate uriTemplate;
     public Set<HttpMethod> allowedHttpMethods;
 
     ResourceMapping(Resource resource, HttpMethod[] httpMethods, UriTemplate uriTemplate) {
@@ -27,5 +27,10 @@ class ResourceMapping {
 
     public UriTemplateMatch match(String path) {
         return uriTemplate.match(path);
+    }
+
+
+    public boolean isTo(Class<?> resourceClass) {
+        return resource.getClass().equals(resourceClass);
     }
 }

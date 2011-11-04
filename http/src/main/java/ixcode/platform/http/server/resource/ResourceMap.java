@@ -2,7 +2,9 @@ package ixcode.platform.http.server.resource;
 
 import ixcode.platform.http.protocol.HttpMethod;
 import ixcode.platform.http.protocol.request.Request;
+import ixcode.platform.http.server.resource.path.UriTemplate;
 import ixcode.platform.http.server.resource.path.UriTemplateMatch;
+import ixcode.platform.reflect.ObjectFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +15,17 @@ import static java.lang.String.format;
 public class ResourceMap implements ResourceLookup {
 
     private final List<ResourceMapping> resourceMappings = new ArrayList<ResourceMapping>();
+    private final String uriRoot;
 
-    public static ResourceMap aResourceMap() {
-        return new ResourceMap();
+
+    public static ResourceMap aResourceMapRootedAt(String uriRoot) {
+        return new ResourceMap(uriRoot);
     }
+
+    private ResourceMap(String uriRoot) {
+        this.uriRoot = uriRoot;
+    }
+
 
     public EntryBuilder mapping(String path) {
         return new EntryBuilder(this, path);
@@ -33,7 +42,7 @@ public class ResourceMap implements ResourceLookup {
             if (match.level > 0) {
                 if (match.level == closestMatch[0]
                         && match.parameters.size() == closestMatch[1])
-                throw new MultipleResourceMatchedException(path, matched.resource, resourceMapping.resource);
+                    throw new MultipleResourceMatchedException(path, matched.resource, resourceMapping.resource);
             }
             if (match.level > closestMatch[0]) {
                 matched = resourceMapping;
@@ -52,8 +61,26 @@ public class ResourceMap implements ResourceLookup {
         throw new RuntimeException(format("Resource does not support the [%s] method", request.getMethod()));
     }
 
-    private void registerMapping(String path, Resource resource, HttpMethod[] httpMethods) {
-        resourceMappings.add(new ResourceMapping(resource, httpMethods, uriTemplateFrom(path)));
+    @Override public List<UriTemplate> uriTemplateMappedTo(Class<?> resourceClass) {
+        List<UriTemplate> matchingTemplates = new ArrayList<UriTemplate>();
+        for (ResourceMapping resourceMapping : resourceMappings) {
+            if (resourceMapping.isTo(resourceClass)) {
+                matchingTemplates.add(resourceMapping.uriTemplate);
+            }
+        }
+        if (matchingTemplates.size() == 0) {
+            throw new RuntimeException("Could not find a uriTemplate for resource " + resourceClass.getName());
+        }
+        return matchingTemplates;
+    }
+
+
+    private void registerMapping(String uriRoot, String path, Resource resource, HttpMethod[] httpMethods) {
+        resourceMappings.add(new ResourceMapping(resource, httpMethods, uriTemplateFrom(uriRoot, path)));
+    }
+
+    public <T extends UriTemplateGenerator> T linkTo(Class<T> templateClass) {
+        return new ObjectFactory<T>().instantiateWithArg(templateClass, ResourceLookup.class, this);
     }
 
     public static class EntryBuilder {
@@ -73,7 +100,7 @@ public class ResourceMap implements ResourceLookup {
         }
 
         public ResourceMap supporting(HttpMethod... httpMethods) {
-            parent.registerMapping(path, resource, httpMethods);
+            parent.registerMapping(parent.uriRoot, path, resource, httpMethods);
             return parent;
         }
     }
