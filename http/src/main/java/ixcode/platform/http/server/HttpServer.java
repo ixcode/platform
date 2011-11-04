@@ -25,6 +25,10 @@ public class HttpServer {
     private int httpPort;
     private String webrootDir;
 
+    public HttpServer(Class serverClass, int port, RequestDispatcher rootServlet) {
+        this(serverClass.getSimpleName(), "web", port, "/", rootServlet);
+    }
+
     public HttpServer(String serverName, int port, RequestDispatcher rootServlet) {
         this(serverName, "web", port, "/", rootServlet);
     }
