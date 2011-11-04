@@ -1,6 +1,8 @@
 package ixcode.platform.reflect;
 
 import ixcode.platform.collection.*;
+import ixcode.platform.text.format.Format;
+import ixcode.platform.text.format.FormatRegistry;
 import ixcode.platform.text.format.StringToObjectParser;
 
 import java.lang.reflect.*;
@@ -14,6 +16,7 @@ public class ObjectReflector {
     private final Class<?> targetClass;
     private final ConstructorMatrix constructorMatrix;
     private final StringToObjectParser parser = new StringToObjectParser();
+    private final FormatRegistry formatRegistry = new FormatRegistry();
 
     public static ObjectReflector reflect(Class<?> targetClass) {
         return new ObjectReflector(targetClass);
@@ -57,8 +60,18 @@ public class ObjectReflector {
         return fieldReflectors;
     }
 
-    public Map<String, String> propertyValuesOf(Object anInstance) {
-        return null;
+    public Map<String, String> propertyValuesOf(final Object anInstance) {
+        final Map<String, String> propertyValues = new LinkedHashMap<String, String>();
+        nonTransientFields.apply(new Action<FieldReflector>() {
+            @Override public void to(FieldReflector item, Collection<FieldReflector> tail) {
+                Object value = item.valueFrom(anInstance);
+                if (value != null) {
+                    Format format = formatRegistry.findFormatFor(value.getClass());
+                    propertyValues.put(item.name, format.format(value));
+                }
+            }
+        });
+        return propertyValues;
     }
 
     public void withEachNonTransientField(Action<FieldReflector> action) {

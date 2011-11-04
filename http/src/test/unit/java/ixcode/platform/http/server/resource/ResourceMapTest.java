@@ -14,7 +14,7 @@ public class ResourceMapTest {
 
     @Test
     public void can_generate_a_uri() throws Exception {
-        ResourceMap map = aResourceMapRootedAt("http://localhost:8080")
+        ResourceMap map = aResourceMapRootedAt("http://localhost:9878")
                 .mapping("/some/{name}/with/{id}").toA(new SomeResource()).supporting(GET);
 
         Hyperlink hyperlink = map.linkTo(SomeResource.SomeUriTemplate.class).withName("johnny").andId(3345);

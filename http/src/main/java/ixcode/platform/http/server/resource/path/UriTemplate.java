@@ -12,7 +12,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static ixcode.platform.collection.CollectionPrinter.printCollection;
+import static ixcode.platform.http.protocol.UriFactory.uri;
+import static ixcode.platform.http.representation.Hyperlink.hyperlinkTo;
 import static ixcode.platform.http.server.resource.path.UriTemplateMatch.noMatch;
+import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
 
 public class UriTemplate {
@@ -20,10 +23,12 @@ public class UriTemplate {
     private static final Logger log = Logger.getLogger(UriTemplate.class);
 
     private final String uriRoot;
+    private String path;
     private final Pattern regexPattern;
     private List<String> parameterNames;
 
     public static UriTemplate uriTemplateFrom(String uriRoot, String path) {
+
         List<String> parameterNames = new ArrayList<String>();
 
         Pattern parameterPattern = Pattern.compile("\\{\\w*\\}");
@@ -33,11 +38,12 @@ public class UriTemplate {
         }
 
         String pathWithParametersSubstituted = matcher.replaceAll("([^./]*)");
-        return new UriTemplate(uriRoot, compile(pathWithParametersSubstituted), parameterNames);
+        return new UriTemplate(uriRoot, path, compile(pathWithParametersSubstituted), parameterNames);
     }
 
-    private UriTemplate(String uriRoot, Pattern regexPattern, List<String> parameterNames) {
+    private UriTemplate(String uriRoot, String path, Pattern regexPattern, List<String> parameterNames) {
         this.uriRoot = uriRoot;
+        this.path = path;
         this.regexPattern = regexPattern;
         this.parameterNames = parameterNames;
     }
@@ -47,7 +53,12 @@ public class UriTemplate {
     }
 
     public Hyperlink hyperlinkFrom(Map<String, String> properties) {
-        return null;
+        String substitutedPath = path;
+        for (String parameterName : parameterNames) {
+            String parameter = format("{%s}", parameterName);
+            substitutedPath = substitutedPath.replace(parameter, properties.get(parameterName));
+        }
+        return hyperlinkTo(uri(uriRoot + substitutedPath));
     }
 
     public UriTemplateMatch match(String path) {
