@@ -12,7 +12,7 @@ import java.util.List;
 import static ixcode.platform.http.server.resource.path.UriTemplate.uriTemplateFrom;
 import static java.lang.String.format;
 
-public class ResourceMap implements ResourceLookup {
+public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder  {
 
     private final List<ResourceMapping> resourceMappings = new ArrayList<ResourceMapping>();
     private final String uriRoot;
@@ -79,7 +79,7 @@ public class ResourceMap implements ResourceLookup {
         resourceMappings.add(new ResourceMapping(resource, httpMethods, uriTemplateFrom(uriRoot, path)));
     }
 
-    public <T extends UriTemplateGenerator> T linkTo(Class<T> templateClass) {
+    @Override public <T extends UriTemplateGenerator> T linkTo(Class<T> templateClass) {
         return new ObjectFactory<T>().instantiateWithArg(templateClass, ResourceLookup.class, this);
     }
 

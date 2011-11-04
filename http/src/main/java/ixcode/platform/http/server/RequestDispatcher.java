@@ -3,8 +3,10 @@ package ixcode.platform.http.server;
 
 import ixcode.platform.http.protocol.request.Request;
 import ixcode.platform.http.protocol.response.ResponseBuilder;
+import ixcode.platform.http.server.resource.ResourceHyperlinkBuilder;
 import ixcode.platform.http.server.resource.ResourceInvocation;
 import ixcode.platform.http.server.resource.ResourceLookup;
+import ixcode.platform.http.server.resource.ResourceMap;
 import ixcode.platform.http.server.resource.ResourceNotFoundException;
 import ixcode.platform.json.JsonObject;
 import ixcode.platform.json.printer.JsonPrinter;
@@ -20,9 +22,15 @@ import static ixcode.platform.http.protocol.request.Request.httpRequestFrom;
 public class RequestDispatcher extends HttpServlet {
 
     private final ResourceLookup resourceLookup;
+    private final ResourceHyperlinkBuilder resourceHyperlinkBuilder;
 
-    public RequestDispatcher(ResourceLookup resourceLookup) {
+    public static RequestDispatcher requestDispatcher(ResourceMap resourceMap) {
+        return new RequestDispatcher(resourceMap, resourceMap);
+    }
+
+    public RequestDispatcher(ResourceLookup resourceLookup, ResourceHyperlinkBuilder resourceHyperlinkBuilder) {
         this.resourceLookup = resourceLookup;
+        this.resourceHyperlinkBuilder = resourceHyperlinkBuilder;
     }
 
     @Override
@@ -32,7 +40,7 @@ public class RequestDispatcher extends HttpServlet {
 
         try {
             ResourceInvocation resource = resourceLookup.resourceMappedTo(request);
-            resource.GET(request, responseBuilder);
+            resource.GET(request, responseBuilder, resourceHyperlinkBuilder);
         } catch (ResourceNotFoundException e) {
             responseBuilder
                     .status().notFound()

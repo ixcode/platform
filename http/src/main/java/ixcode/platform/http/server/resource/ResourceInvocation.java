@@ -13,7 +13,7 @@ public class ResourceInvocation {
         this.uriTemplateMatch = uriTemplateMatch;
     }
 
-    public void GET(Request request, ResponseBuilder responseBuilder) {
-        resource.GET(request, responseBuilder, null);
+    public void GET(Request request, ResponseBuilder responseBuilder, ResourceHyperlinkBuilder resourceMap) {
+        resource.GET(request, responseBuilder, resourceMap);
     }
 }

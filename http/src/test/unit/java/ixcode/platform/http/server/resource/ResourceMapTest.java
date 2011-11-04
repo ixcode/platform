@@ -43,7 +43,7 @@ public class ResourceMapTest {
             }
         }
 
-        @Override public void GET(Request request, ResponseBuilder respondWith, ResourceMap resourceMap) {
+        @Override public void GET(Request request, ResponseBuilder respondWith, ResourceHyperlinkBuilder resourceHyperlinkBuilder) {
 
         }
     }
