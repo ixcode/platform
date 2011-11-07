@@ -1,8 +1,14 @@
 package ixcode.platform.http.server.resource;
 
 import ixcode.platform.http.protocol.request.Request;
+import ixcode.platform.http.protocol.request.RequestParameters;
 import ixcode.platform.http.protocol.response.ResponseBuilder;
 import ixcode.platform.http.server.resource.path.UriTemplateMatch;
+
+import java.util.Map;
+
+import static ixcode.platform.http.protocol.request.Request.requestWithUriParameters;
+import static ixcode.platform.http.protocol.request.RequestParameters.appendUriParameters;
 
 public class ResourceInvocation {
     private final Resource resource;
@@ -14,6 +20,8 @@ public class ResourceInvocation {
     }
 
     public void GET(Request request, ResponseBuilder responseBuilder, ResourceHyperlinkBuilder resourceMap) {
-        resource.GET(request, responseBuilder, resourceMap);
+        Request requestWithUriParameters = requestWithUriParameters(request,
+                                                                    appendUriParameters(request.parameters, uriTemplateMatch.parameters));
+        resource.GET(requestWithUriParameters, responseBuilder, resourceMap);
     }
 }

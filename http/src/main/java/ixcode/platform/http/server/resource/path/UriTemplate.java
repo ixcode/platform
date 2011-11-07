@@ -52,13 +52,13 @@ public class UriTemplate {
         return parameterNames.containsAll(properties.keySet());
     }
 
-    public Hyperlink hyperlinkFrom(Map<String, String> properties) {
+    public Hyperlink hyperlinkFrom(Map<String, String> properties, String relation) {
         String substitutedPath = path;
         for (String parameterName : parameterNames) {
             String parameter = format("{%s}", parameterName);
             substitutedPath = substitutedPath.replace(parameter, properties.get(parameterName));
         }
-        return hyperlinkTo(uri(uriRoot + substitutedPath));
+        return hyperlinkTo(uri(uriRoot + substitutedPath), relation);
     }
 
     public UriTemplateMatch match(String path) {

@@ -8,8 +8,6 @@ import ixcode.platform.http.server.resource.ResourceInvocation;
 import ixcode.platform.http.server.resource.ResourceLookup;
 import ixcode.platform.http.server.resource.ResourceMap;
 import ixcode.platform.http.server.resource.ResourceNotFoundException;
-import ixcode.platform.json.JsonObject;
-import ixcode.platform.json.printer.JsonPrinter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static ixcode.platform.http.protocol.request.Request.httpRequestFrom;
+import static ixcode.platform.http.protocol.request.Request.requestFrom;
 
 public class RequestDispatcher extends HttpServlet {
 
@@ -35,12 +33,12 @@ public class RequestDispatcher extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
-        Request request = httpRequestFrom(httpServletRequest);
+        Request request = requestFrom(httpServletRequest);
         ResponseBuilder responseBuilder = new ResponseBuilder();
 
         try {
-            ResourceInvocation resource = resourceLookup.resourceMappedTo(request);
-            resource.GET(request, responseBuilder, resourceHyperlinkBuilder);
+            ResourceInvocation invoke = resourceLookup.resourceMappedTo(request);
+            invoke.GET(request, responseBuilder, resourceHyperlinkBuilder);
         } catch (ResourceNotFoundException e) {
             responseBuilder
                     .status().notFound()

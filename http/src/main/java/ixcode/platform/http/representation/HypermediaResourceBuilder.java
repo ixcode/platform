@@ -68,6 +68,11 @@ public abstract class HypermediaResourceBuilder<T extends HypermediaResourceBuil
         return (T) this;
     }
 
+    public T withHyperlink(Hyperlink hyperlink) {
+        hyperlinks.add(hyperlink);
+        return (T)this;
+    }
+
     private T linkingTo(List<Hyperlink> hyperlinks) {
         for (Hyperlink hyperlink : hyperlinks) {
             mapBuilder.key(hyperlink.relation).value(hyperlink.uri);

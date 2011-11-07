@@ -29,7 +29,7 @@ public class ResourceMapTest {
             private Integer id;
 
             public SomeUriTemplate(ResourceLookup source) {
-                super(source, SomeResource.class);
+                super(source, SomeResource.class, "users");
             }
 
             public SomeUriTemplate withName(String name) {
@@ -39,7 +39,7 @@ public class ResourceMapTest {
 
             public Hyperlink andId(int id) {
                 this.id = id;
-                return super.buildHyperlink();
+                return super.hyperlink();
             }
         }
 

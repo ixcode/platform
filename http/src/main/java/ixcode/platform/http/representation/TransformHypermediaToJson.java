@@ -5,6 +5,7 @@ import ixcode.platform.text.format.UriFormat;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 
 import static ixcode.platform.json.JsonObjectBuilder.jsonObjectWith;
 
@@ -12,10 +13,10 @@ public class TransformHypermediaToJson extends TransformToJson {
 
     UriFormat uriFormat = new UriFormat();
 
-    @Override protected Object jsonValueOf(Object value) {
+    @Override protected Object jsonValueOf(Class<?> parentType, Object value) {
         if (value instanceof Hyperlink) {
             Hyperlink hyperlink = (Hyperlink)value;
-            if (hyperlink.relation == null) {
+            if (List.class.isAssignableFrom(parentType) || hyperlink.relation == null) {
                 return uriFormat.format(hyperlink.uri);
             }
             return jsonObjectWith().key(hyperlink.relation).value(uriFormat.format(hyperlink.uri)).build();
@@ -28,6 +29,6 @@ public class TransformHypermediaToJson extends TransformToJson {
                 throw new RuntimeException("Couldn not format URL: " + value + " (See Cause)", e);
             }
         }
-        return super.jsonValueOf(value);
+        return super.jsonValueOf(parentType, value);
     }
 }

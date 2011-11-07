@@ -8,11 +8,15 @@ public class Request {
     public final RequestParameters parameters;
     private transient HttpServletRequest httpServletRequest;
 
-    public static Request httpRequestFrom(HttpServletRequest httpServletRequest) {
+    public static Request requestFrom(HttpServletRequest httpServletRequest) {
         return new Request(requestParametersFrom(httpServletRequest), httpServletRequest);
     }
 
-    Request(RequestParameters parameters, HttpServletRequest httpServletRequest) {
+    public static Request requestWithUriParameters(Request request, RequestParameters includingUri) {
+        return new Request(includingUri, request.httpServletRequest);
+    }
+
+    private Request(RequestParameters parameters, HttpServletRequest httpServletRequest) {
         this.parameters = parameters;
         this.httpServletRequest = httpServletRequest;
     }
@@ -24,4 +28,6 @@ public class Request {
     public String getMethod() {
         return httpServletRequest.getMethod();
     }
+
+
 }

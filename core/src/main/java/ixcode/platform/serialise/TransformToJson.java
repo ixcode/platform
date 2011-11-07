@@ -26,7 +26,7 @@ public class TransformToJson {
     public <T, R> R from(T object) {
         return (isList(object))
                 ? (R) buildJsonArrayFrom((Collection<?>) object)
-                : (R) jsonValueOf(object);
+                : (R) jsonValueOf(null, object);
     }
 
     protected JsonObject buildJsonObjectFrom(final Object object) {
@@ -37,7 +37,7 @@ public class TransformToJson {
             @Override public void to(FieldReflector item, Collection<FieldReflector> tail) {
                 Object value = item.valueFrom(object);
                 if (value != null) {
-                    valueMap.put(item.name, jsonValueOf(value));
+                    valueMap.put(item.name, jsonValueOf(JsonObject.class, value));
                 }
             }
         });
@@ -48,7 +48,7 @@ public class TransformToJson {
     protected JsonObject buildJsonObjectFrom(final Map<?, ?> object) {
         JsonObjectBuilder jsonObjectBuilder = jsonObjectWith();;
         for (Map.Entry<?, ?> entry : object.entrySet()) {
-            jsonObjectBuilder.key(entry.getKey().toString()).value(jsonValueOf(entry.getValue()));
+            jsonObjectBuilder.key(entry.getKey().toString()).value(jsonValueOf(JsonObject.class, entry.getValue()));
         }
         return jsonObjectBuilder.build();
     }
@@ -57,13 +57,13 @@ public class TransformToJson {
         List<Object> items = new ArrayList<Object>();
 
         for (Object object : collection) {
-            items.add(jsonValueOf(object));
+            items.add(jsonValueOf(List.class, object));
         }
 
         return new JsonArray(items);
     }
 
-    protected Object jsonValueOf(Object value) {
+    protected Object jsonValueOf(Class<?> parentType, Object value) {
         if (value == null) {
             return null;
         }

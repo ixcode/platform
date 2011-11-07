@@ -15,15 +15,16 @@ public class UriTemplateGenerator {
 
     private final ResourceLookup source;
     private final Class<?> resourceClass;
+    private final String relation;
     private final ObjectReflector reflector;
 
-    public UriTemplateGenerator(ResourceLookup source, Class<?> resourceClass) {
+    public UriTemplateGenerator(ResourceLookup source, Class<?> resourceClass, String relation) {
         this.source = source;
-        this.resourceClass = resourceClass;
+        this.resourceClass = resourceClass; this.relation = relation;
         reflector = reflect(this.getClass());
     }
 
-    protected Hyperlink buildHyperlink() {
+    public Hyperlink hyperlink() {
         List<UriTemplate> uriTemplates = source.uriTemplateMappedTo(resourceClass);
 
 
@@ -31,7 +32,7 @@ public class UriTemplateGenerator {
 
         for (UriTemplate uriTemplate : uriTemplates) {
             if (uriTemplate.matches(properties)) {
-                return uriTemplate.hyperlinkFrom(properties);
+                return uriTemplate.hyperlinkFrom(properties, relation);
             }
         }
 
