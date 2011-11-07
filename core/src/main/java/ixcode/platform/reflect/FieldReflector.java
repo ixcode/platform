@@ -1,5 +1,6 @@
 package ixcode.platform.reflect;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 
 import static java.lang.String.format;
@@ -23,5 +24,9 @@ public class FieldReflector {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(format("Could not get field value [%s] from [%s] (See Cause)", name, parent), e);
         }
+    }
+
+    public boolean hasAnnotation(Class<? extends Annotation> annotationClass) {
+        return this.field.isAnnotationPresent(annotationClass);
     }
 }

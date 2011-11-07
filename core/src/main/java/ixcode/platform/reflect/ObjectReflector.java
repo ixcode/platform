@@ -79,4 +79,7 @@ public class ObjectReflector {
     }
 
 
+    public Format findFormatFor(Class<? extends Object> aClass) {
+        return formatRegistry.findFormatFor(aClass);
+    }
 }

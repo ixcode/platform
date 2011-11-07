@@ -1,10 +1,14 @@
 package ixcode.platform.http.server.resource.path;
 
+import ixcode.platform.collection.Action;
+import ixcode.platform.collection.FArrayList;
+import ixcode.platform.collection.FList;
 import ixcode.platform.http.representation.Hyperlink;
 import ixcode.platform.text.regex.MatcherPrinter;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,14 +56,45 @@ public class UriTemplate {
         return parameterNames.containsAll(properties.keySet());
     }
 
-    public Hyperlink hyperlinkFrom(Map<String, String> properties, String relation) {
+    public Hyperlink hyperlinkFrom(Map<String, String> uriParameters,
+                                   Map<String, String> queryParameters,
+                                   String relation) {
+
+        String substitutedPath = substituteUriParameters(uriParameters);
+        String queryString = buildQueryString(queryParameters);
+
+        return hyperlinkTo(uri(uriRoot + substitutedPath + queryString), relation);
+    }
+
+
+    private String substituteUriParameters(Map<String, String> uriParameters) {
         String substitutedPath = path;
         for (String parameterName : parameterNames) {
             String parameter = format("{%s}", parameterName);
-            substitutedPath = substitutedPath.replace(parameter, properties.get(parameterName));
-        }
-        return hyperlinkTo(uri(uriRoot + substitutedPath), relation);
+            substitutedPath = substitutedPath.replace(parameter, uriParameters.get(parameterName));
+        } return substitutedPath;
     }
+
+    private String buildQueryString(final Map<String, String> queryParameters) {
+        if (queryParameters.size() == 0) {
+            return "";
+        }
+
+        final StringBuilder sb = new StringBuilder().append("?");
+
+        FList<String> parameterNames = new FArrayList<String>(queryParameters.keySet());
+        parameterNames.apply(new Action<String>() {
+            @Override public void to(String key, Collection<String> tail) {
+                sb.append(key).append("=").append(queryParameters.get(key));
+                if (!tail.isEmpty()) {
+                    sb.append("&");
+                }
+            }
+        });
+
+        return sb.toString();
+    }
+
 
     public UriTemplateMatch match(String path) {
         Matcher matcher = regexPattern.matcher(path);
@@ -83,7 +118,6 @@ public class UriTemplate {
     private static String removeCurlyBraces(String parameter) {
         return parameter.replaceAll("[\\{\\}]", "");
     }
-
 
 
 }

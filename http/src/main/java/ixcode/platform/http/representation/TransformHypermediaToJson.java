@@ -19,7 +19,9 @@ public class TransformHypermediaToJson extends TransformToJson {
             if (List.class.isAssignableFrom(parentType) || hyperlink.relation == null) {
                 return uriFormat.format(hyperlink.uri);
             }
-            return jsonObjectWith().key(hyperlink.relation).value(uriFormat.format(hyperlink.uri)).build();
+            return uriFormat.format(hyperlink.uri);
+//            Don't think we ever need this...
+//            return jsonObjectWith().key(hyperlink.relation).value(uriFormat.format(hyperlink.uri)).build();
         } else if (value instanceof URI) {
             return uriFormat.format((URI)value);
         }  else if (value instanceof URL) {
