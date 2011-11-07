@@ -38,6 +38,13 @@ public class PaginatedListHypermedia extends HypermediaResourceBuilder<Paginated
         return this;
     }
 
+
+    public PaginatedListHypermedia ofType(String... types) {
+        for (String type : types) {
+            ofType(type);
+        }
+        return this;
+    }
     public PaginatedListHypermedia ofType(String type) {
         super.types.add(0, type);
         return this;

@@ -76,6 +76,9 @@ public class RequestParameters  {
 
 
     public String[] get(String key) {
+        if (parameterMap.get(key) == null) {
+            return new String[] {null};
+        }
         return parameterMap.get(key).parameterValues;
     }
 

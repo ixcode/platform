@@ -1,5 +1,7 @@
 package ixcode.platform.http.representation;
 
+import ixcode.platform.text.format.CollectionFormat;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,11 @@ public abstract class HypermediaResourceBuilder<T extends HypermediaResourceBuil
     }
 
     private T addTypesfrom(List<String> types) {
-        mapBuilder.key("is").value(printCollection(types, " "));
+        if (types.size() > 1) {
+            mapBuilder.key("is").value(types);
+        } else if (types.size() == 1) {
+            mapBuilder.key("is").value(types.get(0));
+        }
         return (T) this;
     }
 
