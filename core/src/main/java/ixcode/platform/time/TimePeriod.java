@@ -1,6 +1,8 @@
 package ixcode.platform.time;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import static ixcode.platform.time.TimeDuration.lastingFor;
 
@@ -9,11 +11,9 @@ public class TimePeriod {
     private TimeDuration duration;
 
 
-
     public static TimePeriod forATimePeriodOf(int duration, TimeUnit timeUnit, Date startDate) {
         return new TimePeriod(startDate, lastingFor(duration, timeUnit));
     }
-
 
 
     public static Date fromToday() {
@@ -23,6 +23,33 @@ public class TimePeriod {
     public static Date today() {
         return new Date();
     }
+
+    public static Date tomorrow() {
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(Calendar.DATE, +1);
+        return calendar.getTime();
+    }
+
+    public static Date yesterday() {
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(Calendar.DATE, +1);
+        return calendar.getTime();
+    }
+
+    public static Date previousDayFrom(Date date) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, -1);
+        return calendar.getTime();
+    }
+
+    public static Date nextDayFrom(Date date) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, +1);
+        return calendar.getTime();
+    }
+
 
     public static Date forToday() {
         return new Date();
@@ -40,8 +67,6 @@ public class TimePeriod {
     public static Date now() {
         return new Date();
     }
-
-
 
 
     public static class TimePeriodBuilder {
