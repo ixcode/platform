@@ -14,6 +14,8 @@ public class TimePeriod {
         return new TimePeriod(startDate, lastingFor(duration, timeUnit));
     }
 
+
+
     public static Date fromToday() {
         return new Date();
     }
@@ -38,6 +40,8 @@ public class TimePeriod {
     public static Date now() {
         return new Date();
     }
+
+
 
 
     public static class TimePeriodBuilder {

@@ -16,17 +16,22 @@ import java.util.Map;
 import static ixcode.platform.reflect.ObjectReflector.reflect;
 import static ixcode.platform.text.format.CollectionFormat.collectionToString;
 
-public class UriTemplateGenerator {
+public class UriTemplateGenerator<T extends UriTemplateGenerator> {
 
     private final ResourceLookup source;
     private final Class<?> resourceClass;
-    private final String relation;
+    private String relation;
     private final ObjectReflector reflector;
 
     public UriTemplateGenerator(ResourceLookup source, Class<?> resourceClass, String relation) {
         this.source = source;
         this.resourceClass = resourceClass; this.relation = relation;
         reflector = reflect(this.getClass());
+    }
+
+    public T withRelation(String relation) {
+        this.relation = relation;
+        return (T)this;
     }
 
     public Hyperlink hyperlink() {
