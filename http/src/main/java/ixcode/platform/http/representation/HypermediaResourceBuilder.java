@@ -4,6 +4,7 @@ import ixcode.platform.text.format.CollectionFormat;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +24,8 @@ public abstract class HypermediaResourceBuilder<T extends HypermediaResourceBuil
         this.types = new ArrayList<String>(asList(types));
     }
 
-    public T withTypes(List<String> types) {
-        this.types = types;
+    public T withTypes(String... types) {
+        this.types = asList(types);
         return (T) this;
     }
 

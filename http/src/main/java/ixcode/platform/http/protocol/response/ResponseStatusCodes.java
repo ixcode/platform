@@ -5,10 +5,13 @@ public enum ResponseStatusCodes implements ResponseStatus {
     ok(200, "Ok"),
     created(201, "Created"),
 
+    see_other(303, "See other"),
+
     bad_request(400, "Bad request"),
     not_found(404, "Not found"),
 
-    server_error(500, "Server error.");
+    server_error(500, "Server error");
+
 
     private final int code;
     private final String message;

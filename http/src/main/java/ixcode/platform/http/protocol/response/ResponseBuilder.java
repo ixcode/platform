@@ -1,6 +1,7 @@
 package ixcode.platform.http.protocol.response;
 
 import ixcode.platform.http.protocol.*;
+import ixcode.platform.http.representation.Hyperlink;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -14,12 +15,20 @@ public class ResponseBuilder {
 
     public void translateTo(HttpServletResponse httpServletResponse) {
         httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
+
+        for (Header header : headers) {
+            header.addTo(httpServletResponse);
+        }
+
         httpServletResponse.setStatus(responseStatus.code());
+
         try {
             httpServletResponse.getWriter().print(responseBody);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+
     }
 
     public ResponseStatusBuilder status() {
@@ -49,6 +58,7 @@ public class ResponseBuilder {
         this.contentType = contentType;
         return this;
     }
+
 
 
 }

@@ -1,6 +1,6 @@
 package ixcode.platform.http.protocol.response;
 
-import java.net.*;
+import java.net.URI;
 
 import static ixcode.platform.http.protocol.Header.locationHeader;
 import static ixcode.platform.http.protocol.response.ResponseStatusCodes.created;
@@ -30,6 +30,11 @@ public class ResponseStatusBuilder {
     public ResponseBuilder created(URI location) {
         parent.header(locationHeader(location));
         return parent.responseStatus(created);
+    }
+
+    public ResponseBuilder seeOther(URI location) {
+        parent.header(locationHeader(location));
+        return parent.responseStatus(ResponseStatusCodes.see_other);
     }
 
     public ResponseBuilder custom(int code, String message) {

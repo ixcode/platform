@@ -1,14 +1,12 @@
 package ixcode.platform.http.protocol.request;
 
 import ixcode.platform.collection.*;
-import ixcode.platform.text.format.StringPadding;
 
-import javax.management.monitor.StringMonitor;
 import javax.servlet.http.*;
 import java.util.*;
 
 import static ixcode.platform.http.protocol.request.RequestParameter.ParameterSource.body;
-import static ixcode.platform.http.protocol.request.RequestParameter.ParameterSource.query;
+import static ixcode.platform.http.protocol.request.RequestParameter.ParameterSource.querystring;
 import static ixcode.platform.http.protocol.request.RequestParameter.ParameterSource.uri;
 
 public class RequestParameters  {
@@ -36,7 +34,7 @@ public class RequestParameters  {
         RequestParameters requestParameters = new RequestParameters();
         String queryString = httpServletRequest.getQueryString();
         for (String parameterName : parameterNames) {
-            RequestParameter.ParameterSource parameterSource = (queryString.contains(parameterName)) ? query : body;
+            RequestParameter.ParameterSource parameterSource = (queryString.contains(parameterName)) ? querystring : body;
             requestParameters.withParameter(parameterSource,
                                             parameterName,
                                             httpServletRequest.getParameterValues(parameterName));
@@ -49,8 +47,12 @@ public class RequestParameters  {
         parameters.apply(action);
     }
 
+    public ParameterTypeQuery isParameter(String parameterName) {
+        return new ParameterTypeQuery(this, parameterName);
+    }
+
     RequestParameters withQueryParameter(String name, String... values) {
-        return withParameter(query, name, values);
+        return withParameter(querystring, name, values);
     }
 
     private RequestParameters withUriParameter(String name, String value) {
@@ -84,5 +86,19 @@ public class RequestParameters  {
 
     public String getFirstValueOf(String key) {
         return get(key)[0];
+    }
+
+    public static class ParameterTypeQuery {
+        private RequestParameters parent;
+        private String parameterName;
+
+        public ParameterTypeQuery(RequestParameters parent, String parameterName) {
+            this.parent = parent;
+            this.parameterName = parameterName;
+        }
+
+        public boolean from(RequestParameter.ParameterSource source) {
+            return source.equals(parent.parameterMap.get(parameterName).source);
+        }
     }
 }

@@ -58,12 +58,13 @@ public class UriTemplate {
 
     public Hyperlink hyperlinkFrom(Map<String, String> uriParameters,
                                    Map<String, String> queryParameters,
+                                   String path,
                                    String relation) {
 
         String substitutedPath = substituteUriParameters(uriParameters);
         String queryString = buildQueryString(queryParameters);
 
-        return hyperlinkTo(uri(uriRoot + substitutedPath + queryString), relation);
+        return hyperlinkTo(uri(uriRoot + substitutedPath + path + queryString), relation);
     }
 
 

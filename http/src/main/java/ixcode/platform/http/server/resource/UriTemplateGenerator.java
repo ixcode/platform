@@ -5,7 +5,6 @@ import ixcode.platform.http.representation.Hyperlink;
 import ixcode.platform.http.server.resource.path.UriTemplate;
 import ixcode.platform.reflect.FieldReflector;
 import ixcode.platform.reflect.ObjectReflector;
-import ixcode.platform.text.format.CollectionFormat;
 import ixcode.platform.text.format.Format;
 
 import java.util.Collection;
@@ -22,6 +21,7 @@ public class UriTemplateGenerator<T extends UriTemplateGenerator> {
     private final Class<?> resourceClass;
     private String relation;
     private final ObjectReflector reflector;
+    private String path = "";
 
     public UriTemplateGenerator(ResourceLookup source, Class<?> resourceClass, String relation) {
         this.source = source;
@@ -31,7 +31,12 @@ public class UriTemplateGenerator<T extends UriTemplateGenerator> {
 
     public T withRelation(String relation) {
         this.relation = relation;
-        return (T)this;
+        return (T) this;
+    }
+
+    public T withPath(String path) {
+        this.path = (path.startsWith("/") ? path : "/" + path);
+        return (T) this;
     }
 
     public Hyperlink hyperlink() {
@@ -50,7 +55,7 @@ public class UriTemplateGenerator<T extends UriTemplateGenerator> {
                     String stringValue = format.format(value);
                     if (item.hasAnnotation(QueryParameter.class)) {
                         queryParameters.put(item.name, stringValue);
-                    }  else {
+                    } else {
                         uriParameters.put(item.name, stringValue);
                     }
                 }
@@ -60,7 +65,7 @@ public class UriTemplateGenerator<T extends UriTemplateGenerator> {
 
         for (UriTemplate uriTemplate : uriTemplates) {
             if (uriTemplate.matches(uriParameters)) {
-                return uriTemplate.hyperlinkFrom(uriParameters, queryParameters, relation);
+                return uriTemplate.hyperlinkFrom(uriParameters, queryParameters, path, relation);
             }
         }
 
@@ -70,4 +75,6 @@ public class UriTemplateGenerator<T extends UriTemplateGenerator> {
     public void addQueryParameter(String name, Object value) {
 
     }
+
+
 }
