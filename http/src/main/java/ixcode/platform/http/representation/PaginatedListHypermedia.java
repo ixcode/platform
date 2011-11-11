@@ -1,9 +1,6 @@
 package ixcode.platform.http.representation;
 
-import com.sun.tools.internal.xjc.reader.xmlschema.WildcardNameClassBuilder;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;

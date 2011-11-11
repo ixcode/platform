@@ -18,6 +18,7 @@ public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder  {
     private final String uriRoot;
 
 
+
     public static ResourceMap aResourceMapRootedAt(String uriRoot) {
         return new ResourceMap(uriRoot);
     }
@@ -32,7 +33,7 @@ public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder  {
     }
 
     public ResourceInvocation resourceMappedTo(Request request) {
-        String path = request.getPath();
+        String path = removeTrailingSlashIfNotRoot(request.getPath());
 
         int[] closestMatch = {0, 0};
         ResourceMapping matched = null;
@@ -59,6 +60,10 @@ public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder  {
         }
 
         throw new RuntimeException(format("Resource does not support the [%s] method", request.getMethod()));
+    }
+
+    private String removeTrailingSlashIfNotRoot(String path) {
+        return (path.length() > 1 && path.endsWith("/")) ? path.substring(0, path.length() -1) : path;
     }
 
     @Override public List<UriTemplate> uriTemplateMappedTo(Class<?> resourceClass) {

@@ -1,5 +1,7 @@
 package ixcode.platform.http.server;
 
+import ixcode.platform.http.server.redirection.RedirectTrailingSlashes;
+import ixcode.platform.http.server.redirection.Redirection;
 import ixcode.platform.io.*;
 import ixcode.platform.reflect.*;
 import org.apache.log4j.*;
@@ -11,6 +13,8 @@ import org.eclipse.jetty.servlet.*;
 
 import javax.servlet.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ixcode.platform.logging.ConsoleLog4jLogging.*;
 import static java.lang.String.*;
@@ -24,6 +28,7 @@ public class HttpServer {
     private String serverName;
     private int httpPort;
     private String webrootDir;
+    private List<Redirection> redirections = new ArrayList<Redirection>();
 
     public HttpServer(Class serverClass, int port, RequestDispatcher rootServlet) {
         this(serverClass.getSimpleName(), "web", port, "/", rootServlet);
@@ -75,11 +80,23 @@ public class HttpServer {
         }
     }
 
+    public HttpServer withRedirection(Redirection redirection) {
+        this.redirections.add(redirection);
+        return this;
+    }
 
     private HandlerList handlers() {
         HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{resourceHandler(), servletHandler()});
+        handlers.setHandlers(new Handler[]{
+                redirectionHandler(),
+                resourceHandler(),
+                servletHandler()
+        });
         return handlers;
+    }
+
+    private Handler redirectionHandler() {
+        return new RedirectionHandler(redirections);
     }
 
     private ResourceHandler resourceHandler() {
@@ -107,4 +124,6 @@ public class HttpServer {
         cm.setConstraint(constraint);
         return cm;
     }
+
+
 }
