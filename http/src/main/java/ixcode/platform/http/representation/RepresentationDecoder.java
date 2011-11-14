@@ -1,5 +1,6 @@
 package ixcode.platform.http.representation;
 
+import ixcode.platform.http.protocol.response.ResponseStatus;
 import ixcode.platform.xml.*;
 import org.apache.log4j.*;
 
@@ -19,19 +20,19 @@ public class RepresentationDecoder {
         this.entityClass = entityClass;
     }
 
-    public <T> Representation representationFrom(String responseMessage, Map<String, List<String>> httpHeaders) {
+    public <T> Representation representationFrom(ResponseStatus responseStatus, String responseMessage, Map<String, List<String>> httpHeaders) {
         if (entityClass == null) {
-            return new RawRepresentation(responseMessage, httpHeaders);
+            return new RawRepresentation(responseStatus,  responseMessage, httpHeaders);
         }
-        RepresentationHandler handler = new RepresentationHandler(entityClass, httpHeaders);
+        RepresentationHandler handler = new RepresentationHandler(entityClass, responseStatus, httpHeaders);
         new XmlParser().parse(responseMessage).using(handler);
         return handler.buildRepresentation();
     }
 
     private static class RawRepresentation extends Representation {
 
-        public RawRepresentation(String response, Map<String, List<String>> httpHeaders) {
-            super(response, httpHeaders);
+        public RawRepresentation(ResponseStatus responseStatus, String response, Map<String, List<String>> httpHeaders) {
+            super(responseStatus, response, httpHeaders);
         }
     }
 

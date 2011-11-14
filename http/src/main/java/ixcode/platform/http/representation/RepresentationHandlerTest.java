@@ -1,6 +1,5 @@
 package ixcode.platform.http.representation;
 
-import ixcode.platform.http.representation.*;
 import org.junit.*;
 import ixcode.platform.xml.*;
 
@@ -13,7 +12,7 @@ public class RepresentationHandlerTest {
     @Test
     public void can_parse_a_representation() {
         String xml="<simpleObject><name>Johnny Foo</name><age>23</age></simpleObject>";
-        RepresentationHandler handler = new RepresentationHandler(SimpleObject.class, null);
+        RepresentationHandler handler = new RepresentationHandler(SimpleObject.class, null, null);
 
         new XmlParser().parse(xml).using(handler);
 

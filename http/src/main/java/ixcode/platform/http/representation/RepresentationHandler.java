@@ -1,5 +1,6 @@
 package ixcode.platform.http.representation;
 
+import ixcode.platform.http.protocol.response.ResponseStatus;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import ixcode.platform.reflect.*;
@@ -17,16 +18,18 @@ public class RepresentationHandler extends DefaultHandler {
     private StringBuilder nodeContent;
     private List<Hyperlink> hyperlinks = new ArrayList<Hyperlink>();
     private Attributes attributes;
+    private ResponseStatus responseStatus;
     private Map<String, List<String>> httpHeaders;
 
 
-    public RepresentationHandler(Class<?> rootEntityClass, Map<String, List<String>> httpHeaders) {
+    public RepresentationHandler(Class<?> rootEntityClass, ResponseStatus responseStatus, Map<String, List<String>> httpHeaders) {
+        this.responseStatus = responseStatus;
         this.httpHeaders = httpHeaders;
         this.objectBuilder = new ObjectBuilder(rootEntityClass);
     }
 
     public Representation buildRepresentation() {
-        return new Representation(objectBuilder.build(), httpHeaders, hyperlinks);
+        return new Representation(responseStatus, objectBuilder.build(), httpHeaders, hyperlinks);
     }
 
     @Override

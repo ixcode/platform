@@ -1,27 +1,38 @@
 package ixcode.platform.http.representation;
 
+import ixcode.platform.http.protocol.response.ResponseStatus;
+import ixcode.platform.http.protocol.response.ResponseStatusCodes;
+
 import java.util.*;
 
 import static java.lang.String.format;
 
 public class Representation implements HypermediaLinks {
 
+    private ResponseStatus responseStatus;
     private final Object entity;
     private final Map<String, List<Hyperlink>> hyperlinks;
     public final Map<String, List<String>> httpHeaders;
+    private final List<Hyperlink> allHyperlinks;
 
-    public Representation(Object entity, Map<String, List<String>> httpHeaders) {
-        this(entity, httpHeaders, new ArrayList<Hyperlink>());
+    public Representation(ResponseStatus responseStatus, Object entity, Map<String, List<String>> httpHeaders) {
+        this(responseStatus, entity, httpHeaders, new ArrayList<Hyperlink>());
     }
 
-    public Representation(Object entity, Map<String, List<String>> httpHeaders, List<Hyperlink> hyperlinks) {
+    public Representation(ResponseStatus responseStatus, Object entity, Map<String, List<String>> httpHeaders, List<Hyperlink> hyperlinks) {
+        this.responseStatus = responseStatus;
         this.entity = entity;
         this.httpHeaders = httpHeaders;
+        this.allHyperlinks = hyperlinks;
         this.hyperlinks = mapHyperLinks(hyperlinks);
     }
 
     public <E> E getEntity() {
         return (E) entity;
+    }
+
+    public ResponseStatus getResponseStatus() {
+        return responseStatus;
     }
 
     public boolean hasRelation(String relation) {
@@ -70,5 +81,7 @@ public class Representation implements HypermediaLinks {
         return null;
     }
 
-
+    public List<Hyperlink> getAllHyperlinks() {
+        return allHyperlinks;
+    }
 }

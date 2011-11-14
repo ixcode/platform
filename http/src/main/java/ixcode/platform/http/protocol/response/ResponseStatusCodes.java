@@ -1,5 +1,8 @@
 package ixcode.platform.http.protocol.response;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum ResponseStatusCodes implements ResponseStatus {
 
     ok(200, "Ok"),
@@ -16,10 +19,22 @@ public enum ResponseStatusCodes implements ResponseStatus {
     private final int code;
     private final String message;
 
+    private static final Map<Integer, ResponseStatus> CUSTOM_STATUS_LOOKUP = new HashMap<Integer, ResponseStatus>();
 
-    ResponseStatusCodes(int code, String message) {
+    private ResponseStatusCodes(int code, String message) {
         this.code = code;
         this.message = message;
+    }
+
+
+    public static ResponseStatus codeToStatus(int responseCode) {
+        for (ResponseStatus status : ResponseStatusCodes.values()) {
+            if (status.code() == responseCode) {
+                return status;
+            }
+        }
+
+        return lookupCustomStatus(responseCode);
     }
 
 
@@ -32,9 +47,13 @@ public enum ResponseStatusCodes implements ResponseStatus {
         return message;
     }
 
+    @Override public boolean isError() {
+        return isResponseAnError(this);
+    }
+
 
     public static ResponseStatus customStatus(final int code, final String message) {
-        return new ResponseStatus() {
+        ResponseStatus status = new ResponseStatus() {
             @Override public int code() {
                 return code;
             }
@@ -42,8 +61,28 @@ public enum ResponseStatusCodes implements ResponseStatus {
             @Override public String message() {
                 return message;
             }
+
+            @Override public boolean isError() {
+                return isResponseAnError(this);
+            }
         };
+        registerStatus(status);
+        return status;
+    }
+
+    private static void registerStatus(ResponseStatus status) {
+        CUSTOM_STATUS_LOOKUP.put(status.code(), status);
+    }
+
+    private static ResponseStatus lookupCustomStatus(Integer code) {
+        if (CUSTOM_STATUS_LOOKUP.containsKey(code)) {
+            return CUSTOM_STATUS_LOOKUP.get(code);
+        }
+        throw new RuntimeException("Could not find custom status for code " + code);
     }
 
 
+    private static boolean isResponseAnError(ResponseStatus responseStatus) {
+        return responseStatus.code() < 200 || responseStatus.code() > 299;
+    }
 }

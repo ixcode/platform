@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import static ixcode.platform.http.protocol.UriFactory.*;
+import static ixcode.platform.http.protocol.response.ResponseStatusCodes.codeToStatus;
 import static ixcode.platform.io.StreamHandling.*;
 
 public class Http {
@@ -45,10 +46,12 @@ public class Http {
                 HttpURLConnection urlConnection = (HttpURLConnection) uri.toURL().openConnection();
                 urlConnection.connect();
                 int responseCode = urlConnection.getResponseCode();
+                String responseBody = null;
                 if (responseCode < 200 || responseCode > 299) {
-                    throw new RuntimeException("Could not complete request! Response code: " + responseCode);
+                    responseBody = readFully(urlConnection.getErrorStream(), "UTF-8");
+                } else {
+                    responseBody = readFully(urlConnection.getInputStream(), "UTF-8");
                 }
-                String responseBody = readFully(urlConnection.getInputStream(), "UTF-8");
 
                 log.info("HTTP/1.1 " + responseCode + " " + urlConnection.getResponseMessage());
 
@@ -58,7 +61,7 @@ public class Http {
 
                 Map<String, List<String>> httpHeaders = urlConnection.getHeaderFields();
 
-                return new RepresentationDecoder(entityClass).representationFrom(responseBody, httpHeaders);
+                return new RepresentationDecoder(entityClass).representationFrom(codeToStatus(responseCode), responseBody, httpHeaders);
 
             } catch (RuntimeException e) {
                 throw e;

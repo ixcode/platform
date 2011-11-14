@@ -22,7 +22,7 @@ public class RepresentationBuilder<E> {
     }
 
     public Representation build() {
-        return new Representation(entity, new HashMap<String, List<String>>(), hyperlinks);
+        return new Representation(null, entity, new HashMap<String, List<String>>(), hyperlinks);
     }
 
     public LinkBuilder linkingTo(URI uri) {
