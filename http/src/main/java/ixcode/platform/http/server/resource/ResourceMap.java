@@ -1,5 +1,6 @@
 package ixcode.platform.http.server.resource;
 
+import ixcode.platform.di.InjectionContext;
 import ixcode.platform.http.protocol.HttpMethod;
 import ixcode.platform.http.protocol.request.Request;
 import ixcode.platform.http.server.resource.path.UriTemplate;
@@ -12,11 +13,11 @@ import java.util.List;
 import static ixcode.platform.http.server.resource.path.UriTemplate.uriTemplateFrom;
 import static java.lang.String.format;
 
-public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder  {
+public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder {
 
     private final List<ResourceMapping> resourceMappings = new ArrayList<ResourceMapping>();
     private final String uriRoot;
-
+    private InjectionContext injectionContext;
 
 
     public static ResourceMap aResourceMapRootedAt(String uriRoot) {
@@ -63,7 +64,7 @@ public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder  {
     }
 
     private String removeTrailingSlashIfNotRoot(String path) {
-        return (path.length() > 1 && path.endsWith("/")) ? path.substring(0, path.length() -1) : path;
+        return (path.length() > 1 && path.endsWith("/")) ? path.substring(0, path.length() - 1) : path;
     }
 
     @Override public List<UriTemplate> uriTemplateMappedTo(Class<?> resourceClass) {
@@ -88,6 +89,11 @@ public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder  {
         return new ObjectFactory<T>().instantiateWithArg(templateClass, ResourceLookup.class, this);
     }
 
+    public ResourceMap withInjectionContext(InjectionContext injecttionContext) {
+        this.injectionContext = injecttionContext;
+        return this;
+    }
+
     public static class EntryBuilder {
         private final ResourceMap parent;
         private String path;
@@ -107,6 +113,11 @@ public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder  {
         public ResourceMap supporting(HttpMethod... httpMethods) {
             parent.registerMapping(parent.uriRoot, path, resource, httpMethods);
             return parent;
+        }
+
+        public EntryBuilder toA(Class<? extends Resource> resourceClass) {
+            toA((Resource) parent.injectionContext.getA(resourceClass));
+            return this;
         }
     }
 

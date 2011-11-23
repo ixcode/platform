@@ -29,9 +29,8 @@ public class PaginatedListHypermedia extends HypermediaResourceBuilder<Paginated
         return this;
     }
 
-    public PaginatedListHypermedia withFullList(Object... items) {
-        List<?> itemList = asList(items);
-        this.items.addAll(itemList);
+    public PaginatedListHypermedia withFullList(List<?> items) {
+        this.items.addAll(items);
         return this;
     }
 

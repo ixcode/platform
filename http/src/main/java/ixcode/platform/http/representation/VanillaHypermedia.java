@@ -9,4 +9,6 @@ public class VanillaHypermedia extends HypermediaResourceBuilder<VanillaHypermed
     private VanillaHypermedia(String[] types) {
         super(types);
     }
+
+
 }

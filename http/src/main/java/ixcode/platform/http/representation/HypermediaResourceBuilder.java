@@ -1,10 +1,7 @@
 package ixcode.platform.http.representation;
 
-import ixcode.platform.text.format.CollectionFormat;
-
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +14,7 @@ public abstract class HypermediaResourceBuilder<T extends HypermediaResourceBuil
     private transient List<Hyperlink> hyperlinks = new ArrayList<Hyperlink>();
     protected List<String> types;
     private List<ValuePair> valuePairs = new ArrayList<ValuePair>();
-
+    private Object rootObject;
 
 
     public HypermediaResourceBuilder(String... types) {
@@ -38,6 +35,11 @@ public abstract class HypermediaResourceBuilder<T extends HypermediaResourceBuil
         return (T) this;
     }
 
+    public T havingRootObject(Object rootObject) {
+        this.rootObject = rootObject;
+        return (T)this;
+    }
+
     public KeyValueBuilder<T> havingValue(Object value) {
         return new KeyValueBuilder<T>(this, value);
     }
@@ -47,8 +49,10 @@ public abstract class HypermediaResourceBuilder<T extends HypermediaResourceBuil
     }
 
     public Map<String, Object> build() {
+        Object root = (rootObject != null) ? rootObject : this;
+
         return addTypesfrom(types)
-                .addValuesFrom(this)
+                .addValuesFrom(root)
                 .havingValues(valuePairs)
                 .excludingNulls()
                 .linkingTo(hyperlinks)
