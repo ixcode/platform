@@ -31,7 +31,7 @@ public class Representation implements HypermediaLinks {
         return (E) entity;
     }
 
-    public ResponseStatus getResponseStatus() {
+    public ResponseStatus responseStatus() {
         return responseStatus;
     }
 

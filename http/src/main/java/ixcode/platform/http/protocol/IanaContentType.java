@@ -13,13 +13,13 @@ public enum IanaContentType implements ContentType {
         this.identitfier = identitfier;
     }
 
-    public String getIdentifier() {
+    public String identifier() {
         return identitfier;
     }
 
     public static ContentType vendorXml(final String customName) {
         return new ContentType() {
-            @Override public String getIdentifier() {
+            @Override public String identifier() {
                 return format("application/xml+%s.vnd");
             }
         };
@@ -27,7 +27,7 @@ public enum IanaContentType implements ContentType {
 
     public static ContentType vendorJson(final String vendortType) {
         return new ContentType() {
-            @Override public String getIdentifier() {
+            @Override public String identifier() {
                 return format("application/json+%s.vnd");
             }
         };

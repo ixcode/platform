@@ -16,6 +16,18 @@ public class StreamHandling {
         }
     }
 
+    public static void closeQuietly(Writer writer) {
+        if (writer == null) {
+            return;
+        }
+
+        try {
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Could not close writer (See Cause)", e);
+        }
+    }
+
     public static void closeQuietly(Reader reader) {
         if (reader == null) {
             return;
