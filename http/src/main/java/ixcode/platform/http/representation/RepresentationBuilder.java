@@ -13,7 +13,7 @@ public class RepresentationBuilder<E> {
         return new RepresentationBuilder(entity);
     }
 
-    public RepresentationBuilder(E entity) {
+    private RepresentationBuilder(E entity) {
         this.entity = entity;
     }
 

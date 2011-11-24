@@ -3,9 +3,7 @@ package ixcode.platform.http.representation;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
-
-public class PaginatedListHypermedia extends HypermediaResourceBuilder<PaginatedListHypermedia> {
+public class PaginatedListHypermedia extends HypermediaRepresentationBuilder<PaginatedListHypermedia> {
     private Integer totalNumberOfItems;
     private Integer startIndex;
     private Integer pageSize;

@@ -1,19 +1,18 @@
-package ixcode.platform.http.protocol.response;
+package ixcode.platform.http.protocol.request;
 
 import ixcode.platform.http.protocol.ContentTypeBuilder;
 
-public class ResponseContentTypeBuilder {
+public class RequestContentTypeBuilder {
 
-    private final ResponseBuilder parent;
+    private final RequestBuilder parent;
     private final ContentTypeBuilder contentTypeBuilder;
 
-    public ResponseContentTypeBuilder(ResponseBuilder parent) {
+    public RequestContentTypeBuilder(RequestBuilder parent) {
         this.parent = parent;
         contentTypeBuilder = new ContentTypeBuilder(parent);
     }
 
-
-    public ResponseBuilder json() {
+    public RequestBuilder json() {
         contentTypeBuilder.json();
         return parent;
     }

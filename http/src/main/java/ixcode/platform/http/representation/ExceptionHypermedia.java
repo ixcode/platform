@@ -1,6 +1,6 @@
 package ixcode.platform.http.representation;
 
-public class ExceptionHypermedia extends HypermediaResourceBuilder<ExceptionHypermedia> {
+public class ExceptionHypermedia extends HypermediaRepresentationBuilder<ExceptionHypermedia> {
 
 private ExceptionReport exception;
 

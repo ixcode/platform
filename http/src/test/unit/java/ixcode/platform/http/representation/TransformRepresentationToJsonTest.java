@@ -4,14 +4,13 @@ import ixcode.platform.serialise.JsonSerialiser;
 import org.junit.Test;
 
 import static ixcode.platform.http.protocol.UriFactory.uri;
+import static ixcode.platform.http.representation.RepresentationBuilder.aRepresentationOf;
 
 public class TransformRepresentationToJsonTest {
 
     @Test
     public void should_serialise_links() {
-        RepresentationBuilder<SimpleObject> representationBuilder = new RepresentationBuilder(new SimpleObject("foo", 34));
-
-        Representation representation = representationBuilder
+        Representation representation = aRepresentationOf(new SimpleObject("foo", 34))
                 .linkingTo(uri("http://someuri")).as("somerelation")
                 .build();
 

@@ -1,6 +1,7 @@
 package ixcode.platform.http.client;
 
 
+import ixcode.platform.http.protocol.ContentTypeBuilder;
 import ixcode.platform.http.representation.*;
 import org.apache.log4j.*;
 
@@ -16,8 +17,8 @@ public class Http {
 
     private static final Logger log = Logger.getLogger(Http.class);
 
-    public <T> PostRequest<T> POST(T entity) {
-        return new PostRequest<T>(entity);
+    public <T> PostRequestBuilder<T> POST(T entity) {
+        return new PostRequestBuilder<T>(entity);
     }
 
     public GetRepresentationRequest GET(Class<?> entityClass) {
@@ -78,6 +79,25 @@ public class Http {
         }
 
         public <T> T to(URI productCatalogLink) {
+            return null;
+        }
+    }
+
+    public static class PostRequestBuilder<T> {
+
+        private T entity;
+        private URI uri;
+
+        public PostRequestBuilder(T entity) {
+            this.entity = entity;
+        }
+
+        public PostRequestBuilder<T> to(URI uri) {
+            this.uri = uri;
+            return this;
+        }
+
+        public ContentTypeBuilder as() {
             return null;
         }
     }

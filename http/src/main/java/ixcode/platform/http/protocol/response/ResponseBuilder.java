@@ -1,13 +1,15 @@
 package ixcode.platform.http.protocol.response;
 
-import ixcode.platform.http.protocol.*;
-import ixcode.platform.http.representation.Hyperlink;
+import ixcode.platform.http.protocol.ContentType;
+import ixcode.platform.http.protocol.ContentTypeBuilder;
+import ixcode.platform.http.protocol.Header;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ResponseBuilder {
+public class ResponseBuilder implements ContentTypeBuilder.ContentTypeAcceptor {
     private ResponseStatus responseStatus;
     private String responseBody;
     private ContentType contentType;
@@ -59,6 +61,7 @@ public class ResponseBuilder {
         return this;
     }
 
-
-
+    @Override public void acceptContentTypeHeader(ContentType contentType) {
+        contentTypeHeader(contentType);
+    }
 }

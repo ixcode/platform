@@ -9,7 +9,7 @@ import static ixcode.platform.collection.CollectionPrinter.printCollection;
 import static ixcode.platform.http.representation.Hyperlink.hyperlinkTo;
 import static java.util.Arrays.asList;
 
-public abstract class HypermediaResourceBuilder<T extends HypermediaResourceBuilder> implements LinkCollection {
+public abstract class HypermediaRepresentationBuilder<T extends HypermediaRepresentationBuilder> implements LinkCollection {
     private ReflectiveMapBuilder mapBuilder = new ReflectiveMapBuilder();
     private transient List<Hyperlink> hyperlinks = new ArrayList<Hyperlink>();
     protected List<String> types;
@@ -17,7 +17,7 @@ public abstract class HypermediaResourceBuilder<T extends HypermediaResourceBuil
     private Object rootObject;
 
 
-    public HypermediaResourceBuilder(String... types) {
+    public HypermediaRepresentationBuilder(String... types) {
         this.types = new ArrayList<String>(asList(types));
     }
 
@@ -64,7 +64,7 @@ public abstract class HypermediaResourceBuilder<T extends HypermediaResourceBuil
         return (T) this;
     }
 
-    private HypermediaResourceBuilder havingValues(List<ValuePair> valuePairs) {
+    private HypermediaRepresentationBuilder havingValues(List<ValuePair> valuePairs) {
         for (ValuePair valuePair : valuePairs) {
             mapBuilder.key(valuePair.key).value(valuePair.value);
         }
@@ -99,11 +99,11 @@ public abstract class HypermediaResourceBuilder<T extends HypermediaResourceBuil
         hyperlinks.add(hyperlinkTo(uri, relation, title));
     }
 
-    public static class KeyValueBuilder<T extends HypermediaResourceBuilder> {
-        private final HypermediaResourceBuilder<T> parent;
+    public static class KeyValueBuilder<T extends HypermediaRepresentationBuilder> {
+        private final HypermediaRepresentationBuilder<T> parent;
         private final Object value;
 
-        public KeyValueBuilder(HypermediaResourceBuilder<T> parent, Object value) {
+        public KeyValueBuilder(HypermediaRepresentationBuilder<T> parent, Object value) {
             this.parent = parent;
             this.value = value;
         }
