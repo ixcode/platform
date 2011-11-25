@@ -2,21 +2,25 @@ package ixcode.platform.http.client;
 
 
 import ixcode.platform.http.protocol.request.RequestBuilder;
-import ixcode.platform.http.representation.*;
-import org.apache.log4j.*;
+import ixcode.platform.http.representation.Hyperlink;
+import ixcode.platform.http.representation.Representation;
+import ixcode.platform.http.representation.RepresentationDecoder;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ixcode.platform.http.protocol.UriFactory.*;
+import static ixcode.platform.http.protocol.UriFactory.uri;
 import static ixcode.platform.http.protocol.response.ResponseStatusCodes.codeToStatus;
-import static ixcode.platform.io.StreamHandling.*;
+import static ixcode.platform.io.StreamHandling.closeQuietly;
+import static ixcode.platform.io.StreamHandling.readFully;
 
 public class Http {
 
@@ -26,23 +30,23 @@ public class Http {
         return new PostRequest(body);
     }
 
-    public GetRepresentationRequest GET(Class<?> entityClass) {
-        return new GetRepresentationRequest(entityClass);
+    public GetRequest GET(Class<?> entityClass) {
+        return new GetRequest(entityClass);
     }
 
-    public GetRepresentationRequest GET() {
-        return new GetRepresentationRequest(null);
+    public GetRequest GET() {
+        return new GetRequest(null);
     }
 
     public RequestBuilder makeRequestTo(Hyperlink hyperlink) {
         return new RequestBuilder(this, hyperlink);
     }
 
-    public static class GetRepresentationRequest {
+    public static class GetRequest extends BaseRequest<GetRequest> {
 
         private Class<?> entityClass;
 
-        public GetRepresentationRequest(Class<?> entityClass) {
+        public GetRequest(Class<?> entityClass) {
             this.entityClass = entityClass;
         }
 
@@ -52,8 +56,14 @@ public class Http {
 
         public Representation from(URI uri) {
             try {
-                log.info("GET " + uri.toURL().toExternalForm() + " HTTP/1.1");
+                if (log.isInfoEnabled()) {
+                    log.info("\nGET " + uri.toURL().toExternalForm() + " HTTP/1.1");
+                    logHeaders();
+                }
+
                 HttpURLConnection urlConnection = (HttpURLConnection) uri.toURL().openConnection();
+                urlConnection.setInstanceFollowRedirects(true);
+                addHeadersTo(urlConnection);
                 urlConnection.connect();
                 int responseCode = urlConnection.getResponseCode();
                 String responseBody = null;
@@ -66,7 +76,7 @@ public class Http {
                 log.info("HTTP/1.1 " + responseCode + " " + urlConnection.getResponseMessage());
 
                 if (log.isDebugEnabled()) {
-                    log.debug("\n" + responseBody);
+                    log.debug(responseBody);
                 }
 
                 Map<String, List<String>> httpHeaders = urlConnection.getHeaderFields();
@@ -79,32 +89,29 @@ public class Http {
                 throw new RuntimeException(e);
             }
         }
+
     }
 
-    public static class PostRequest {
-
-        private String body;
-        private Map<String, String> headers = new LinkedHashMap<String, String>();
+    public static class PostRequest extends BaseRequest<PostRequest> {
 
 
         public PostRequest(String body) {
             this.body = body;
         }
 
-        public PostRequest withHeader(String name, String value) {
-            headers.put(name, value);
-            return this;
-        }
 
         public Representation to(URI uri) {
-             try {
+            try {
                 if (log.isInfoEnabled()) {
-                    log.info("POST " + uri.toURL().toExternalForm() + " HTTP/1.1");
-                    logHeaders(headers);
-                    log.info(body);
+                    log.info("\nPOST " + uri.toURL().toExternalForm() + " HTTP/1.1");
+                    logHeaders();
+                    if (body != null) {
+                        log.info(body);
+                    }
                 }
                 HttpURLConnection urlConnection = (HttpURLConnection) uri.toURL().openConnection();
-                 urlConnection.setDoOutput(true);
+                urlConnection.setInstanceFollowRedirects(false);
+                urlConnection.setDoOutput(true);
                 addHeadersTo(urlConnection);
                 writeBodyTo(urlConnection);
                 urlConnection.connect();
@@ -119,8 +126,8 @@ public class Http {
 
                 log.info("HTTP/1.1 " + responseCode + " " + urlConnection.getResponseMessage());
 
-                if (log.isDebugEnabled()) {
-                    log.debug("\n" + responseBody);
+                if (log.isDebugEnabled() && (responseBody != null) && (responseBody.length() >0)) {
+                    log.debug(responseBody);
                 }
 
                 Map<String, List<String>> httpHeaders = urlConnection.getHeaderFields();
@@ -134,13 +141,27 @@ public class Http {
             }
         }
 
-        private void logHeaders(Map<String, String> headers) {
+
+    }
+
+    public static abstract class BaseRequest<T extends BaseRequest> {
+
+        protected String body;
+        protected Map<String, String> headers = new LinkedHashMap<String, String>();
+
+        public T withHeader(String name, String value) {
+            headers.put(name, value);
+            return (T)this;
+        }
+
+
+        protected void logHeaders() {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 log.info(entry.getKey() + ": " + entry.getValue());
             }
         }
 
-        private void writeBodyTo(HttpURLConnection urlConnection) {
+        protected void writeBodyTo(HttpURLConnection urlConnection) {
             PrintWriter out = null;
             try {
                 out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream())));
@@ -152,11 +173,11 @@ public class Http {
             }
         }
 
-        private void addHeadersTo(HttpURLConnection urlConnection) {
+
+        protected void addHeadersTo(HttpURLConnection urlConnection) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 urlConnection.setRequestProperty(entry.getKey(), entry.getValue());
             }
         }
-
     }
 }

@@ -72,7 +72,11 @@ public class UriTemplate {
         String substitutedPath = path;
         for (String parameterName : parameterNames) {
             String parameter = format("{%s}", parameterName);
-            substitutedPath = substitutedPath.replace(parameter, uriParameters.get(parameterName));
+            String parameterValue = uriParameters.get(parameterName);
+            if (parameterValue == null) {
+                throw new RuntimeException("Null Parameter value supplied for " + parameter);
+            }
+            substitutedPath = substitutedPath.replace(parameter, parameterValue);
         } return substitutedPath;
     }
 

@@ -3,7 +3,6 @@ package ixcode.platform.http.protocol.request;
 import ixcode.platform.http.client.Http;
 import ixcode.platform.http.protocol.ContentType;
 import ixcode.platform.http.protocol.ContentTypeBuilder;
-import ixcode.platform.http.protocol.response.HttpResponse;
 import ixcode.platform.http.representation.Hyperlink;
 import ixcode.platform.http.representation.Representation;
 
@@ -15,13 +14,18 @@ public class RequestBuilder implements ContentTypeBuilder.ContentTypeAcceptor{
     private ContentType contentType;
     private String body;
 
+
     public RequestBuilder(Http http, Hyperlink hyperlink) {
         this.http = http;
         this.hyperlink = hyperlink;
     }
 
-    public RequestContentTypeBuilder accepting() {
+    public RequestContentTypeBuilder ofContentType() {
         return new RequestContentTypeBuilder(this);
+    }
+
+    public RequestContentTypeBuilder accepting() {
+        return ofContentType();
     }
 
     @Override public void acceptContentTypeHeader(ContentType contentType) {
@@ -35,7 +39,16 @@ public class RequestBuilder implements ContentTypeBuilder.ContentTypeAcceptor{
 
     public Representation post() {
         return http.POST(body)
-            .withHeader("Accept", contentType.identifier())
+            .withHeader("Content-Type", contentType.identifier())
             .to(hyperlink.uri);
     }
+
+    public Representation get() {
+        return http.GET()
+            .withHeader("Accept", contentType.identifier())
+            .from(hyperlink.uri);
+    }
+
+
+
 }

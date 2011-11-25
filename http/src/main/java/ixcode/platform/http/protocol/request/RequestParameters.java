@@ -1,15 +1,19 @@
 package ixcode.platform.http.protocol.request;
 
-import ixcode.platform.collection.*;
+import ixcode.platform.collection.Action;
+import ixcode.platform.collection.FArrayList;
+import ixcode.platform.collection.FList;
 
-import javax.servlet.http.*;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static ixcode.platform.http.protocol.request.RequestParameter.ParameterSource.body;
 import static ixcode.platform.http.protocol.request.RequestParameter.ParameterSource.querystring;
 import static ixcode.platform.http.protocol.request.RequestParameter.ParameterSource.uri;
 
-public class RequestParameters  {
+public class RequestParameters {
 
     private final FList<RequestParameter> parameters = new FArrayList<RequestParameter>();
     private final Map<String, RequestParameter> parameterMap = new LinkedHashMap<String, RequestParameter>();
@@ -32,14 +36,22 @@ public class RequestParameters  {
     public static RequestParameters requestParametersFrom(HttpServletRequest httpServletRequest) {
         Set<String> parameterNames = httpServletRequest.getParameterMap().keySet();
         RequestParameters requestParameters = new RequestParameters();
-        String queryString = httpServletRequest.getQueryString();
+
+        addQueryStringParameters(httpServletRequest, parameterNames, requestParameters, httpServletRequest.getQueryString());
+
+        return requestParameters;
+    }
+
+    private static void addQueryStringParameters(HttpServletRequest httpServletRequest, Set<String> parameterNames, RequestParameters requestParameters, String queryString) {
+        if (queryString == null) {
+            return;
+        }
         for (String parameterName : parameterNames) {
             RequestParameter.ParameterSource parameterSource = (queryString.contains(parameterName)) ? querystring : body;
             requestParameters.withParameter(parameterSource,
                                             parameterName,
                                             httpServletRequest.getParameterValues(parameterName));
         }
-        return requestParameters;
     }
 
 
@@ -79,7 +91,7 @@ public class RequestParameters  {
 
     public String[] get(String key) {
         if (parameterMap.get(key) == null) {
-            return new String[] {null};
+            return new String[]{null};
         }
         return parameterMap.get(key).parameterValues;
     }

@@ -49,5 +49,23 @@ public class RequestDispatcher extends HttpServlet {
         responseBuilder.translateTo(httpServletResponse);
     }
 
+    @Override
+    protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+        Request request = requestFrom(httpServletRequest);
+        ResponseBuilder responseBuilder = new ResponseBuilder();
+
+        try {
+            ResourceInvocation invoke = resourceLookup.resourceMappedTo(request);
+            invoke.POST(request, responseBuilder, resourceHyperlinkBuilder);
+        } catch (ResourceNotFoundException e) {
+            responseBuilder
+                    .status().notFound()
+                    .contentType().json()
+                    .body(String.format("{ \"is\" : \"problem\",  \"code\" : \"%s\", \"HTTP/1.1 Status\" : \"404\", \"description\" : \"Resource not found\", \"path\" : \"%s\"}", e.getSystemErrorCode(), e.getPath()));
+        }
+
+        responseBuilder.translateTo(httpServletResponse);
+    }
+
 
 }

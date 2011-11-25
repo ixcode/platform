@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ResponseBuilder implements ContentTypeBuilder.ContentTypeAcceptor {
     private ResponseStatus responseStatus;
-    private String responseBody;
+    private String responseBody = "";
     private ContentType contentType;
     private final List<Header> headers = new ArrayList<Header>();
 

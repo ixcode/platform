@@ -20,8 +20,24 @@ public class ResourceInvocation {
     }
 
     public void GET(Request request, ResponseBuilder responseBuilder, ResourceHyperlinkBuilder resourceMap) {
+//        if (!(resource instanceof GetResource)) {
+//            throw new RuntimeException("You tried to invoke GET on a resource which is not GETable! " + resource);
+//        }
+
         Request requestWithUriParameters = requestWithUriParameters(request,
                                                                     appendUriParameters(request.parameters, uriTemplateMatch.parameters));
+
         resource.GET(requestWithUriParameters, responseBuilder, resourceMap);
+    }
+
+    public void POST(Request request, ResponseBuilder responseBuilder, ResourceHyperlinkBuilder resourceMap) {
+        if (!(resource instanceof PostResource)) {
+            throw new RuntimeException("You tried to invoke GET on a resource which is not GETable! " + resource);
+        }
+
+        Request requestWithUriParameters = requestWithUriParameters(request,
+                                                                    appendUriParameters(request.parameters, uriTemplateMatch.parameters));
+
+        ((PostResource)resource).POST(requestWithUriParameters, responseBuilder, resourceMap);
     }
 }
