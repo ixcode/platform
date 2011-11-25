@@ -44,4 +44,12 @@ public class Hyperlink {
     public int hashCode() {
         return uri != null ? uri.hashCode() : 0;
     }
+
+    public String toUriExternalForm() {
+        try {
+            return uri.toURL().toExternalForm();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Could not turn uri to string for " + uri, e);
+        }
+    }
 }

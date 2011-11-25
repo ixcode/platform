@@ -5,6 +5,7 @@ import ixcode.platform.http.protocol.request.RequestBuilder;
 import ixcode.platform.http.representation.Hyperlink;
 import ixcode.platform.http.representation.Representation;
 import ixcode.platform.http.representation.RepresentationDecoder;
+import ixcode.platform.text.format.CollectionFormat;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedWriter;
@@ -21,6 +22,7 @@ import static ixcode.platform.http.protocol.UriFactory.uri;
 import static ixcode.platform.http.protocol.response.ResponseStatusCodes.codeToStatus;
 import static ixcode.platform.io.StreamHandling.closeQuietly;
 import static ixcode.platform.io.StreamHandling.readFully;
+import static ixcode.platform.text.format.CollectionFormat.collectionToString;
 
 public class Http {
 
@@ -125,6 +127,7 @@ public class Http {
                 }
 
                 log.info("HTTP/1.1 " + responseCode + " " + urlConnection.getResponseMessage());
+                logHeaders(urlConnection.getHeaderFields());
 
                 if (log.isDebugEnabled() && (responseBody != null) && (responseBody.length() >0)) {
                     log.debug(responseBody);
@@ -138,6 +141,16 @@ public class Http {
                 throw e;
             } catch (Exception e) {
                 throw new RuntimeException(e);
+            }
+        }
+
+        private void logHeaders(Map<String, List<String>> headerFields) {
+            if (!log.isInfoEnabled()) {
+                return;
+            }
+
+            for (Map.Entry<String, List<String>> entry : headerFields.entrySet()) {
+                log.info(entry.getKey() + ": " + collectionToString(entry.getValue()));
             }
         }
 

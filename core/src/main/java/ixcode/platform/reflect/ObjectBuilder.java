@@ -37,6 +37,7 @@ public class ObjectBuilder {
         public void fromString(String propertyValue) {
             parent.addProperty(propertyName, propertyValue);
         }
+
     }
 
     private void addProperty(String propertyName, String propertyValue) {

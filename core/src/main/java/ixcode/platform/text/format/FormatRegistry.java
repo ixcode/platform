@@ -8,7 +8,13 @@ import java.util.UUID;
 
 public class FormatRegistry {
 
+    private static final Map<Class<?>, Format> USER_REGISTERED_FORMATS = new HashMap<Class<?>, Format>();
+
     private final Map<Class<?>, Format> formatMap = new HashMap<Class<?>, Format>();
+
+    public static void registerFormat(Class<?> sourceClass, Format format) {
+        USER_REGISTERED_FORMATS.put(sourceClass, format);
+    }
 
     public FormatRegistry() {
         loadStandardFormats();
@@ -22,6 +28,13 @@ public class FormatRegistry {
         addFormat(Date.class, new UtcDateFormat());
         addFormat(URI.class, new UriFormat());
         addFormat(UUID.class, new UuidFormat());
+        addUserRegisteredFormats();
+    }
+
+    private void addUserRegisteredFormats() {
+        for (Map.Entry<Class<?>, Format> entry : USER_REGISTERED_FORMATS.entrySet()) {
+            formatMap.put(entry.getKey(), entry.getValue());
+        }
     }
 
     public void addFormat(Class<?> targetClass, Format format) {

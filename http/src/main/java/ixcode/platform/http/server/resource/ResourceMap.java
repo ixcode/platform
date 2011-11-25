@@ -60,7 +60,7 @@ public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder {
             return new ResourceInvocation(matched.resource, uriTemplateMatch);
         }
 
-        throw new RuntimeException(format("Resource does not support the [%s] method", request.getMethod()));
+        throw new RuntimeException(format("Resource [%s] does not support the [%s] method", matched.resource, request.getMethod()));
     }
 
     private String removeTrailingSlashIfNotRoot(String path) {

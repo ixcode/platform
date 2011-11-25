@@ -4,6 +4,7 @@ import ixcode.platform.collection.Action;
 import ixcode.platform.collection.FArrayList;
 import ixcode.platform.collection.FList;
 
+import java.util.Collection;
 import java.util.List;
 
 public class JsonArray {
@@ -31,4 +32,7 @@ public class JsonArray {
     }
 
 
+    public boolean contains(Object object) {
+        return items.contains(object);
+    }
 }
