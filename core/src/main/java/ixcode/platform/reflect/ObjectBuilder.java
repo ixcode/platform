@@ -11,6 +11,10 @@ public class ObjectBuilder {
 
     private Map<String, String> propertyValues = new HashMap<String, String>();
 
+    public static ObjectBuilder buildA(Class<?> rootEntityClass) {
+        return new ObjectBuilder(rootEntityClass);
+    }
+
     public ObjectBuilder(Class<?> rootEntityClass) {
         this.objectReflector = reflect(rootEntityClass);
     }
@@ -37,8 +41,9 @@ public class ObjectBuilder {
             this.propertyName = propertyName;
         }
 
-        public void fromString(String propertyValue) {
+        public ObjectBuilder fromString(String propertyValue) {
             parent.addProperty(propertyName, propertyValue);
+            return parent;
         }
 
         public void asObject(Object propertyValueAsObject) {
