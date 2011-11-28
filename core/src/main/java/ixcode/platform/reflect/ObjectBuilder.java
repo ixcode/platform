@@ -23,11 +23,14 @@ public class ObjectBuilder {
         return new PropertyBuilder(this, propertyName);
     }
 
+    public Class<?> getTypeOfCollectionCalled(String propertyName) {
+        return objectReflector.typeOfCollectionProperty(propertyName);
+    }
+
     public static class PropertyBuilder {
 
         private ObjectBuilder parent;
         private String propertyName;
-        private String propertyValue;
 
         public PropertyBuilder(ObjectBuilder parent, String propertyName) {
             this.parent = parent;
@@ -37,6 +40,13 @@ public class ObjectBuilder {
         public void fromString(String propertyValue) {
             parent.addProperty(propertyName, propertyValue);
         }
+
+        public void asObject(Object propertyValueAsObject) {
+            parent.addPropertyAsObject(propertyName, propertyValueAsObject);
+        }
+    }
+
+    private void addPropertyAsObject(String propertyName, Object propertyValueAsObject) {
 
     }
 

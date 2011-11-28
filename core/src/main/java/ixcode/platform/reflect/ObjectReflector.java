@@ -1,22 +1,32 @@
 package ixcode.platform.reflect;
 
-import ixcode.platform.collection.*;
+import ixcode.platform.collection.Action;
+import ixcode.platform.collection.FArrayList;
+import ixcode.platform.collection.FList;
 import ixcode.platform.text.format.Format;
 import ixcode.platform.text.format.FormatRegistry;
 import ixcode.platform.text.format.StringToObjectParser;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
+import static java.lang.String.format;
 import static java.lang.reflect.Modifier.isTransient;
 
 public class ObjectReflector {
     public final FList<FieldReflector> nonTransientFields;
 
+
     private final Class<?> targetClass;
     private final ConstructorMatrix constructorMatrix;
     private final StringToObjectParser parser = new StringToObjectParser();
     private final FormatRegistry formatRegistry = new FormatRegistry();
+    private final Map<String, FieldReflector> fieldMap = new LinkedHashMap<String, FieldReflector>();
 
     public static ObjectReflector reflect(Class<?> targetClass) {
         return new ObjectReflector(targetClass);
@@ -25,7 +35,7 @@ public class ObjectReflector {
     private ObjectReflector(Class<?> targetClass) {
         this.targetClass = targetClass;
         this.constructorMatrix = new ConstructorMatrix(targetClass);
-        this.nonTransientFields = extractNonTransientFields(targetClass);
+        this.nonTransientFields = processFields(targetClass);
     }
 
     public <T> T invokeMostSpecificConstructorFor(Map<String, String> valueMap) {
@@ -50,15 +60,14 @@ public class ObjectReflector {
         }
     }
 
-    private FList<FieldReflector> extractNonTransientFields(Class<?> targetClass) {
-        FList<FieldReflector> fieldReflectors = new FArrayList<FieldReflector>();
-        for (Field field : targetClass.getDeclaredFields()) {
-            if (!isTransient(field.getModifiers())) {
-                fieldReflectors.add(new FieldReflector(field));
-            }
+    public Class<?> typeOfCollectionProperty(String propertyName) {
+        FieldReflector fieldReflector = fieldMap.get(propertyName);
+        if (fieldReflector.isCollection()) {
+            return (Class<?>) fieldReflector.genericTypeArguments()[0];
         }
-        return fieldReflectors;
+        throw new RuntimeException(format("Oh dear, the field [%s] is not a collection it's a [%s]", fieldReflector.type));
     }
+
 
     public Map<String, String> propertyValuesOf(final Object anInstance) {
         final Map<String, String> propertyValues = new LinkedHashMap<String, String>();
@@ -81,5 +90,19 @@ public class ObjectReflector {
 
     public Format findFormatFor(Class<? extends Object> aClass) {
         return formatRegistry.findFormatFor(aClass);
+    }
+
+    private FList<FieldReflector> processFields(Class<?> targetClass) {
+        FList<FieldReflector> nonTransientFields = new FArrayList<FieldReflector>();
+        for (Field field : targetClass.getDeclaredFields()) {
+            FieldReflector fieldReflector = new FieldReflector(field);
+            fieldMap.put(field.getName(), fieldReflector);
+
+            if (!isTransient(field.getModifiers())) {
+
+                nonTransientFields.add(fieldReflector);
+            }
+        }
+        return nonTransientFields;
     }
 }

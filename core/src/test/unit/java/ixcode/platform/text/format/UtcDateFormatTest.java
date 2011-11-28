@@ -33,17 +33,17 @@ public class UtcDateFormatTest {
 
         String result = new UtcDateFormat().format(someDate);
 
-        assertThat(result, is("2011-01-23T01:00:45+0000"));
+        assertThat(result, is("2011-01-23T01:00:45Z"));
     }
 
     @Test
     public void parses_back_into_appropriate_timezone() {
-        Date parsedDate = new UtcDateFormat().parseString("2011-01-23T06:30:36+0530");
+        Date parsedDate = new UtcDateFormat().parseString("2011-01-23T06:30:36Z");
 
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss Z z");
 
         String result = simpleDateFormat.format(parsedDate);
-        assertThat(result, is("2011-01-23 01:00:36 +0000 UTC"));
+        assertThat(result, is("2011-01-23 06:30:36 +0000 UTC"));
     }
 }

@@ -2,6 +2,7 @@ package ixcode.platform.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
+import java.util.Collection;
 
 import static java.lang.String.format;
 
@@ -28,5 +29,13 @@ public class FieldReflector {
 
     public boolean hasAnnotation(Class<? extends Annotation> annotationClass) {
         return this.field.isAnnotationPresent(annotationClass);
+    }
+
+    public Type[] genericTypeArguments() {
+        return ((ParameterizedType) field.getGenericType()).getActualTypeArguments();
+    }
+
+    public boolean isCollection() {
+        return Collection.class.isAssignableFrom(type);
     }
 }
