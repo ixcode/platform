@@ -28,11 +28,15 @@ public class ObjectBuilder {
     }
 
     public Class<?> getTypeOfCollectionCalled(String propertyName) {
-        return objectReflector.typeOfCollectionProperty(propertyName);
+        return objectReflector.typeOfCollectionField(propertyName);
     }
 
     private void addProperty(String propertyName, Object propertyValue) {
         propertyValues.put(propertyName, propertyValue);
+    }
+
+    public boolean hasProperty(String propertyName) {
+        return objectReflector.hasField(propertyName);
     }
 
     public static class PropertyBuilder {

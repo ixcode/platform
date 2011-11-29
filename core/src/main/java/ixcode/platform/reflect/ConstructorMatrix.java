@@ -13,8 +13,10 @@ public class ConstructorMatrix {
     private static Paranamer paranamer = new AdaptiveParanamer();
 
     private Map<ParameterSet, Constructor> matrix = new HashMap<ParameterSet, Constructor>();
+    private final Class<?> targetClass;
 
     public ConstructorMatrix(Class<?> targetClass) {
+        this.targetClass = targetClass;
         for (Constructor constructor : targetClass.getDeclaredConstructors()) {
             matrix.put(parametersFrom(constructor), constructor);
         }
@@ -38,7 +40,7 @@ public class ConstructorMatrix {
         }
 
         if (mostSpecificParameterSet == null) {
-            throw new NoConstructorMatchedException(parameterNames);
+            throw new NoConstructorMatchedException(targetClass, parameterNames);
         }
 
         return mostSpecificParameterSet;

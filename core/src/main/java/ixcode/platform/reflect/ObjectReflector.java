@@ -62,27 +62,33 @@ public class ObjectReflector {
                 : source;
     }
 
-    public Class<?> typeOfCollectionProperty(String propertyName) {
-        FieldReflector fieldReflector = fieldMap.get(propertyName);
+    public Class<?> typeOfCollectionField(String fieldName) {
+        if (!fieldMap.containsKey(fieldName)) {
+            throw new RuntimeException("No field called " + fieldName);
+        }
+        FieldReflector fieldReflector = fieldMap.get(fieldName);
         if (fieldReflector.isCollection()) {
             return (Class<?>) fieldReflector.genericTypeArguments()[0];
         }
         throw new RuntimeException(format("Oh dear, the field [%s] is not a collection it's a [%s]", fieldReflector.type));
     }
 
+    public boolean hasField(String propertyName) {
+        return fieldMap.containsKey(propertyName);
+    }
 
-    public Map<String, String> propertyValuesOf(final Object anInstance) {
-        final Map<String, String> propertyValues = new LinkedHashMap<String, String>();
+    public Map<String, String> fieldValuesOf(final Object anInstance) {
+        final Map<String, String> fieldValues = new LinkedHashMap<String, String>();
         nonTransientFields.apply(new Action<FieldReflector>() {
             @Override public void to(FieldReflector item, Collection<FieldReflector> tail) {
                 Object value = item.valueFrom(anInstance);
                 if (value != null) {
                     Format format = formatRegistry.findFormatFor(value.getClass());
-                    propertyValues.put(item.name, format.format(value));
+                    fieldValues.put(item.name, format.format(value));
                 }
             }
         });
-        return propertyValues;
+        return fieldValues;
     }
 
     public void withEachNonTransientField(Action<FieldReflector> action) {
@@ -93,6 +99,8 @@ public class ObjectReflector {
     public Format findFormatFor(Class<? extends Object> aClass) {
         return formatRegistry.findFormatFor(aClass);
     }
+
+
 
     private FList<FieldReflector> processFields(Class<?> targetClass) {
         FList<FieldReflector> nonTransientFields = new FArrayList<FieldReflector>();
@@ -107,4 +115,6 @@ public class ObjectReflector {
         }
         return nonTransientFields;
     }
+
+
 }

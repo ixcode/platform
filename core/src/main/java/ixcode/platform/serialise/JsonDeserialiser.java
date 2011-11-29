@@ -45,6 +45,9 @@ public class JsonDeserialiser {
 
 
     private void populateJsonArray(ObjectBuilder objectBuilder, String propertyName, JsonArray jsonArray) {
+        if(!objectBuilder.hasProperty(propertyName)) {
+            return;
+        }
         final Class<?> typeOfChildren = objectBuilder.getTypeOfCollectionCalled(propertyName);
 
         final List<Object> transformedObjects = new ArrayList<Object>();
@@ -61,7 +64,6 @@ public class JsonDeserialiser {
         });
 
         objectBuilder.setProperty(propertyName).asObject(transformedObjects);
-
     }
 
 

@@ -1,11 +1,7 @@
 package ixcode.platform.reflect;
 
-import ixcode.platform.collection.Action;
 import org.junit.Test;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.Collection;
 import java.util.List;
 
 import static ixcode.platform.reflect.ObjectReflector.reflect;
@@ -18,7 +14,7 @@ public class ObjectReflectorTest {
     public void can_determine_the_type_of_a_collection() {
         ObjectReflector reflector = reflect(SomethingWithACollectionProperty.class);
 
-        Class<?> type = reflector.typeOfCollectionProperty("someList");
+        Class<?> type = reflector.typeOfCollectionField("someList");
 
         assertThat(type.getName(), is("java.lang.String"));
 
