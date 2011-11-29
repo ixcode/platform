@@ -13,7 +13,7 @@ import static java.lang.String.format;
 
 public class ParameterSet {
     public final Constructor constructor;
-    public final List<ParameterDefinition> parameterDefinitions = new ArrayList<ParameterDefinition>();
+    public final List<Parameter> parameters = new ArrayList<Parameter>();
     public final Set<String> parameterNameSet = new HashSet<String>();
 
     public ParameterSet(Constructor constructor, Paranamer paranamer) {
@@ -55,7 +55,7 @@ public class ParameterSet {
     }
 
     void add(String name, Class<?> type) {
-        parameterDefinitions.add(new ParameterDefinition(name, type));
+        parameters.add(new Parameter(name, type));
         parameterNameSet.add(name);
     }
 
@@ -64,14 +64,14 @@ public class ParameterSet {
     }
 
     public int numberOfParameters() {
-        return parameterDefinitions.size();
+        return parameters.size();
     }
 
-    public static class ParameterDefinition {
+    public static class Parameter {
         public final String name;
         public final Class<?> type;
 
-        private ParameterDefinition(String name, Class<?> type) {
+        private Parameter(String name, Class<?> type) {
             this.name = name;
             this.type = type;
         }

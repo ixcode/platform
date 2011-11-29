@@ -9,7 +9,7 @@ public class ObjectBuilder {
     private final ObjectReflector objectReflector;
 
 
-    private Map<String, String> propertyValues = new HashMap<String, String>();
+    private Map<String, Object> propertyValues = new HashMap<String, Object>();
 
     public static ObjectBuilder buildA(Class<?> rootEntityClass) {
         return new ObjectBuilder(rootEntityClass);
@@ -31,6 +31,10 @@ public class ObjectBuilder {
         return objectReflector.typeOfCollectionProperty(propertyName);
     }
 
+    private void addProperty(String propertyName, Object propertyValue) {
+        propertyValues.put(propertyName, propertyValue);
+    }
+
     public static class PropertyBuilder {
 
         private ObjectBuilder parent;
@@ -46,16 +50,10 @@ public class ObjectBuilder {
             return parent;
         }
 
-        public void asObject(Object propertyValueAsObject) {
-            parent.addPropertyAsObject(propertyName, propertyValueAsObject);
+        public ObjectBuilder asObject(Object propertyValueAsObject) {
+            parent.addProperty(propertyName, propertyValueAsObject);
+            return parent;
         }
     }
 
-    private void addPropertyAsObject(String propertyName, Object propertyValueAsObject) {
-
-    }
-
-    private void addProperty(String propertyName, String propertyValue) {
-        propertyValues.put(propertyName, propertyValue);
-    }
 }

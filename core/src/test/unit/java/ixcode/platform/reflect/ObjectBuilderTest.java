@@ -4,10 +4,13 @@ import ixcode.platform.text.format.UtcDateFormat;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.List;
 
 import static ixcode.platform.reflect.ObjectBuilder.buildA;
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 
 public class ObjectBuilderTest {
 
@@ -19,12 +22,14 @@ public class ObjectBuilderTest {
                 .setProperty("someInteger").fromString("2334")
                 .setProperty("aString").fromString("foobar")
                 .setProperty("anotherString").fromString("barfoo")
+                .setProperty("aList").asObject(asList("a", "b", "c", "d"))
                 .build();
 
         assertThat(new UtcDateFormat().format(output.theDate), is("2011-01-23T06:30:36Z"));
         assertThat(output.someInteger, is(2334));
         assertThat(output.aString, is("foobar"));
         assertThat(output.anotherString, is("barfoo"));
+        assertThat(output.aList, contains("a", "b", "c", "d"));
     }
 
     public static class DateKindOfObject {
@@ -32,12 +37,19 @@ public class ObjectBuilderTest {
         public final Integer someInteger;
         public final String aString;
         public final String anotherString;
+        public final List<String> aList;
 
-        private DateKindOfObject(Date theDate, Integer someInteger, String aString, String anotherString) {
+        private DateKindOfObject(Date theDate,
+                                 Integer someInteger,
+                                 String aString,
+                                 String anotherString,
+                                 List<String> aList) {
+
             this.theDate = theDate;
             this.someInteger = someInteger;
             this.aString = aString;
             this.anotherString = anotherString;
+            this.aList = aList;
         }
     }
 }

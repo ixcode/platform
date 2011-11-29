@@ -2,7 +2,7 @@ package ixcode.platform.text.format;
 
 
 public class StringToObjectParser {
-    public Parser parse(String value) {
+    public Parser fromString(String value) {
         return new Parser(value);
     }
 

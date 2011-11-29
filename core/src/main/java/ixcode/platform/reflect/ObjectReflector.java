@@ -24,7 +24,7 @@ public class ObjectReflector {
 
     private final Class<?> targetClass;
     private final ConstructorMatrix constructorMatrix;
-    private final StringToObjectParser parser = new StringToObjectParser();
+    private final StringToObjectParser parse = new StringToObjectParser();
     private final FormatRegistry formatRegistry = new FormatRegistry();
     private final Map<String, FieldReflector> fieldMap = new LinkedHashMap<String, FieldReflector>();
 
@@ -38,26 +38,28 @@ public class ObjectReflector {
         this.nonTransientFields = processFields(targetClass);
     }
 
-    public <T> T invokeMostSpecificConstructorFor(Map<String, String> valueMap) {
+    public <T> T invokeMostSpecificConstructorFor(Map<String, Object> valueMap) {
         ParameterSet parameterSet = constructorMatrix.findMostSpecificMatchTo(valueMap.keySet());
 
         List<Object> values = new ArrayList<Object>();
 
-        for (ParameterSet.ParameterDefinition definition : parameterSet.parameterDefinitions) {
-            Object value = parser.parse(valueMap.get(definition.name)).as(definition.type);
-            values.add(value);
+        for (ParameterSet.Parameter parameter : parameterSet.parameters) {
+            values.add(parseObject(valueMap, parameter));
         }
 
         try {
             parameterSet.constructor.setAccessible(true);
             return (T) parameterSet.constructor.newInstance(values.toArray(new Object[0]));
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not invoke most specific constructor (See Cause)", e);
         }
+    }
+
+    private Object parseObject(Map<String, Object> valueMap, ParameterSet.Parameter definition) {
+        Object source = valueMap.get(definition.name);
+        return (source instanceof String)
+                ? parse.fromString((String)source).as(definition.type)
+                : source;
     }
 
     public Class<?> typeOfCollectionProperty(String propertyName) {
