@@ -36,6 +36,13 @@ public class KindToClassMap {
         public void registerMapping(String kind, Class<?> targetClass) {
             map.put(kind, targetClass);
         }
+
+        public KindToClassMapBuilder merge(KindToClassMap kindToClassMap) {
+            for (Map.Entry<String, Class<?>> entry : kindToClassMap.map.entrySet()) {
+                map.put(entry.getKey(), entry.getValue());
+            }
+            return this;
+        }
     }
 
     public static class KindToClassEntryBuilder {

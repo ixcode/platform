@@ -6,6 +6,7 @@ import ixcode.platform.json.JsonObject;
 import ixcode.platform.json.JsonPair;
 import ixcode.platform.json.JsonParser;
 import ixcode.platform.reflect.ObjectBuilder;
+import ixcode.platform.text.format.FormatRegistry;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,6 +18,7 @@ public class JsonDeserialiser {
 
 
     private KindToClassMap kindToClassMap;
+    private final FormatRegistry formatRegistry = new FormatRegistry();
 
     public JsonDeserialiser(KindToClassMap kindToClassMap) {
         this.kindToClassMap = kindToClassMap;
@@ -34,8 +36,10 @@ public class JsonDeserialiser {
     protected void parseValue(ObjectBuilder objectBuilder, String key, Object value) {
         if (value instanceof String) {
             populateProperty(objectBuilder, key, (String) value);
-        } if (value instanceof JsonArray) {
+        } else if (value instanceof JsonArray) {
             populateJsonArray(objectBuilder, key, (JsonArray) value);
+        } else if (value instanceof JsonObject) {
+           objectBuilder.setProperty(key).asObject(parseJsonObject((JsonObject)value, kindToClassMap.classFor(key)));
         }
     }
 
@@ -56,8 +60,10 @@ public class JsonDeserialiser {
 
                 if (item instanceof JsonObject) {
                     transformedObjects.add(parseJsonObject((JsonObject) item, typeOfChildren));
+                } else if (item instanceof String) {
+                    transformedObjects.add(formatRegistry.findFormatFor(typeOfChildren).parseString((String)item));
                 } else {
-                    throw new RuntimeException(format("Ah, can't work out what to do with a [%s]", item.getClass()));
+                    throw new RuntimeException("Ah, don't know how to parse object: " + item);
                 }
 
             }
