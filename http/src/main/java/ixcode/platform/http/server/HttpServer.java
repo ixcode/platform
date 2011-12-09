@@ -72,7 +72,7 @@ public class HttpServer {
             server = new Server(httpPort);
             server.setHandler(handlers());
             server.start();
-            new SystemProcess().writeProcessIdToFile(".webserver.pid");
+            new SystemProcess().writeProcessIdToFile(format(".webserver.%s.pid", serverName));
             LOG.info(format("Http Server Started. Serving using the dispatcher [%s], static content is from [%s]", rootServlet.getClass().getName(), new File(webrootDir).getCanonicalPath()));
             server.join();
         } catch (Exception e) {

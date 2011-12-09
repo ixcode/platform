@@ -12,7 +12,7 @@ public class PaginatedListHypermedia extends HypermediaRepresentationBuilder<Pag
     private Hyperlink previous;
     private Hyperlink next;
 
-    private List<Object> items = new ArrayList<Object>();
+    private List<Object> list = new ArrayList<Object>();
 
     public static PaginatedListHypermedia paginatedListHypermedia() {
         return new PaginatedListHypermedia();
@@ -28,7 +28,7 @@ public class PaginatedListHypermedia extends HypermediaRepresentationBuilder<Pag
     }
 
     public PaginatedListHypermedia withFullList(List<?> items) {
-        this.items.addAll(items);
+        this.list.addAll(items);
         return this;
     }
 
@@ -46,7 +46,7 @@ public class PaginatedListHypermedia extends HypermediaRepresentationBuilder<Pag
 
     public PaginatedListHypermedia withPage(List<Hyperlink> pageOfUsers) {
         this.pageSize = pageOfUsers.size();
-        this.items.addAll(pageOfUsers);
+        this.list.addAll(pageOfUsers);
         return this;
     }
 

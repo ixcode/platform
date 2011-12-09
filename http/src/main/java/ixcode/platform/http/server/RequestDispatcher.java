@@ -8,6 +8,7 @@ import ixcode.platform.http.server.resource.ResourceInvocation;
 import ixcode.platform.http.server.resource.ResourceLookup;
 import ixcode.platform.http.server.resource.ResourceMap;
 import ixcode.platform.http.server.resource.ResourceNotFoundException;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +19,8 @@ import java.io.IOException;
 import static ixcode.platform.http.protocol.request.Request.requestFrom;
 
 public class RequestDispatcher extends HttpServlet {
+
+    private static final Logger log = Logger.getLogger(RequestDispatcher.class);
 
     private final ResourceLookup resourceLookup;
     private final ResourceHyperlinkBuilder resourceHyperlinkBuilder;
@@ -40,6 +43,7 @@ public class RequestDispatcher extends HttpServlet {
             ResourceInvocation invoke = resourceLookup.resourceMappedTo(request);
             invoke.GET(request, responseBuilder, resourceHyperlinkBuilder);
         } catch (ResourceNotFoundException e) {
+            log.info(e.getMessage());
             responseBuilder
                     .status().notFound()
                     .contentType().json()
@@ -58,6 +62,7 @@ public class RequestDispatcher extends HttpServlet {
             ResourceInvocation invoke = resourceLookup.resourceMappedTo(request);
             invoke.POST(request, responseBuilder, resourceHyperlinkBuilder);
         } catch (ResourceNotFoundException e) {
+            log.info(e.getMessage());
             responseBuilder
                     .status().notFound()
                     .contentType().json()

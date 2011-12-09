@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static java.lang.String.format;
-
 public class JsonDeserialiser {
 
 
@@ -39,7 +37,11 @@ public class JsonDeserialiser {
         } else if (value instanceof JsonArray) {
             populateJsonArray(objectBuilder, key, (JsonArray) value);
         } else if (value instanceof JsonObject) {
-           objectBuilder.setProperty(key).asObject(parseJsonObject((JsonObject)value, kindToClassMap.classFor(key)));
+            if (kindToClassMap.canMap(key)) {
+                objectBuilder.setProperty(key).asObject(parseJsonObject((JsonObject) value, kindToClassMap.classFor(key)));
+            }
+        } else {
+            objectBuilder.setProperty(key).asObject(value);
         }
     }
 
@@ -49,7 +51,7 @@ public class JsonDeserialiser {
 
 
     private void populateJsonArray(ObjectBuilder objectBuilder, String propertyName, JsonArray jsonArray) {
-        if(!objectBuilder.hasProperty(propertyName)) {
+        if (!objectBuilder.hasProperty(propertyName)) {
             return;
         }
         final Class<?> typeOfChildren = objectBuilder.getTypeOfCollectionCalled(propertyName);
@@ -61,7 +63,7 @@ public class JsonDeserialiser {
                 if (item instanceof JsonObject) {
                     transformedObjects.add(parseJsonObject((JsonObject) item, typeOfChildren));
                 } else if (item instanceof String) {
-                    transformedObjects.add(formatRegistry.findFormatFor(typeOfChildren).parseString((String)item));
+                    transformedObjects.add(formatRegistry.findFormatFor(typeOfChildren).parseString((String) item));
                 } else {
                     throw new RuntimeException("Ah, don't know how to parse object: " + item);
                 }
@@ -93,7 +95,7 @@ public class JsonDeserialiser {
         if (value instanceof String) {
             return (String) value;
         }
-        return jsonObject.<List<String>>valueOf("is").get(0);
+        return jsonObject.<JsonArray>valueOf("is").get(0);
     }
 
 

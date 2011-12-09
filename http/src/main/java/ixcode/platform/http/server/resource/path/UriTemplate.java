@@ -33,16 +33,28 @@ public class UriTemplate {
 
     public static UriTemplate uriTemplateFrom(String uriRoot, String path) {
 
-        List<String> parameterNames = new ArrayList<String>();
+        String pathWithWildcardsSubstituted = substituteWildcards(path);
 
-        Pattern parameterPattern = Pattern.compile("\\{\\w*\\}");
+        List<String> parameterNames = new ArrayList<String>();
+        String pathWithParametersSubstituted = substituteParameters(pathWithWildcardsSubstituted, parameterNames);
+
+        return new UriTemplate(uriRoot, path, compile(pathWithParametersSubstituted), parameterNames);
+    }
+
+    private static String substituteWildcards(String path) {
+        if (path.endsWith("**")) {
+            return path.replaceAll("\\*\\*", "(.*)");
+        }
+        return path;
+    }
+
+    private static String substituteParameters(String path, List<String> parameterNames) {Pattern parameterPattern = Pattern.compile("\\{\\w*\\}");
         Matcher matcher = parameterPattern.matcher(path);
         while (matcher.find()) {
             parameterNames.add(removeCurlyBraces(matcher.group()));
         }
 
-        String pathWithParametersSubstituted = matcher.replaceAll("([^./]*)");
-        return new UriTemplate(uriRoot, path, compile(pathWithParametersSubstituted), parameterNames);
+        return matcher.replaceAll("([^./]*)");
     }
 
     private UriTemplate(String uriRoot, String path, Pattern regexPattern, List<String> parameterNames) {
@@ -117,7 +129,8 @@ public class UriTemplate {
             parameters.put(parameterNames.get(i), matcher.group(i + 1));
         }
         int matchLevel = (path.split("/").length - 1) - parameters.size();
-        return new UriTemplateMatch(matchLevel, parameters);
+        String subpath = matcher.groupCount() == parameterNames.size() + 1 ? matcher.group(parameterNames.size()+1) : "";
+        return new UriTemplateMatch(matchLevel, parameters, subpath);
     }
 
     private static String removeCurlyBraces(String parameter) {

@@ -52,4 +52,6 @@ public class Hyperlink {
             throw new RuntimeException("Could not turn uri to string for " + uri, e);
         }
     }
+
+
 }

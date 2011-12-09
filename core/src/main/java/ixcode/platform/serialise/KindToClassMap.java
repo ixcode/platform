@@ -13,11 +13,18 @@ public class KindToClassMap {
     }
 
     public Class<?> classFor(String kind) {
+        if (!map.containsKey(kind)) {
+            throw new RuntimeException("Could not map kind [" + kind + "] to a class");
+        }
         return map.get(kind);
     }
 
     private KindToClassMap(Map<String, Class<?>> map) {
         this.map = map;
+    }
+
+    public boolean canMap(String kind) {
+        return this.map.containsKey(kind);
     }
 
 

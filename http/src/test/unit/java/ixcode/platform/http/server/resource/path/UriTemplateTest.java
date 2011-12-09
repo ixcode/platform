@@ -57,4 +57,25 @@ public class UriTemplateTest {
 
         assertThat(match.parameters.get("userId"), is("PARAM_VALUE"));
     }
+
+    @Test
+    public void matches_willdcards_with_parameters() {
+        UriTemplate uriTemplate = uriTemplateFrom(null, "/some/{parameter}/**");
+
+        UriTemplateMatch match = uriTemplate.match("/some/foobar/subpath/andanother");
+
+        assertThat(match.level, is(3));
+        assertThat(match.parameters.get("parameter"), is("foobar"));
+        assertThat(match.subpath, is("subpath/andanother"));
+    }
+
+    @Test
+    public void matches_willdcards_without_parameters() {
+        UriTemplate uriTemplate = uriTemplateFrom(null, "/some/foobar/**");
+
+        UriTemplateMatch match = uriTemplate.match("/some/foobar/subpath/andanother");
+
+        assertThat(match.level, is(4));
+        assertThat(match.subpath, is("subpath/andanother"));
+    }
 }
