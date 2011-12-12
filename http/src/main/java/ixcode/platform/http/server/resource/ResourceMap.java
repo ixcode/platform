@@ -115,9 +115,22 @@ public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder {
             return parent;
         }
 
-        public EntryBuilder toA(Class<? extends Resource> resourceClass) {
-            toA((Resource) parent.injectionContext.getA(resourceClass));
-            return this;
+        public ResourceMap toThe(Class<? extends Resource> resourceClass) {
+            parent.registerMapping(parent.uriRoot, path, parent.injectionContext.getA(resourceClass), httpMethodsFrom(resourceClass));
+            return parent;
+        }
+
+        private HttpMethod[] httpMethodsFrom(Class<? extends Resource> resourceClass) {
+            List<HttpMethod> httpMethods = new ArrayList<HttpMethod>();
+
+            if (GetResource.class.isAssignableFrom(resourceClass)) {
+                httpMethods.add(HttpMethod.GET);
+            }
+            if (PostResource.class.isAssignableFrom(resourceClass)) {
+                httpMethods.add(HttpMethod.POST);
+            }
+
+            return httpMethods.toArray(new HttpMethod[0]);
         }
     }
 

@@ -1,11 +1,8 @@
 package ixcode.platform.http.server.resource;
 
 import ixcode.platform.http.protocol.request.Request;
-import ixcode.platform.http.protocol.request.RequestParameters;
 import ixcode.platform.http.protocol.response.ResponseBuilder;
 import ixcode.platform.http.server.resource.path.UriTemplateMatch;
-
-import java.util.Map;
 
 import static ixcode.platform.http.protocol.request.Request.requestWithUriParameters;
 import static ixcode.platform.http.protocol.request.RequestParameters.appendUriParameters;
@@ -20,12 +17,9 @@ public class ResourceInvocation {
     }
 
     public void GET(Request request, ResponseBuilder responseBuilder, ResourceHyperlinkBuilder resourceMap) {
-//        if (!(resource instanceof GetResource)) {
-//            throw new RuntimeException("You tried to invoke GET on a resource which is not GETable! " + resource);
-//        }
-
         Request requestWithUriParameters = requestWithUriParameters(request,
-                                                                    appendUriParameters(request.parameters, uriTemplateMatch.parameters));
+                                                                    appendUriParameters(request.parameters, uriTemplateMatch.parameters),
+                                                                    uriTemplateMatch.subpath);
 
         resource.GET(requestWithUriParameters, responseBuilder, resourceMap);
     }
@@ -36,7 +30,7 @@ public class ResourceInvocation {
         }
 
         Request requestWithUriParameters = requestWithUriParameters(request,
-                                                                    appendUriParameters(request.parameters, uriTemplateMatch.parameters));
+                                                                    appendUriParameters(request.parameters, uriTemplateMatch.parameters), uriTemplateMatch.subpath);
 
         ((PostResource)resource).POST(requestWithUriParameters, responseBuilder, resourceMap);
     }

@@ -7,22 +7,25 @@ import static ixcode.platform.http.protocol.request.RequestParameters.requestPar
 import static ixcode.platform.io.StreamHandling.readFully;
 
 public class Request {
-    public final RequestParameters parameters;
     private transient HttpServletRequest httpServletRequest;
+
+    public final RequestParameters parameters;
+    public final String subpath;
     public final String body;
 
     public static Request requestFrom(HttpServletRequest httpServletRequest) {
-        return new Request(requestParametersFrom(httpServletRequest), bodyFrom(httpServletRequest), httpServletRequest);
+        return new Request(requestParametersFrom(httpServletRequest), bodyFrom(httpServletRequest), httpServletRequest, "");
     }
 
-    public static Request requestWithUriParameters(Request request, RequestParameters includingUri) {
-        return new Request(includingUri, request.body, request.httpServletRequest);
+    public static Request requestWithUriParameters(Request request, RequestParameters includingUri, String subpath) {
+        return new Request(includingUri, request.body, request.httpServletRequest, subpath);
     }
 
-    private Request(RequestParameters parameters, String body, HttpServletRequest httpServletRequest) {
+    private Request(RequestParameters parameters, String body, HttpServletRequest httpServletRequest, String subpath) {
         this.parameters = parameters;
         this.body = body;
         this.httpServletRequest = httpServletRequest;
+        this.subpath = subpath;
     }
 
     private static String bodyFrom(HttpServletRequest httpServletRequest) {

@@ -19,6 +19,7 @@ import static ixcode.platform.collection.CollectionPrinter.printCollection;
 import static ixcode.platform.http.protocol.UriFactory.uri;
 import static ixcode.platform.http.representation.Hyperlink.hyperlinkTo;
 import static ixcode.platform.http.server.resource.path.UriTemplateMatch.noMatch;
+import static ixcode.platform.http.server.resource.path.WeightCalculator.weightOf;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.compile;
 
@@ -48,7 +49,8 @@ public class UriTemplate {
         return path;
     }
 
-    private static String substituteParameters(String path, List<String> parameterNames) {Pattern parameterPattern = Pattern.compile("\\{\\w*\\}");
+    private static String substituteParameters(String path, List<String> parameterNames) {
+        Pattern parameterPattern = Pattern.compile("\\{\\w*\\}");
         Matcher matcher = parameterPattern.matcher(path);
         while (matcher.find()) {
             parameterNames.add(removeCurlyBraces(matcher.group()));
@@ -128,10 +130,25 @@ public class UriTemplate {
         for (int i = 0; i < parameterNames.size(); ++i) {
             parameters.put(parameterNames.get(i), matcher.group(i + 1));
         }
-        int matchLevel = (path.split("/").length - 1) - parameters.size();
-        String subpath = matcher.groupCount() == parameterNames.size() + 1 ? matcher.group(parameterNames.size()+1) : "";
+
+        String subpath = (matcher.groupCount() == parameterNames.size() + 1)
+                ? matcher.group(parameterNames.size() + 1)
+                : "";
+
+        String matchedPath = path.substring(0, path.length() - subpath.length());
+
+        int pathLevelMatched = (matchedPath.split("/").length - 1) - parameters.size();
+
+        int matchLevel = weightOf()
+                .matches(pathLevelMatched)
+                .params(parameters.size())
+                .hasWildcard(!subpath.isEmpty())
+                .calculate();
+
+
         return new UriTemplateMatch(matchLevel, parameters, subpath);
     }
+
 
     private static String removeCurlyBraces(String parameter) {
         return parameter.replaceAll("[\\{\\}]", "");
