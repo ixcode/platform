@@ -44,7 +44,7 @@ public class UriTemplate {
 
     private static String substituteWildcards(String path) {
         if (path.endsWith("**")) {
-            return path.replaceAll("\\*\\*", "(.*)");
+            return path.replaceAll("/\\*\\*", "(.*)?");
         }
         return path;
     }
@@ -132,7 +132,7 @@ public class UriTemplate {
         }
 
         String subpath = (matcher.groupCount() == parameterNames.size() + 1)
-                ? matcher.group(parameterNames.size() + 1)
+                ? removeLeadingSlashFrom(matcher.group(parameterNames.size() + 1))
                 : "";
 
         String matchedPath = path.substring(0, path.length() - subpath.length());
@@ -149,10 +149,21 @@ public class UriTemplate {
         return new UriTemplateMatch(matchLevel, parameters, subpath);
     }
 
+    private String removeLeadingSlashFrom(String group) {
+        if (group.startsWith("/")) {
+            return group.substring(1);
+        } else {
+            return group;
+        }
+    }
+
 
     private static String removeCurlyBraces(String parameter) {
         return parameter.replaceAll("[\\{\\}]", "");
     }
 
+    public String toString() {
+        return this.path.toString();
+    }
 
 }

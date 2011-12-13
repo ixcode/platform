@@ -12,6 +12,7 @@ import java.util.List;
 
 import static ixcode.platform.http.server.resource.path.UriTemplate.uriTemplateFrom;
 import static java.lang.String.format;
+import static java.util.Collections.sort;
 
 public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder {
 
@@ -36,31 +37,41 @@ public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder {
     public ResourceInvocation resourceMappedTo(Request request) {
         String path = removeTrailingSlashIfNotRoot(request.getPath());
 
-        int[] closestMatch = {0, 0};
-        ResourceMapping matched = null;
-        UriTemplateMatch uriTemplateMatch = null;
+        List<MatchRanking> rankings = new ArrayList<MatchRanking>();
         for (ResourceMapping resourceMapping : resourceMappings) {
             UriTemplateMatch match = resourceMapping.match(path);
             if (match.level > 0) {
-                if (match.level == closestMatch[0]
-                        && match.parameters.size() == closestMatch[1])
-                    throw new MultipleResourceMatchedException(path, matched.resource, resourceMapping.resource);
-            }
-            if (match.level > closestMatch[0]) {
-                matched = resourceMapping;
-                uriTemplateMatch = match;
+                rankings.add(new MatchRanking(match, resourceMapping));
             }
         }
 
-        if (matched == null) {
+
+        if (rankings.isEmpty()) {
             throw new ResourceNotFoundException(path);
         }
+
+        sort(rankings);
+
+        MatchRanking bestMatchRanking = rankings.get(0);
+
+        checkForDuplicateMatch(path, rankings, bestMatchRanking);
+
+        ResourceMapping matched = bestMatchRanking.resourceMapping;
+        UriTemplateMatch uriTemplateMatch = bestMatchRanking.uriTemplateMatch;
+
 
         if (matched.allowsHttpMethod(request.getMethod())) {
             return new ResourceInvocation(matched.resource, uriTemplateMatch);
         }
 
         throw new RuntimeException(format("Resource [%s] does not support the [%s] method", matched.resource, request.getMethod()));
+    }
+
+    private void checkForDuplicateMatch(String path, List<MatchRanking> rankings, MatchRanking bestMatchRanking) {
+        if (rankings.size() > 1
+                && (bestMatchRanking.level == rankings.get(1).level)) {
+            throw new MultipleResourceMatchedException(path, bestMatchRanking.resourceMapping.resource, rankings.get(rankings.size() - 2).resourceMapping);
+        }
     }
 
     private String removeTrailingSlashIfNotRoot(String path) {
@@ -135,4 +146,23 @@ public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder {
     }
 
 
+    private class MatchRanking implements Comparable<MatchRanking> {
+        public final int level;
+        private final UriTemplateMatch uriTemplateMatch;
+        public final ResourceMapping resourceMapping;
+
+        private final Integer comparableValue;
+
+
+        private MatchRanking(UriTemplateMatch uriTemplateMatch, ResourceMapping resourceMapping) {
+            this.uriTemplateMatch = uriTemplateMatch;
+            this.level = uriTemplateMatch.level;
+            this.resourceMapping = resourceMapping;
+            this.comparableValue = new Integer(this.level);
+        }
+
+        @Override public int compareTo(MatchRanking o) {
+            return o.comparableValue.compareTo(comparableValue);
+        }
+    }
 }

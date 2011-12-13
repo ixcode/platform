@@ -76,6 +76,16 @@ public class UriTemplateTest {
     }
 
     @Test
+    public void matches_wildcards_with_only_parameters() {
+        UriTemplate uriTemplate = uriTemplateFrom(null, "/{param1}/{param2}/**");
+
+        UriTemplateMatch match = uriTemplate.match("/some/foobar");
+
+        assertThat(match.level, is(weightOf().params(2).calculate()));
+        assertThat(match.subpath, is(""));
+    }
+
+    @Test
     public void matches_only_parameters_and_wildcards() {
         UriTemplate uriTemplate = uriTemplateFrom(null, "/{parameter}/**");
 

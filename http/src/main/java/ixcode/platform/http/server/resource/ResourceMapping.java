@@ -33,4 +33,8 @@ class ResourceMapping {
     public boolean isTo(Class<?> resourceClass) {
         return resource.getClass().equals(resourceClass);
     }
+
+    public String toString() {
+        return uriTemplate.toString() + " => " + resource.getClass().getSimpleName();
+    }
 }

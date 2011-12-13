@@ -24,4 +24,8 @@ public class UriTemplateMatch {
     public static UriTemplateMatch noMatch() {
         return NO_MATCH;
     }
+
+    public String toString() {
+        return "Match (" + level + ", params " + parameters.size() + ", subpath " + subpath + ")";
+    }
 }
