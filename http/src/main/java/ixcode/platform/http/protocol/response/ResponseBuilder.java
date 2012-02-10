@@ -15,6 +15,12 @@ public class ResponseBuilder implements ContentTypeBuilder.ContentTypeAcceptor {
     private ContentType contentType;
     private final List<Header> headers = new ArrayList<Header>();
 
+    public final LinkBuilder linkBuilder;
+
+    public ResponseBuilder(LinkBuilder linkBuilder) {
+        this.linkBuilder = linkBuilder;
+    }
+
     public void translateTo(HttpServletResponse httpServletResponse) {
         httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
 

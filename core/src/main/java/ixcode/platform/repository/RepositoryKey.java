@@ -27,4 +27,9 @@ public class RepositoryKey {
     public final int hashCode() {
         return key.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return key.toString();
+    }
 }

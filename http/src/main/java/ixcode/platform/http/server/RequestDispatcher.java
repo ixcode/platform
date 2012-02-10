@@ -2,12 +2,9 @@ package ixcode.platform.http.server;
 
 
 import ixcode.platform.http.protocol.request.Request;
+import ixcode.platform.http.protocol.response.LinkBuilder;
 import ixcode.platform.http.protocol.response.ResponseBuilder;
-import ixcode.platform.http.server.resource.ResourceHyperlinkBuilder;
-import ixcode.platform.http.server.resource.ResourceInvocation;
-import ixcode.platform.http.server.resource.ResourceLookup;
-import ixcode.platform.http.server.resource.ResourceMap;
-import ixcode.platform.http.server.resource.ResourceNotFoundException;
+import ixcode.platform.http.server.resource.*;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -17,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static ixcode.platform.http.protocol.request.Request.requestFrom;
+import static ixcode.platform.http.protocol.response.LinkBuilder.linkBuilderFrom;
 
 public class RequestDispatcher extends HttpServlet {
 
@@ -37,7 +35,7 @@ public class RequestDispatcher extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
         Request request = requestFrom(httpServletRequest);
-        ResponseBuilder responseBuilder = new ResponseBuilder();
+        ResponseBuilder responseBuilder = new ResponseBuilder(linkBuilderFrom(httpServletRequest));
 
         try {
             ResourceInvocation invoke = resourceLookup.resourceMappedTo(request);
@@ -56,7 +54,7 @@ public class RequestDispatcher extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
         Request request = requestFrom(httpServletRequest);
-        ResponseBuilder responseBuilder = new ResponseBuilder();
+        ResponseBuilder responseBuilder = new ResponseBuilder(linkBuilderFrom(httpServletRequest));
 
         try {
             ResourceInvocation invoke = resourceLookup.resourceMappedTo(request);
