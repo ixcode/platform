@@ -11,4 +11,6 @@ public interface Repository<T> {
     T get(RepositoryKey key);
 
     List<RepositoryItem> find(RepositorySearch search);
+
+    Class<T> getItemType();
 }

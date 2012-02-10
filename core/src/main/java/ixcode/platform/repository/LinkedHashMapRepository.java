@@ -11,9 +11,11 @@ public final class LinkedHashMapRepository<T> implements Repository<T> {
 
     private final Map<RepositoryKey, RepositoryItem<T>> storage = new LinkedHashMap<RepositoryKey, RepositoryItem<T>>();
     private final RepositoryKeyGenerator keyGenerator;
+    private Class<T> itemType;
 
-    public LinkedHashMapRepository(RepositoryKeyGenerator keyGenerator) {
+    public LinkedHashMapRepository(RepositoryKeyGenerator keyGenerator, Class<T> itemType) {
         this.keyGenerator = keyGenerator;
+        this.itemType = itemType;
     }
 
     @Override
@@ -42,5 +44,10 @@ public final class LinkedHashMapRepository<T> implements Repository<T> {
     @Override
     public List<RepositoryItem> find(RepositorySearch search) {
         return new ArrayList<RepositoryItem>(storage.values());
+    }
+
+    @Override
+    public Class<T> getItemType() {
+        return itemType;
     }
 }
