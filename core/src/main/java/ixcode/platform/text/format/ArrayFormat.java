@@ -1,11 +1,12 @@
 package ixcode.platform.text.format;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
 
-public class CollectionFormat extends AbstractFormat {
+public class ArrayFormat extends AbstractFormat {
 
-    public static String collectionToString(Collection<?> source) {
-        return new CollectionFormat().format(source);
+    public static String arrayToString(Object[] source) {
+        return new ArrayFormat().format(source);
     }
 
     @Override
@@ -15,11 +16,11 @@ public class CollectionFormat extends AbstractFormat {
 
     @Override
     public String format(Object source) {
-        Collection<?> collection = (Collection<?>)source;
+        Object[] array = (Object[]) source;
         StringBuilder sb = new StringBuilder();
-        for (Iterator<?> itr = collection.iterator(); itr.hasNext();) {
-            sb.append(itr.next().toString());
-            if (itr.hasNext()) {
+        for (int i=0;i<array.length;++i) {
+            sb.append(array[i].toString());
+            if (i<array.length-1) {
                 sb.append(", ");
             }
         }
@@ -27,5 +28,5 @@ public class CollectionFormat extends AbstractFormat {
     }
 
 
-
+    
 }

@@ -1,10 +1,9 @@
 package ixcode.platform.http.protocol;
 
-import ixcode.platform.http.protocol.*;
-
 import static ixcode.platform.http.protocol.IanaContentType.vendorJson;
 
 public class ContentTypeBuilder {
+
 
     public interface ContentTypeAcceptor {
         void acceptContentTypeHeader(ContentType contentType);
@@ -17,12 +16,17 @@ public class ContentTypeBuilder {
     }
 
     public void json() {
-        target.acceptContentTypeHeader(IanaContentType.JSON);
+        target.acceptContentTypeHeader(IanaContentType.json);
     }
 
     public void xml() {
-        target.acceptContentTypeHeader(IanaContentType.XML);
+        target.acceptContentTypeHeader(IanaContentType.xml);
     }
+
+    public void xhtml() {
+        target.acceptContentTypeHeader(IanaContentType.xhtml);
+    }
+
 
     public void jsonVendor(String vendortType) {
         target.acceptContentTypeHeader(vendorJson(vendortType));

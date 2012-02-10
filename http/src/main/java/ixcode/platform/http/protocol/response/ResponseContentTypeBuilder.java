@@ -17,4 +17,9 @@ public class ResponseContentTypeBuilder {
         contentTypeBuilder.json();
         return parent;
     }
+
+    public ResponseBuilder xhtml() {
+        contentTypeBuilder.xhtml();
+        return parent;
+    }
 }
