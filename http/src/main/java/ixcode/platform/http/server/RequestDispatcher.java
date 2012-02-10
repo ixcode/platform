@@ -2,7 +2,6 @@ package ixcode.platform.http.server;
 
 
 import ixcode.platform.http.protocol.request.Request;
-import ixcode.platform.http.protocol.response.LinkBuilder;
 import ixcode.platform.http.protocol.response.ResponseBuilder;
 import ixcode.platform.http.server.resource.*;
 import org.apache.log4j.Logger;
@@ -14,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static ixcode.platform.http.protocol.request.Request.requestFrom;
-import static ixcode.platform.http.protocol.response.LinkBuilder.linkBuilderFrom;
+import static ixcode.platform.http.protocol.response.ResponseLinkBuilder.linkBuilderFrom;
 
 public class RequestDispatcher extends HttpServlet {
 

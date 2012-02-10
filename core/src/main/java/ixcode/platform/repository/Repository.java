@@ -13,4 +13,6 @@ public interface Repository<T> {
     List<RepositoryItem> find(RepositorySearch search);
 
     Class<T> getItemType();
+
+    String getRepositoryId();
 }

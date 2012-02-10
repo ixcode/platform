@@ -1,5 +1,10 @@
 package ixcode.platform.http.representation;
 
+import ixcode.platform.http.protocol.response.ResponseLinkBuilder;
+import ixcode.platform.reflect.FieldReflector;
+import ixcode.platform.reflect.ObjectReflector;
+import ixcode.platform.repository.RepositoryKey;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +12,8 @@ import java.util.Map;
 
 import static ixcode.platform.collection.CollectionPrinter.printCollection;
 import static ixcode.platform.http.representation.Hyperlink.hyperlinkTo;
+import static ixcode.platform.reflect.ObjectReflector.reflect;
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 public abstract class HypermediaRepresentationBuilder<T extends HypermediaRepresentationBuilder> implements LinkCollection {
@@ -15,6 +22,7 @@ public abstract class HypermediaRepresentationBuilder<T extends HypermediaRepres
     protected List<String> types;
     private List<ValuePair> valuePairs = new ArrayList<ValuePair>();
     private Object rootObject;
+    private ResponseLinkBuilder linkBuilder;
 
 
     public HypermediaRepresentationBuilder(String... types) {
@@ -39,6 +47,11 @@ public abstract class HypermediaRepresentationBuilder<T extends HypermediaRepres
         this.rootObject = rootObject;
         return (T)this;
     }
+    
+    public T havingLinkBuilder(ResponseLinkBuilder linkBuilder) {
+        this.linkBuilder = linkBuilder;
+        return (T)this;
+    }
 
     public KeyValueBuilder<T> havingValue(Object value) {
         return new KeyValueBuilder<T>(this, value);
@@ -60,8 +73,22 @@ public abstract class HypermediaRepresentationBuilder<T extends HypermediaRepres
     }
 
     private T addValuesFrom(Object source) {
-        mapBuilder.extractValuesFrom(source);
+        addValuesAndLinksFrom(source);
         return (T) this;
+    }
+    
+    private void addValuesAndLinksFrom(Object source) {
+        ObjectReflector reflector = reflect(source.getClass());
+        for (FieldReflector fieldReflector : reflector.nonTransientFields) {
+            Object value = fieldReflector.valueFrom(source);
+            if (value instanceof RepositoryKey) {
+                RepositoryKey key = (RepositoryKey)value;
+                URI uri = linkBuilder.linkTo(format("/%s/%s", key.repositoryId, key.key));
+                mapBuilder.key(fieldReflector.name).value(uri);
+            } else if (value != null) {
+                mapBuilder.key(fieldReflector.name).value(value);
+            }
+        }        
     }
 
     private HypermediaRepresentationBuilder havingValues(List<ValuePair> valuePairs) {

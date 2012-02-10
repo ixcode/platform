@@ -23,7 +23,7 @@ public class StringRepositoryKey {
         }
 
         public RepositoryKey forRepository(Object forRepository) {
-            return new RepositoryKey(forRepository.getClass(), key);
+            return new RepositoryKey(forRepository.getClass().getName(), key);
         }
     }
 }

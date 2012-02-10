@@ -10,17 +10,19 @@ import static java.util.Arrays.asList;
 public final class LinkedHashMapRepository<T> implements Repository<T> {
 
     private final Map<RepositoryKey, RepositoryItem<T>> storage = new LinkedHashMap<RepositoryKey, RepositoryItem<T>>();
+    private String repositoryId;
     private final RepositoryKeyGenerator keyGenerator;
     private Class<T> itemType;
 
-    public LinkedHashMapRepository(RepositoryKeyGenerator keyGenerator, Class<T> itemType) {
+    public LinkedHashMapRepository(String repositoryId, RepositoryKeyGenerator keyGenerator, Class<T> itemType) {
+        this.repositoryId = repositoryId;
         this.keyGenerator = keyGenerator;
         this.itemType = itemType;
     }
 
     @Override
     public RepositoryKey put(T object) {
-        RepositoryKey key = keyGenerator.generateKeyFor(this.getClass(), object);
+        RepositoryKey key = keyGenerator.generateKeyFor(repositoryId, object);
 
         storage.put(key, new RepositoryItem(key, object));
 
@@ -49,5 +51,10 @@ public final class LinkedHashMapRepository<T> implements Repository<T> {
     @Override
     public Class<T> getItemType() {
         return itemType;
+    }
+
+    @Override
+    public String getRepositoryId() {
+        return repositoryId;
     }
 }

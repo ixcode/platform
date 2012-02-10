@@ -15,9 +15,9 @@ public class ResponseBuilder implements ContentTypeBuilder.ContentTypeAcceptor {
     private ContentType contentType;
     private final List<Header> headers = new ArrayList<Header>();
 
-    public final LinkBuilder linkBuilder;
+    public final ResponseLinkBuilder linkBuilder;
 
-    public ResponseBuilder(LinkBuilder linkBuilder) {
+    public ResponseBuilder(ResponseLinkBuilder linkBuilder) {
         this.linkBuilder = linkBuilder;
     }
 

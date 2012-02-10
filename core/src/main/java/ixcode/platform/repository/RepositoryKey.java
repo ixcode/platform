@@ -2,11 +2,12 @@ package ixcode.platform.repository;
 
 public class RepositoryKey {
 
-    private final Class<?> forRepository;
-    private Object key;
+    public final String repositoryId;
+    public final Object key;
+    public static final RepositoryKey NEW = new RepositoryKey("NEW", null);
 
-    public RepositoryKey(Class<?> forRepository, Object key) {
-        this.forRepository = forRepository;
+    public RepositoryKey(String repositoryId, Object key) {
+        this.repositoryId = repositoryId;
         this.key = key;
     }
 
@@ -18,7 +19,7 @@ public class RepositoryKey {
         RepositoryKey that = (RepositoryKey) o;
 
         if (!key.equals(that.key)) return false;
-        if (!forRepository.isAssignableFrom(that.forRepository)) return false;
+        if (!repositoryId.equals(that.repositoryId)) return false;
 
         return true;
     }

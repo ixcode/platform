@@ -1,7 +1,6 @@
 package ixcode.platform.http.server.resource;
 
 import ixcode.platform.http.protocol.request.Request;
-import ixcode.platform.http.protocol.response.LinkBuilder;
 import ixcode.platform.http.protocol.response.ResponseBuilder;
 import ixcode.platform.http.server.resource.path.UriTemplateMatch;
 
