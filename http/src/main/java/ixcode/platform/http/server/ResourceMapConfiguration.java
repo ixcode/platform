@@ -1,7 +1,7 @@
 package ixcode.platform.http.server;
 
-import ixcode.platform.http.server.resource.ResourceMap;
+import ixcode.platform.http.server.resource.RouteMap;
 
 public interface ResourceMapConfiguration {
-    void populateResourceMap(ResourceMap map);
+    void populateRouteMap(RouteMap map);
 }

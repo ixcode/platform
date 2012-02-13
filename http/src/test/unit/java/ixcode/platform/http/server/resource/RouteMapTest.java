@@ -6,16 +6,16 @@ import ixcode.platform.http.representation.Hyperlink;
 import org.junit.Test;
 
 import static ixcode.platform.http.protocol.HttpMethod.GET;
-import static ixcode.platform.http.server.resource.ResourceMap.aResourceMapRootedAt;
+import static ixcode.platform.http.server.resource.RouteMap.aResourceMapRootedAt;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class ResourceMapTest {
+public class RouteMapTest {
 
     @Test
     public void can_generate_a_uri() throws Exception {
-        ResourceMap map = aResourceMapRootedAt("http://localhost:9878")
-                .mapping("/some/{name}/with/{id}").toA(new SomeResource()).supporting(GET);
+        RouteMap map = aResourceMapRootedAt("http://localhost:9878")
+                .thePath("/some/{name}/with/{id}").toA(new SomeResource()).supporting(GET);
 
         Hyperlink hyperlink = map.linkTo(SomeResource.SomeUriTemplate.class).withName("johnny").andId(3345);
 

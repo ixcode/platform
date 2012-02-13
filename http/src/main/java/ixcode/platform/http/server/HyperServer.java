@@ -1,12 +1,15 @@
 package ixcode.platform.http.server;
 
+import ixcode.platform.collection.MapBuilder;
 import ixcode.platform.di.InjectionContext;
 import ixcode.platform.http.server.redirection.RedirectTrailingSlashes;
-import ixcode.platform.http.server.resource.ResourceMap;
+import ixcode.platform.http.server.resource.RouteMap;
 import ixcode.platform.http.server.routing.ResourceRoute;
+import ixcode.platform.repository.Repository;
 
+import static ixcode.platform.collection.MapBuilder.linkedHashMapWith;
 import static ixcode.platform.http.server.RequestDispatcher.requestDispatcher;
-import static ixcode.platform.http.server.resource.ResourceMap.aResourceMapRootedAt;
+import static ixcode.platform.http.server.resource.RouteMap.aResourceMapRootedAt;
 import static ixcode.platform.logging.ConsoleLog4jLogging.initialiseLog4j;
 import static java.lang.String.format;
 
@@ -21,7 +24,7 @@ public class HyperServer {
 
     public HyperServer(String hostname, int port,
                        InjectionContextConfiguration injectionContextConfiguration,
-                       ResourceMapConfiguration resourceMapConfiguration ) {
+                       ResourceMapConfiguration resourceMapConfiguration) {
 
         this.hostname = hostname;
         this.port = port;
@@ -29,9 +32,9 @@ public class HyperServer {
         this.resourceMapConfiguration = resourceMapConfiguration;
         initialiseLog4j();
         injectionContext = new InjectionContext();
+        registerResourceRoute(injectionContextConfiguration);
         injectionContextConfiguration.populateInjectionContext(injectionContext);
     }
-
 
 
     public void start() {
@@ -43,18 +46,26 @@ public class HyperServer {
                 .start();
     }
 
-    public ResourceMap withResourceMap() {
-        ResourceMap map = aResourceMapRootedAt(format("http://%s:%s", hostname, port))
+    public RouteMap withResourceMap() {
+        RouteMap map = aResourceMapRootedAt(format("http://%s:%s", hostname, port))
                 .withInjectionContext(injectionContext)
-                .mapping("/{resourceType}").toThe(ResourceRoute.class)
-                .mapping("/{resourceType}/{resourceIdentifier}/**").toThe(ResourceRoute.class);
-        
-        resourceMapConfiguration.populateResourceMap(map);
-        
+                .thePath("/{resourceType}").toThe(ResourceRoute.class)
+                .thePath("/{resourceType}/{resourceIdentifier}/**").toThe(ResourceRoute.class);
+
+        resourceMapConfiguration.populateRouteMap(map);
+
         return map;
-                
+
     }
 
+    private void registerResourceRoute(InjectionContextConfiguration injectionContextConfiguration) {
+        MapBuilder repositoryMapBuilder = linkedHashMapWith();
+        for (Repository<?> repository : injectionContextConfiguration.repositories()) {
+            repositoryMapBuilder.key(repository.getRepositoryId()).value(repository);
+        }
+
+        injectionContext.register(new ResourceRoute(repositoryMapBuilder.build()));
+    }
 
 
 }

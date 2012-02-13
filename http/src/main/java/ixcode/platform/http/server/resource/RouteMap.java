@@ -14,23 +14,23 @@ import static ixcode.platform.http.server.resource.path.UriTemplate.uriTemplateF
 import static java.lang.String.format;
 import static java.util.Collections.sort;
 
-public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder {
+public class RouteMap implements ResourceLookup, ResourceHyperlinkBuilder {
 
     private final List<ResourceMapping> resourceMappings = new ArrayList<ResourceMapping>();
     private final String uriRoot;
     private InjectionContext injectionContext;
 
 
-    public static ResourceMap aResourceMapRootedAt(String uriRoot) {
-        return new ResourceMap(uriRoot);
+    public static RouteMap aResourceMapRootedAt(String uriRoot) {
+        return new RouteMap(uriRoot);
     }
 
-    private ResourceMap(String uriRoot) {
+    private RouteMap(String uriRoot) {
         this.uriRoot = uriRoot;
     }
 
 
-    public EntryBuilder mapping(String path) {
+    public EntryBuilder thePath(String path) {
         return new EntryBuilder(this, path);
     }
 
@@ -100,18 +100,18 @@ public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder {
         return new ObjectFactory<T>().instantiateWithArg(templateClass, ResourceLookup.class, this);
     }
 
-    public ResourceMap withInjectionContext(InjectionContext injecttionContext) {
+    public RouteMap withInjectionContext(InjectionContext injecttionContext) {
         this.injectionContext = injecttionContext;
         return this;
     }
 
     public static class EntryBuilder {
-        private final ResourceMap parent;
+        private final RouteMap parent;
         private String path;
         private Resource resource;
 
 
-        private EntryBuilder(ResourceMap parent, String path) {
+        private EntryBuilder(RouteMap parent, String path) {
             this.parent = parent;
             this.path = path;
         }
@@ -121,12 +121,12 @@ public class ResourceMap implements ResourceLookup, ResourceHyperlinkBuilder {
             return this;
         }
 
-        public ResourceMap supporting(HttpMethod... httpMethods) {
+        public RouteMap supporting(HttpMethod... httpMethods) {
             parent.registerMapping(parent.uriRoot, path, resource, httpMethods);
             return parent;
         }
 
-        public ResourceMap toThe(Class<? extends Resource> resourceClass) {
+        public RouteMap toThe(Class<? extends Resource> resourceClass) {
             parent.registerMapping(parent.uriRoot, path, parent.injectionContext.getA(resourceClass), httpMethodsFrom(resourceClass));
             return parent;
         }

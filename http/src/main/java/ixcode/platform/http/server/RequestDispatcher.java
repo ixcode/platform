@@ -22,8 +22,8 @@ public class RequestDispatcher extends HttpServlet {
     private final ResourceLookup resourceLookup;
     private final ResourceHyperlinkBuilder resourceHyperlinkBuilder;
 
-    public static RequestDispatcher requestDispatcher(ResourceMap resourceMap) {
-        return new RequestDispatcher(resourceMap, resourceMap);
+    public static RequestDispatcher requestDispatcher(RouteMap routeMap) {
+        return new RequestDispatcher(routeMap, routeMap);
     }
 
     public RequestDispatcher(ResourceLookup resourceLookup, ResourceHyperlinkBuilder resourceHyperlinkBuilder) {
