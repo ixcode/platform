@@ -25,4 +25,6 @@ public class InjectionContext {
     public void register(Object object) {
         context.put(object.getClass(), object);
     }
+
+
 }

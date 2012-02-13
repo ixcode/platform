@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 public final class LinkedHashMapRepository<T> implements Repository<T> {
@@ -18,6 +19,16 @@ public final class LinkedHashMapRepository<T> implements Repository<T> {
         this.repositoryId = repositoryId;
         this.keyGenerator = keyGenerator;
         this.itemType = itemType;
+    }
+
+    public static <T> Repository<T> createRepositoryFor(Class<T> classOfItems) {
+        if (!classOfItems.isAnnotationPresent(RepositoryId.class)) {
+            throw new RuntimeException("Could not find the annotation 'RepositoryId' on your item class [" + classOfItems.getName() + "]");
+        }
+        String repositoryId = classOfItems.getAnnotation(RepositoryId.class).value();
+        return new LinkedHashMapRepository<T>(
+                repositoryId,
+                new UuidRepositoryKeyGenerator(), classOfItems);
     }
 
     @Override
@@ -40,6 +51,9 @@ public final class LinkedHashMapRepository<T> implements Repository<T> {
 
     @Override
     public T get(RepositoryKey key) {
+        if (!storage.containsKey(key)) {
+            throw new RuntimeException(format("Object with key [%s] not found in repository [%s]", key, repositoryId));
+        }
         return storage.get(key).value;
     }
 
