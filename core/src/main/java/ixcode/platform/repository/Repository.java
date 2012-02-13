@@ -6,6 +6,8 @@ public interface Repository<T> {
 
     RepositoryKey put(T object);
 
+    void put(RepositoryKey key, T object);
+
     List<RepositoryKey> put(T... object);
 
     T get(RepositoryKey key);

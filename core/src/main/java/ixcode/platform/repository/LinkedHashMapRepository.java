@@ -35,9 +35,14 @@ public final class LinkedHashMapRepository<T> implements Repository<T> {
     public RepositoryKey put(T object) {
         RepositoryKey key = keyGenerator.generateKeyFor(repositoryId, object);
 
-        storage.put(key, new RepositoryItem(key, object));
+        put(key, object);
 
         return key;
+    }
+
+    @Override
+    public void put(RepositoryKey key, T object) {
+        storage.put(key, new RepositoryItem(key, object));
     }
 
     @Override
