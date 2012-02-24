@@ -21,15 +21,19 @@ public final class LinkedHashMapRepository<T> implements Repository<T> {
     }
 
     public static <T> Repository<T> createRepositoryFor(Class<T> classOfItems) {
-        boolean hasCollectionId = classOfItems.isAnnotationPresent(RepositoryCollection.class);
-
-        String repositoryId = (hasCollectionId)
-                ? classOfItems.getAnnotation(RepositoryCollection.class).value()
-                : classOfItems.getSimpleName().toLowerCase() + "s";
+        String repositoryId = repositoryIdFor(classOfItems);
 
         return new LinkedHashMapRepository<T>(
                 repositoryId,
                 new UuidRepositoryKeyGenerator(), classOfItems);
+    }
+
+    public static String repositoryIdFor(Class<?> classOfItems) {
+        boolean hasCollectionId = classOfItems.isAnnotationPresent(RepositoryCollection.class);
+
+        return (hasCollectionId)
+                ? classOfItems.getAnnotation(RepositoryCollection.class).value()
+                : classOfItems.getSimpleName().toLowerCase() + "s";
     }
 
     @Override
