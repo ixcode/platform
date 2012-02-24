@@ -19,14 +19,16 @@ public class RequestDispatcher extends HttpServlet {
 
     private static final Logger log = Logger.getLogger(RequestDispatcher.class);
 
+    private final String uriRoot;
     private final ResourceLookup resourceLookup;
     private final ResourceHyperlinkBuilder resourceHyperlinkBuilder;
 
-    public static RequestDispatcher requestDispatcher(RouteMap routeMap) {
-        return new RequestDispatcher(routeMap, routeMap);
+    public static RequestDispatcher requestDispatcher(String uriRoot, RouteMap routeMap) {
+        return new RequestDispatcher(uriRoot, routeMap, routeMap);
     }
 
-    public RequestDispatcher(ResourceLookup resourceLookup, ResourceHyperlinkBuilder resourceHyperlinkBuilder) {
+    public RequestDispatcher(String uriRoot, ResourceLookup resourceLookup, ResourceHyperlinkBuilder resourceHyperlinkBuilder) {
+        this.uriRoot = uriRoot;
         this.resourceLookup = resourceLookup;
         this.resourceHyperlinkBuilder = resourceHyperlinkBuilder;
     }

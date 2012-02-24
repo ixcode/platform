@@ -74,6 +74,8 @@ public class TransformToJson {
             return buildJsonObjectFrom((Map) value);
         } else if (Collection.class.isAssignableFrom(valueClass)) {
             return buildJsonArrayFrom((List) value);
+        } else if (isEnumeration(valueClass)) {
+            return (value.toString());
         } else if (Integer.class.isAssignableFrom(valueClass)
                 || Long.class.isAssignableFrom(valueClass)
                 || Double.class.isAssignableFrom(valueClass)
@@ -86,6 +88,10 @@ public class TransformToJson {
             return value;
         }
         return buildJsonObjectFrom(value);
+    }
+
+    private static boolean isEnumeration(Class<?> valueClass) {
+        return (valueClass.isEnum());
     }
 
     public static String jsonObjectNameFor(Object object) {

@@ -16,17 +16,37 @@ import static java.util.Collections.sort;
 
 public class RouteMap implements ResourceLookup, ResourceHyperlinkBuilder {
 
-    private final List<ResourceMapping> resourceMappings = new ArrayList<ResourceMapping>();
+    private final List<ResourceMapping> resourceMappings;
     private final String uriRoot;
     private InjectionContext injectionContext;
 
+    public static RouteMap aResourceMap() {
+        return new RouteMap();
+    }
 
     public static RouteMap aResourceMapRootedAt(String uriRoot) {
         return new RouteMap(uriRoot);
     }
 
+    private RouteMap() {
+        this(null);
+    }
+
     private RouteMap(String uriRoot) {
         this.uriRoot = uriRoot;
+        this.resourceMappings = new ArrayList<ResourceMapping>();
+    }
+
+    private RouteMap(String uriRoot,
+                     List<ResourceMapping> resourceMappings,
+                     InjectionContext injectionContext) {
+        this.uriRoot = uriRoot;
+        this.resourceMappings = resourceMappings;
+        this.injectionContext = injectionContext;
+    }
+
+    public RouteMap rootedAt(String uriRoot) {
+        return new RouteMap(uriRoot, resourceMappings, injectionContext);
     }
 
 
@@ -100,10 +120,12 @@ public class RouteMap implements ResourceLookup, ResourceHyperlinkBuilder {
         return new ObjectFactory<T>().instantiateWithArg(templateClass, ResourceLookup.class, this);
     }
 
-    public RouteMap withInjectionContext(InjectionContext injecttionContext) {
-        this.injectionContext = injecttionContext;
+    public RouteMap withInjectionContext(InjectionContext injectionContext) {
+        this.injectionContext = injectionContext;
         return this;
     }
+
+    
 
     public static class EntryBuilder {
         private final RouteMap parent;
