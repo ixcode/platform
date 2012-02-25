@@ -4,12 +4,8 @@ import ixcode.platform.http.protocol.response.ResponseStatus;
 import ixcode.platform.xml.*;
 import org.apache.log4j.*;
 
-import java.net.*;
 import java.util.List;
 import java.util.Map;
-
-import static ixcode.platform.http.protocol.UriFactory.*;
-import static ixcode.platform.io.StreamHandling.*;
 
 public class RepresentationDecoder {
     private static final Logger log = Logger.getLogger(RepresentationDecoder.class);

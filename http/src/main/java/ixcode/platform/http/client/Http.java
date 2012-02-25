@@ -5,7 +5,6 @@ import ixcode.platform.http.protocol.request.RequestBuilder;
 import ixcode.platform.http.representation.Hyperlink;
 import ixcode.platform.http.representation.Representation;
 import ixcode.platform.http.representation.RepresentationDecoder;
-import ixcode.platform.text.format.CollectionFormat;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedWriter;
@@ -20,8 +19,8 @@ import java.util.Map;
 
 import static ixcode.platform.http.protocol.UriFactory.uri;
 import static ixcode.platform.http.protocol.response.ResponseStatusCodes.codeToStatus;
-import static ixcode.platform.io.StreamHandling.closeQuietly;
-import static ixcode.platform.io.StreamHandling.readFully;
+import static ixcode.platform.io.IoStreamHandling.closeQuietly;
+import static ixcode.platform.io.IoStreamHandling.readFully;
 import static ixcode.platform.text.format.CollectionFormat.collectionToString;
 
 public class Http {

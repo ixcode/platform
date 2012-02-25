@@ -2,7 +2,7 @@ package ixcode.platform.io;
 
 import java.io.*;
 
-public class StreamHandling {
+public class IoStreamHandling {
 
     public static void closeQuietly(OutputStream out) {
         if (out == null) {
@@ -78,5 +78,19 @@ public class StreamHandling {
             closeQuietly(bufferedReader);
         }
         return stringBuilder.toString();
+    }
+
+    public static void copyStream(InputStream in, OutputStream out) {
+        byte[] buffy = new byte[1024];
+
+        try {
+            int bytesRead = in.read(buffy);
+            while (bytesRead != -1) {
+                out.write(buffy, 0, bytesRead);
+                bytesRead = in.read(buffy);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

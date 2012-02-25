@@ -6,7 +6,7 @@ import java.io.*;
 import java.lang.management.*;
 
 import static java.lang.String.format;
-import static ixcode.platform.io.StreamHandling.*;
+import static ixcode.platform.io.IoStreamHandling.*;
 
 public class SystemProcess {
 

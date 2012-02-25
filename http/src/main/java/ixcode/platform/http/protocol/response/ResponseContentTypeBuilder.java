@@ -22,4 +22,9 @@ public class ResponseContentTypeBuilder {
         contentTypeBuilder.xhtml();
         return parent;
     }
+
+    public ResponseBuilder png() {
+        contentTypeBuilder.png();
+        return parent;
+    }
 }

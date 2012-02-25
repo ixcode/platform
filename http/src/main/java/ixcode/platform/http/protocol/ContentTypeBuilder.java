@@ -5,6 +5,7 @@ import static ixcode.platform.http.protocol.IanaContentType.vendorJson;
 public class ContentTypeBuilder {
 
 
+
     public interface ContentTypeAcceptor {
         void acceptContentTypeHeader(ContentType contentType);
     }
@@ -19,6 +20,10 @@ public class ContentTypeBuilder {
         target.acceptContentTypeHeader(IanaContentType.json);
     }
 
+    public void jsonVendor(String vendortType) {
+        target.acceptContentTypeHeader(vendorJson(vendortType));
+    }
+
     public void xml() {
         target.acceptContentTypeHeader(IanaContentType.xml);
     }
@@ -27,9 +32,9 @@ public class ContentTypeBuilder {
         target.acceptContentTypeHeader(IanaContentType.xhtml);
     }
 
-
-    public void jsonVendor(String vendortType) {
-        target.acceptContentTypeHeader(vendorJson(vendortType));
+    public void png() {
+        target.acceptContentTypeHeader(IanaContentType.png);
     }
+
 
 }

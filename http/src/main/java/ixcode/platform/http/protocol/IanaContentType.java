@@ -4,7 +4,11 @@ import static java.lang.String.format;
 
 public enum IanaContentType implements ContentType {
 
-    html("text/html"), json("application/json"), xhtml("application/xhtml"), xml("application/xml");
+    html("text/html"),
+    json("application/json"),
+    xhtml("application/xhtml"),
+    xml("application/xml"),
+    png("image/png");
 
 
     private String identitfier;

@@ -8,7 +8,7 @@ import ixcode.platform.io.*;
 import javax.xml.parsers.*;
 import java.io.*;
 
-import static ixcode.platform.io.StreamHandling.closeQuietly;
+import static ixcode.platform.io.IoStreamHandling.closeQuietly;
 
 public class XmlParser {
 
@@ -24,7 +24,7 @@ public class XmlParser {
         SAXParser parser = newSaxParser();
         InputStream in = null;
         try {
-            in = StreamHandling.toInputStream(xml, "UTF-8");
+            in = IoStreamHandling.toInputStream(xml, "UTF-8");
             long startParse = System.currentTimeMillis();
 
             parser.parse(in, handler);

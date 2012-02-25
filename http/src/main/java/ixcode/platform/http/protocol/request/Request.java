@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 import static ixcode.platform.http.protocol.request.RequestParameters.requestParametersFrom;
-import static ixcode.platform.io.StreamHandling.readFully;
+import static ixcode.platform.io.IoStreamHandling.readFully;
 
 public class Request {
     private transient HttpServletRequest httpServletRequest;

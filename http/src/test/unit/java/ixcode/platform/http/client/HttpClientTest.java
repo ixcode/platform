@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static ixcode.platform.http.protocol.UriFactory.uri;
-import static ixcode.platform.io.StreamHandling.readFully;
+import static ixcode.platform.io.IoStreamHandling.readFully;
 
 @SystemTest
 public class HttpClientTest {
