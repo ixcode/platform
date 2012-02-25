@@ -29,11 +29,15 @@ public final class LinkedHashMapRepository<T> implements Repository<T> {
     }
 
     public static String repositoryIdFor(Class<?> classOfItems) {
-        boolean hasCollectionId = classOfItems.isAnnotationPresent(RepositoryCollection.class);
+        boolean isResource = classOfItems.isAnnotationPresent(Resource.class);
+        if (!isResource) {
+            throw new RuntimeException(format("Class [%s] must be annotated with @Resource to work automatically with our repository.", classOfItems.getName()));
+        }
 
-        return (hasCollectionId)
-                ? classOfItems.getAnnotation(RepositoryCollection.class).value()
-                : classOfItems.getSimpleName().toLowerCase() + "s";
+        String collectionName = classOfItems.getAnnotation(Resource.class).collectionName();
+        return (collectionName.isEmpty())
+                ? classOfItems.getSimpleName().toLowerCase() + "s"
+                : collectionName;
     }
 
     @Override

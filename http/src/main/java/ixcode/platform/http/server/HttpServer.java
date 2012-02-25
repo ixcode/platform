@@ -90,10 +90,13 @@ public class HttpServer {
         handlers.setHandlers(new Handler[]{
                 redirectionHandler(),
                 resourceHandler(),
-                servletHandler()
+                servletHandler(),
+                faviconHandler()
         });
         return handlers;
     }
+
+
 
     private Handler redirectionHandler() {
         return new RedirectionHandler(redirections);
@@ -102,6 +105,7 @@ public class HttpServer {
     private ResourceHandler resourceHandler() {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setResourceBase(webrootDir);
+
         return resourceHandler;
     }
 
@@ -117,6 +121,9 @@ public class HttpServer {
         return servletHandler;
     }
 
+    private Handler faviconHandler() {
+        return new FaviconHandler();
+    }
 
     private static ConstraintMapping mapConstraintTo(Constraint constraint, String path) {
         ConstraintMapping cm = new ConstraintMapping();
