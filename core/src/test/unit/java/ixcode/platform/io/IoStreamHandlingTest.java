@@ -27,7 +27,7 @@ public class IoStreamHandlingTest {
     }
     
     @Test
-    public void testCopyStream() throws Exception {
+    public void copies_simple_string_stream() throws Exception {
 
         String input = "This is my message to you...";
 
@@ -42,7 +42,7 @@ public class IoStreamHandlingTest {
     }
 
     @Test
-    public void testCopyEmptyStream() throws Exception {
+    public void copies_empty_stream() throws Exception {
 
         String input = "";
 
@@ -54,5 +54,18 @@ public class IoStreamHandlingTest {
         String output = new String(out.toByteArray(), "UTF8");
 
         assertThat(output, is(input));
+    }
+    
+    @Test
+    public void conditionals_based_on_return_values() {
+        int storage = 0;
+        int result = (storage = iAddTwoNumbers(2, 4));
+        
+        assertThat(storage, is(6));
+        assertThat(result, is(6));
+    }
+    
+    private int iAddTwoNumbers(int a, int b) {
+        return a + b;
     }
 }
