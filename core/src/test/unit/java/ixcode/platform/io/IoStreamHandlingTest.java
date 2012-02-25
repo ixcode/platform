@@ -40,4 +40,19 @@ public class IoStreamHandlingTest {
         
         assertThat(output, is(input));
     }
+
+    @Test
+    public void testCopyEmptyStream() throws Exception {
+
+        String input = "";
+
+        in = new ByteArrayInputStream(input.getBytes("UTF8"));
+        out = new ByteArrayOutputStream();
+
+        copyStream(in, out);
+
+        String output = new String(out.toByteArray(), "UTF8");
+
+        assertThat(output, is(input));
+    }
 }

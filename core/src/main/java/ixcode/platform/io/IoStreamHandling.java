@@ -82,15 +82,14 @@ public class IoStreamHandling {
 
     public static void copyStream(InputStream in, OutputStream out) {
         byte[] buffy = new byte[1024];
-
         try {
-            int bytesRead = in.read(buffy);
-            while (bytesRead != -1) {
+            int bytesRead = 0;
+            while ((bytesRead = in.read(buffy)) != -1) {
                 out.write(buffy, 0, bytesRead);
-                bytesRead = in.read(buffy);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 }
