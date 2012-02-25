@@ -59,7 +59,7 @@ public class RequestDispatcher extends HttpServlet {
     private void respondWithDefaultFavicon(ResponseBuilder responseBuilder) {
         responseBuilder.status().ok()
                        .contentType().png()
-                       .bodyFromClasspath("/platform.png");
+                       .bodyFromClasspath("icon/platform.png");
 
     }
 

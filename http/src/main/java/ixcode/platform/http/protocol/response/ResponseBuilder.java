@@ -17,13 +17,14 @@ import java.util.List;
 import static ixcode.platform.io.IoClasspath.inputStreamFromClasspathEntry;
 import static ixcode.platform.io.IoStreamHandling.closeQuietly;
 import static ixcode.platform.io.IoStreamHandling.copyStream;
+import static java.lang.String.format;
 
 public class ResponseBuilder implements ContentTypeBuilder.ContentTypeAcceptor {
 
     private static final Logger log = Logger.getLogger(ResponseBuilder.class);
 
     private ResponseStatus responseStatus;
-    private String responseBody = "";
+    private String responseBody = null;
     private ContentType contentType;
     private final List<Header> headers = new ArrayList<Header>();
 
@@ -47,6 +48,7 @@ public class ResponseBuilder implements ContentTypeBuilder.ContentTypeAcceptor {
             writeStringBody(httpServletResponse);
         } else if (classpathEntry != null) {
             writeClasspathBody(httpServletResponse);
+            log.info("Written classpath! " + classpathEntry);
         }
 
     }
@@ -57,7 +59,9 @@ public class ResponseBuilder implements ContentTypeBuilder.ContentTypeAcceptor {
         try {
             out = httpServletResponse.getOutputStream();
             in = inputStreamFromClasspathEntry(classpathEntry);
-
+            if (in == null) {
+                throw new RuntimeException(format("Could not find classpath entry [%s] on the classpath.", classpathEntry));
+            }
             copyStream(in, out);
 
         } catch (IOException e) {
