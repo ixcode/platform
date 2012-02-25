@@ -7,17 +7,17 @@ import static ixcode.platform.http.server.RequestDispatcher.requestDispatcher;
 import static ixcode.platform.logging.ConsoleLog4jLogging.initialiseLog4j;
 import static java.lang.String.format;
 
-public class HyperServer {
+public class ResourceServer {
 
     private final String hostname;
     private final int port;
     private final RouteMap routeMap;
 
 
-    public HyperServer(String hostname, int port, HyperServerContext hyperServerContext) {
+    public ResourceServer(String hostname, int port, ResourceServerContext resourceServerContext) {
         this.hostname = hostname;
         this.port = port;
-        this.routeMap = hyperServerContext.theRouteMap().rootedAt(format("http://%s:%s", hostname, port));
+        this.routeMap = resourceServerContext.theRouteMap().rootedAt(format("http://%s:%s", hostname, port));
         initialiseLog4j();
     }
 

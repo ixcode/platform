@@ -8,12 +8,12 @@ import java.util.Map;
 
 import static ixcode.platform.http.server.resource.RouteMap.aResourceMap;
 
-public class HyperServerContext {
+public class ResourceServerContext {
 
     private final InjectionContext injectionContext = new InjectionContext();
 
 
-    public HyperServerContext(Map repositoryMap) {
+    public ResourceServerContext(Map repositoryMap) {
         RouteMap hyperRouteMap = registerRouteMap(injectionContext, repositoryMap);
 
     }

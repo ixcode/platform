@@ -95,8 +95,6 @@ public class HttpServer {
         return handlers;
     }
 
-
-
     private Handler redirectionHandler() {
         return new RedirectionHandler(redirections);
     }
