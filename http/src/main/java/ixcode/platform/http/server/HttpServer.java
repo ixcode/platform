@@ -90,8 +90,7 @@ public class HttpServer {
         handlers.setHandlers(new Handler[]{
                 redirectionHandler(),
                 resourceHandler(),
-                servletHandler(),
-                faviconHandler()
+                servletHandler()
         });
         return handlers;
     }
@@ -119,10 +118,6 @@ public class HttpServer {
         servletHandler.setErrorHandler(errorHandler);
         servletHandler.addServlet(new ServletHolder(rootServlet), "/*");
         return servletHandler;
-    }
-
-    private Handler faviconHandler() {
-        return new FaviconHandler();
     }
 
     private static ConstraintMapping mapConstraintTo(Constraint constraint, String path) {
