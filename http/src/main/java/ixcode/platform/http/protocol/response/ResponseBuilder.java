@@ -48,7 +48,7 @@ public class ResponseBuilder implements ContentTypeBuilder.ContentTypeAcceptor {
             writeStringBody(httpServletResponse);
         } else if (classpathEntry != null) {
             writeClasspathBody(httpServletResponse);
-            log.info("Written classpath! " + classpathEntry);
+            log.info("Written from the classpath @ " + classpathEntry);
         }
 
     }
