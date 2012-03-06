@@ -55,8 +55,6 @@ public class ResourceServer {
                 .withRedirection(new RedirectTrailingSlashes())
                 .servingStaticContentFrom("./")
                 .start();
-
-
     }
 
 

@@ -1,6 +1,5 @@
 package ixcode.platform.http.server;
 
-import ixcode.platform.http.server.redirection.RedirectTrailingSlashes;
 import ixcode.platform.http.server.redirection.Redirection;
 import ixcode.platform.io.*;
 import ixcode.platform.reflect.*;
@@ -13,7 +12,6 @@ import org.eclipse.jetty.servlet.*;
 
 import javax.servlet.*;
 import java.io.*;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,7 @@ import static ixcode.platform.logging.ConsoleLog4jLogging.*;
 import static java.lang.String.*;
 
 public class HttpServer {
-    private static final Logger LOG = Logger.getLogger(HttpServer.class);
+    private static final Logger log = Logger.getLogger(HttpServer.class);
 
     private Server server;
     private final String contextPath;
@@ -73,13 +71,14 @@ public class HttpServer {
 
     public void start() {
         try {
-            LOG.info(format("Starting Http Server [%s] on port [%d]...", serverName, httpPort));
-            LOG.info(format("Serving from http://%s:%d/", hostname, httpPort));
+            log.info(format("Starting Http Server [%s] on port [%d]...", serverName, httpPort));
+            log.info(format("Serving from http://%s:%d/", hostname, httpPort));
             server = new Server(httpPort);
             server.setHandler(handlers());
             server.start();
             new SystemProcess().writeProcessIdToFile(format(".webserver.%s.pid", serverName));
-            LOG.info(format("Http Server Started. Serving using the dispatcher [%s], static content is from [%s]", rootServlet.getClass().getName(), new File(webrootDir).getCanonicalPath()));
+            log.info(format("Http Server Started. Serving using the dispatcher [%s] ", rootServlet.getClass().getName()));
+            log.info((format("Static content is from [%s]", new File(webrootDir).getCanonicalPath())));
             server.join();
         } catch (Exception e) {
             throw new HttpServerStartupException(e);

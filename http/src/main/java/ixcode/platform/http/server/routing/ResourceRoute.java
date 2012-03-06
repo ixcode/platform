@@ -29,7 +29,6 @@ import static java.lang.String.format;
 
 public class ResourceRoute implements GetResource, PostResource {
 
-
     private final UriFormat uriFormat = new UriFormat();
     private final JsonMetadata jsonMetadata = new JsonMetadata();
 
@@ -93,7 +92,6 @@ public class ResourceRoute implements GetResource, PostResource {
                    .hypermedia(hypermedia.build());
 
     }
-
 
     private Repository getRepositoryForType(String resourceType) {
         return repositoryLookup.get(resourceType);
