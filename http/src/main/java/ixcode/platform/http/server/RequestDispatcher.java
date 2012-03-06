@@ -1,6 +1,8 @@
 package ixcode.platform.http.server;
 
 
+import ixcode.platform.http.protocol.ContentType;
+import ixcode.platform.http.protocol.IanaContentType;
 import ixcode.platform.http.protocol.request.Request;
 import ixcode.platform.http.protocol.response.ResponseBuilder;
 import ixcode.platform.http.server.resource.ResourceHyperlinkBuilder;
@@ -16,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static ixcode.platform.http.protocol.IanaContentType.json;
+import static ixcode.platform.http.protocol.IanaContentType.xml;
 import static ixcode.platform.http.protocol.request.Request.requestFrom;
 import static ixcode.platform.http.protocol.response.ResponseLinkBuilder.linkBuilderFrom;
 
@@ -40,7 +44,9 @@ public class RequestDispatcher extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
         Request request = requestFrom(httpServletRequest);
-        ResponseBuilder responseBuilder = new ResponseBuilder(linkBuilderFrom(httpServletRequest));
+
+        ContentType contentType = json;
+        ResponseBuilder responseBuilder = new ResponseBuilder(linkBuilderFrom(httpServletRequest), contentType);
 
         try {
             ResourceInvocation invoke = resourceLookup.resourceMappedTo(request);
@@ -74,7 +80,7 @@ public class RequestDispatcher extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
         Request request = requestFrom(httpServletRequest);
-        ResponseBuilder responseBuilder = new ResponseBuilder(linkBuilderFrom(httpServletRequest));
+        ResponseBuilder responseBuilder = new ResponseBuilder(linkBuilderFrom(httpServletRequest), json);
 
         try {
             ResourceInvocation invoke = resourceLookup.resourceMappedTo(request);

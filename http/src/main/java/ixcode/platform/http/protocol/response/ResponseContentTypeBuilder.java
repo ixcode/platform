@@ -18,6 +18,11 @@ public class ResponseContentTypeBuilder {
         return parent;
     }
 
+    public ResponseBuilder xml() {
+        contentTypeBuilder.xml();
+        return parent;
+    }
+
     public ResponseBuilder xhtml() {
         contentTypeBuilder.xhtml();
         return parent;

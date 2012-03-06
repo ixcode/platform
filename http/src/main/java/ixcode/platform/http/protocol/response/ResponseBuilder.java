@@ -3,9 +3,9 @@ package ixcode.platform.http.protocol.response;
 import ixcode.platform.http.protocol.ContentType;
 import ixcode.platform.http.protocol.ContentTypeBuilder;
 import ixcode.platform.http.protocol.Header;
-import ixcode.platform.io.IoClasspath;
-import ixcode.platform.io.IoStreamHandling;
+import ixcode.platform.http.protocol.IanaContentType;
 import ixcode.platform.serialise.JsonSerialiser;
+import ixcode.platform.serialise.XmlSerialiser;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static ixcode.platform.http.protocol.IanaContentType.json;
 import static ixcode.platform.io.IoClasspath.inputStreamFromClasspathEntry;
 import static ixcode.platform.io.IoStreamHandling.closeQuietly;
 import static ixcode.platform.io.IoStreamHandling.copyStream;
@@ -34,9 +35,11 @@ public class ResponseBuilder implements ContentTypeBuilder.ContentTypeAcceptor {
     private String classpathEntry;
 
     private final JsonSerialiser jsonSerialiser = new JsonSerialiser();
+    private final XmlSerialiser xmlSerialiser = new XmlSerialiser();
 
-    public ResponseBuilder(ResponseLinkBuilder linkBuilder) {
+    public ResponseBuilder(ResponseLinkBuilder linkBuilder, ContentType contentType) {
         this.linkBuilder = linkBuilder;
+        this.contentType = contentType;
     }
 
     public void translateTo(HttpServletResponse httpServletResponse) {
@@ -122,8 +125,13 @@ public class ResponseBuilder implements ContentTypeBuilder.ContentTypeAcceptor {
     }
 
     public ResponseBuilder hypermedia(Map<String, Object> hypermedia) {
-        contentType().json();
-        body(jsonSerialiser.toJson(hypermedia));
+        if (json.equals(contentType)) {
+            contentType().json();
+            body(jsonSerialiser.toJson(hypermedia));
+        } else {
+            contentType().xml();
+            body(xmlSerialiser.toXml(hypermedia));
+        }
         return this;
     }
 }
