@@ -30,22 +30,33 @@ public class RequestDispatcher extends HttpServlet {
     private final String uriRoot;
     private final ResourceLookup resourceLookup;
     private final ResourceHyperlinkBuilder resourceHyperlinkBuilder;
+    private final ContentType defaultContentType;
 
-    public static RequestDispatcher requestDispatcher(String uriRoot, RouteMap routeMap) {
-        return new RequestDispatcher(uriRoot, routeMap, routeMap);
+    public static RequestDispatcher requestDispatcher(String uriRoot,
+                                                      RouteMap routeMap,
+                                                      ContentType defaultContentType) {
+        return new RequestDispatcher(uriRoot, routeMap, routeMap, defaultContentType);
     }
 
-    public RequestDispatcher(String uriRoot, ResourceLookup resourceLookup, ResourceHyperlinkBuilder resourceHyperlinkBuilder) {
+    public RequestDispatcher(String uriRoot, 
+                             ResourceLookup resourceLookup, 
+                             ResourceHyperlinkBuilder resourceHyperlinkBuilder,
+                             ContentType defaultContentType) {
+
         this.uriRoot = uriRoot;
         this.resourceLookup = resourceLookup;
         this.resourceHyperlinkBuilder = resourceHyperlinkBuilder;
+        this.defaultContentType = defaultContentType;
+        log.info("Default content type: " + defaultContentType);
+
     }
 
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
         Request request = requestFrom(httpServletRequest);
 
-        ContentType contentType = json;
+        ContentType contentType = determineContentTypeForResponse(request);
+
         ResponseBuilder responseBuilder = new ResponseBuilder(linkBuilderFrom(httpServletRequest), contentType);
 
         try {
@@ -60,6 +71,18 @@ public class RequestDispatcher extends HttpServlet {
         }
 
         responseBuilder.translateTo(httpServletResponse);
+    }
+
+    /**
+     * here is where we would do content negotiation
+     */
+    private ContentType determineContentTypeForResponse(Request request) {
+        if (request.getPath().endsWith(".json")) {
+            return json;
+        } else if (request.getPath().endsWith(".xml")) {
+            return xml;
+        }
+        return defaultContentType;
     }
 
     private void respondWithDefaultFavicon(ResponseBuilder responseBuilder) {

@@ -56,6 +56,7 @@ public class RouteMap implements ResourceLookup, ResourceHyperlinkBuilder {
 
     public ResourceInvocation resourceMappedTo(Request request) {
         String path = removeTrailingSlashIfNotRoot(request.getPath());
+        path = removeFileTypesIfKnown(path);
 
         List<MatchRanking> rankings = new ArrayList<MatchRanking>();
         for (ResourceMapping resourceMapping : resourceMappings) {
@@ -85,6 +86,15 @@ public class RouteMap implements ResourceLookup, ResourceHyperlinkBuilder {
         }
 
         throw new RuntimeException(format("Resource [%s] does not support the [%s] method", matched.resource, request.getMethod()));
+    }
+
+    private String removeFileTypesIfKnown(String path) {
+        if (path.endsWith(".json")) {
+            return path.substring(0, path.length() - 5);
+        } else if (path.endsWith(".xml")) {
+            return path.substring(0, path.length() - 4);
+        }
+        return path;
     }
 
     private void checkForDuplicateMatch(String path, List<MatchRanking> rankings, MatchRanking bestMatchRanking) {

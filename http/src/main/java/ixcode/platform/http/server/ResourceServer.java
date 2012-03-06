@@ -47,9 +47,7 @@ public class ResourceServer {
 
 
     public void start() {
-        log.info("Default content type: " + defaultContentType);
-
-        RequestDispatcher requestDispatcher = requestDispatcher(format("http://%s:%s", hostname, port), routeMap);
+        RequestDispatcher requestDispatcher = requestDispatcher(format("http://%s:%s", hostname, port), routeMap, defaultContentType);
 
         new HttpServer(serverName, hostname, port, requestDispatcher)
                 .withRedirection(new RedirectTrailingSlashes())

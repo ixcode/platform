@@ -1,8 +1,10 @@
 package ixcode.platform.http.server;
 
+import com.google.common.collect.ImmutableClassToInstanceMap;
 import ixcode.platform.http.protocol.ContentType;
 
 import static ixcode.platform.http.protocol.IanaContentType.json;
+import static ixcode.platform.http.protocol.IanaContentType.xml;
 
 public class ResourceServerBuilder {
 
@@ -17,7 +19,8 @@ public class ResourceServerBuilder {
     }
     
     public ResourceServer build() {
-        return new ResourceServer(serverName, hostname, port, rootResourcePackageName, defaultContentType);
+        return new ResourceServer(serverName, hostname, port,
+                                  rootResourcePackageName, defaultContentType);
     }
 
     public ResourceServerBuilder onPort(int port) {
@@ -35,6 +38,11 @@ public class ResourceServerBuilder {
         return this;
     }
 
+    public ResourceServerBuilder xmlByDefault() {
+        this.defaultContentType = xml;
+        return this;
+    }
+
     public ResourceServerBuilder at(String hostname) {
         this.hostname = hostname;
         return this;
@@ -44,4 +52,5 @@ public class ResourceServerBuilder {
         this.serverName = serverName;
         return this;
     }
+
 }
