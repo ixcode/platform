@@ -1,10 +1,12 @@
 package ixcode.platform.serialise;
 
+import ixcode.platform.collection.MapBuilder;
 import ixcode.platform.serialise.*;
 import org.junit.*;
 
 import java.util.*;
 
+import static ixcode.platform.collection.MapBuilder.linkedHashMapWith;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -29,6 +31,15 @@ public class XmlSerialiserTest {
         String xml = new XmlSerialiser().toXml(theList);
         
         assertThat(xml, is("<string>First</string>\n<string>Second</string>\n<string>Third</string>\n"));
+    }
+    
+    @Test
+    public void can_serialize_a_map() {
+        Map<String, String> theMap = linkedHashMapWith().key("someKey").value("aValue").build();
+        
+        String xml = new XmlSerialiser().toXml(theMap);
+        
+        assertThat(xml, is("<someKey>aValue</someKey>"));
     }
 
     public static class SimpleObject {

@@ -5,8 +5,10 @@ import ixcode.platform.xml.XmlStringBuilder;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 import static ixcode.platform.reflect.TypeChecks.isList;
+import static ixcode.platform.reflect.TypeChecks.isMap;
 import static java.lang.String.format;
 
 public class XmlSerialiser {
@@ -24,26 +26,44 @@ public class XmlSerialiser {
 
 
     public <T> String toXml(T object) {
-        if (isList(object)) {
-            appendList(object);
-        } else {
-            appendObject(object);
-        }
+        appendObject(object);
 
         return xb.toString();
     }
 
+    private <T> void appendObject(T object) {
+        if (isList(object)) {
+            appendList(object);
+        } else if (isMap(object.getClass())) {
+            appendMap(object);
+        } else {
+            appendActualObject(object);
+        }
+    }
+
+    private <T> void appendMap(T object) {
+        Map<?, ?> theMap = (Map<?, ?>) object;
+        
+        for (Map.Entry<?, ?> entry : theMap.entrySet()) {
+            xb.openContainerNode(entry.getKey().toString());
+
+            appendObject(entry.getValue());
+
+            xb.closeContainerNode(entry.getKey().toString());
+        }
+    }
+
     private <T> void appendList(T object) {
-        List<?> theList = (List<?>)object;
+        List<?> theList = (List<?>) object;
 
         for (Object item : theList) {
-            appendObject(item);
+            appendActualObject(item);
         }
 
     }
 
 
-    private <T> void appendObject(T objectToSerialise) {
+    private <T> void appendActualObject(T objectToSerialise) {
         String nodeName = formatNodeName(objectToSerialise);
 
         xb.openContainerNode(nodeName);
@@ -65,11 +85,12 @@ public class XmlSerialiser {
             xb.appendText(object.toString());
             return;
         }
-        
+
         appendSimpleObject(object);
     }
 
-    private <T> void appendSimpleObject(T simpleObject) {Field[] declaredFields = simpleObject.getClass().getDeclaredFields();
+    private <T> void appendSimpleObject(T simpleObject) {
+        Field[] declaredFields = simpleObject.getClass().getDeclaredFields();
 
         for (Field f : declaredFields) {
             xb.node(f.getName());
