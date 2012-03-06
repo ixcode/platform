@@ -26,25 +26,29 @@ public class HttpServer {
     private Server server;
     private final String contextPath;
     private Servlet rootServlet;
+    private String hostname;
     private String serverName;
     private int httpPort;
     private String webrootDir;
     private List<Redirection> redirections = new ArrayList<Redirection>();
 
+
     public HttpServer(Class serverClass, int port, RequestDispatcher rootServlet) {
-        this(serverClass.getSimpleName(), "web", port, "/", rootServlet);
+        this(serverClass.getSimpleName(), "localhost", "web", port, "/", rootServlet);
     }
 
-    public HttpServer(String serverName, int port, RequestDispatcher rootServlet) {
-        this(serverName, "web", port, "/", rootServlet);
+    public HttpServer(String serverName, String hostname, int port, RequestDispatcher rootServlet) {
+        this(serverName, hostname, "web", port, "/", rootServlet);
     }
 
-    public HttpServer(String serverName, String webrootDir,
+    public HttpServer(String serverName,
+                      String hostname,
+                      String webrootDir,
                       int httpPort,
                       String contextPath,
                       Servlet rootServlet) {
 
-
+        this.hostname = hostname;
         this.serverName = serverName;
         this.httpPort = httpPort;
         this.webrootDir = webrootDir;
@@ -59,7 +63,7 @@ public class HttpServer {
 
     public static void main(String args[]) {
         initialiseLog4j();
-        new HttpServer(args[0], "web", 8080, "/", loadServletClass(args[1])).start();
+        new HttpServer(args[0], "localhost", "web", 8080, "/", loadServletClass(args[1])).start();
     }
 
     private static Servlet loadServletClass(String servletClassName) {
@@ -70,7 +74,7 @@ public class HttpServer {
     public void start() {
         try {
             LOG.info(format("Starting Http Server [%s] on port [%d]...", serverName, httpPort));
-            LOG.info(format("Serving from http://%s:%d/", InetAddress.getLocalHost().getHostName(), httpPort));
+            LOG.info(format("Serving from http://%s:%d/", hostname, httpPort));
             server = new Server(httpPort);
             server.setHandler(handlers());
             server.start();
