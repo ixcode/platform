@@ -29,7 +29,7 @@ import static java.lang.String.format;
 
 public class ResourceRoute implements GetResource, PostResource {
 
-    private final JsonSerialiser jsonSerialiser = new JsonSerialiser();
+
     private final UriFormat uriFormat = new UriFormat();
     private final JsonMetadata jsonMetadata = new JsonMetadata();
 
@@ -69,9 +69,8 @@ public class ResourceRoute implements GetResource, PostResource {
                 .havingRootObject(item);
 
 
-        respondWith.contentType().json()
-                .status().ok()
-                .body(jsonSerialiser.toJson(hypermedia.build()));
+        respondWith.status().ok()
+                   .hypermedia(hypermedia.build());
     }
 
     private void respondWithList(Request request, ResponseBuilder respondWith, String resourceType, Repository repository) {
@@ -90,9 +89,8 @@ public class ResourceRoute implements GetResource, PostResource {
         VanillaHypermedia hypermedia = hypermedia(tags[0], "list");
         hypermedia.havingValue(links).as("list");
 
-        respondWith.contentType().json()
-                .status().ok()
-                .body(jsonSerialiser.toJson(hypermedia.build()));
+        respondWith.status().ok()
+                   .hypermedia(hypermedia.build());
 
     }
 
@@ -113,9 +111,8 @@ public class ResourceRoute implements GetResource, PostResource {
             }
         });
 
-        respondWith.contentType().json()
-                .status().ok()
-                .body(jsonSerialiser.toJson(hypermedia.build()));
+        respondWith.status().ok()
+                   .hypermedia(hypermedia.build());
     }
 
     @Override

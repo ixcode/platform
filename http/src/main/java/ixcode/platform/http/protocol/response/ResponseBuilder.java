@@ -5,6 +5,7 @@ import ixcode.platform.http.protocol.ContentTypeBuilder;
 import ixcode.platform.http.protocol.Header;
 import ixcode.platform.io.IoClasspath;
 import ixcode.platform.io.IoStreamHandling;
+import ixcode.platform.serialise.JsonSerialiser;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static ixcode.platform.io.IoClasspath.inputStreamFromClasspathEntry;
 import static ixcode.platform.io.IoStreamHandling.closeQuietly;
@@ -30,6 +32,8 @@ public class ResponseBuilder implements ContentTypeBuilder.ContentTypeAcceptor {
 
     public final ResponseLinkBuilder linkBuilder;
     private String classpathEntry;
+
+    private final JsonSerialiser jsonSerialiser = new JsonSerialiser();
 
     public ResponseBuilder(ResponseLinkBuilder linkBuilder) {
         this.linkBuilder = linkBuilder;
@@ -115,5 +119,11 @@ public class ResponseBuilder implements ContentTypeBuilder.ContentTypeAcceptor {
     public void bodyFromClasspath(String classpathEntry) {
         log.debug("Going to load up classpath for: " + classpathEntry);
         this.classpathEntry = classpathEntry;
+    }
+
+    public ResponseBuilder hypermedia(Map<String, Object> hypermedia) {
+        contentType().json();
+        body(jsonSerialiser.toJson(hypermedia));
+        return this;
     }
 }
