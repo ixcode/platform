@@ -27,14 +27,14 @@ public class XmlRepresentationSerialiser extends XmlSerialiser {
     }
 
     @Override
-    protected <T> void appendObjectGuts(T source) {
-        if (source instanceof Representation) {
-            Representation representation = (Representation) source;
+    protected <T> void appendObjectGuts(T object) {
+        if (object instanceof Representation) {
+            Representation representation = (Representation) object;
             super.appendObjectGuts(representation.<T>getEntity());
             appendLinksFrom(representation);
             return;
         }
-        super.appendObjectGuts(source);
+        super.appendObjectGuts(object);
     }
 
     private void appendLinksFrom(Representation representation) {

@@ -1,11 +1,13 @@
 package ixcode.platform.serialise;
 
 import ixcode.platform.text.format.ObjectFormatter;
-import ixcode.platform.xml.*;
+import ixcode.platform.xml.XmlStringBuilder;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.util.List;
 
-import static java.lang.String.*;
+import static ixcode.platform.reflect.TypeChecks.isList;
+import static java.lang.String.format;
 
 public class XmlSerialiser {
     protected final XmlStringBuilder xb;
@@ -22,19 +24,32 @@ public class XmlSerialiser {
 
 
     public <T> String toXml(T object) {
-        appendObject(object);
+        if (isList(object)) {
+            appendList(object);
+        } else {
+            appendObject(object);
+        }
+
         return xb.toString();
     }
+
+    private <T> void appendList(T object) {
+        List<?> theList = (List<?>)object;
+
+        for (Object item : theList) {
+            appendObject(item);
+        }
+
+    }
+
 
     private <T> void appendObject(T objectToSerialise) {
         String nodeName = formatNodeName(objectToSerialise);
 
         xb.openContainerNode(nodeName);
-        xb.newline();
-
         appendObjectGuts(objectToSerialise);
-
         xb.closeContainerNode(nodeName);
+        xb.newline();
     }
 
     protected <T> String formatNodeName(T objectToSerialise) {
@@ -45,8 +60,16 @@ public class XmlSerialiser {
         return format("%s%s", simpleName.substring(0, 1).toLowerCase(), simpleName.substring(1));
     }
 
-    protected <T> void appendObjectGuts(T simpleObject) {
-        Field[] declaredFields = simpleObject.getClass().getDeclaredFields();
+    protected <T> void appendObjectGuts(T object) {
+        if (String.class.isAssignableFrom(object.getClass())) {
+            xb.appendText(object.toString());
+            return;
+        }
+        
+        appendSimpleObject(object);
+    }
+
+    private <T> void appendSimpleObject(T simpleObject) {Field[] declaredFields = simpleObject.getClass().getDeclaredFields();
 
         for (Field f : declaredFields) {
             xb.node(f.getName());
