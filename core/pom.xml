@@ -84,6 +84,18 @@
             <artifactId>json-parser</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.ixcode</groupId>
+            <artifactId>platform.core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ixcode</groupId>
+            <artifactId>platform.http</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
         <testSourceDirectory>src/test/unit/java</testSourceDirectory>
