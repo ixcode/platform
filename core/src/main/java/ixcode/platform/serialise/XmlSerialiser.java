@@ -1,9 +1,11 @@
 package ixcode.platform.serialise;
 
 import ixcode.platform.text.format.ObjectFormatter;
+import ixcode.platform.text.format.UriFormat;
 import ixcode.platform.xml.XmlStringBuilder;
 
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +38,8 @@ public class XmlSerialiser {
             appendList(object);
         } else if (isMap(object.getClass())) {
             appendMap(object);
+        } else if (URI.class.isAssignableFrom(object.getClass())) {
+            xb.appendText(new UriFormat().format(object));
         } else {
             appendActualObject(object);
         }
@@ -43,7 +47,7 @@ public class XmlSerialiser {
 
     private <T> void appendMap(T object) {
         Map<?, ?> theMap = (Map<?, ?>) object;
-        
+
         for (Map.Entry<?, ?> entry : theMap.entrySet()) {
             xb.openContainerNode(entry.getKey().toString());
 
@@ -57,7 +61,7 @@ public class XmlSerialiser {
         List<?> theList = (List<?>) object;
 
         for (Object item : theList) {
-            appendActualObject(item);
+            appendObject(item);
         }
 
     }
@@ -86,10 +90,10 @@ public class XmlSerialiser {
             return;
         }
 
-        appendSimpleObject(object);
+        reflectivelyAppend(object);
     }
 
-    private <T> void appendSimpleObject(T simpleObject) {
+    private <T> void reflectivelyAppend(T simpleObject) {
         Field[] declaredFields = simpleObject.getClass().getDeclaredFields();
 
         for (Field f : declaredFields) {
