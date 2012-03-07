@@ -21,7 +21,7 @@ public class XmlSerialiserTest {
 
         System.out.println(xml);
 
-        assertThat(xml, is("<simpleObject>\n    <name>Johnny Foo</name>\n    <age>23</age>\n    <dateOfBirth>1970-01-01T12:00:00Z</dateOfBirth>\n</simpleObject>"));
+        assertThat(xml, is("<simpleObject>    <name>Johnny Foo</name>\n    <age>23</age>\n    <dateOfBirth>1970-01-01T12:00:00Z</dateOfBirth>\n</simpleObject>\n"));
     }
     
     @Test
@@ -39,7 +39,7 @@ public class XmlSerialiserTest {
         
         String xml = new XmlSerialiser().toXml(theMap);
         
-        assertThat(xml, is("<someKey>aValue</someKey>"));
+        assertThat(xml, is("<someKey>    <string>aValue    </string>\n</someKey>"));
     }
 
     public static class SimpleObject {

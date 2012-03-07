@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ixcode</groupId>
     <version>1.0-SNAPSHOT</version>
-    <artifactId>platform.core</artifactId>
+    <artifactId>platform.http</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -84,6 +84,40 @@
             <artifactId>json-parser</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.ixcode</groupId>
+            <artifactId>platform.core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5-6.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>7.2.2.v20101205</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-security</artifactId>
+            <version>7.2.2.v20101205</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>7.2.2.v20101205</version>
+        </dependency>
+
+
+
+
     </dependencies>
     <build>
         <testSourceDirectory>src/test/unit/java</testSourceDirectory>
