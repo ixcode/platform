@@ -116,10 +116,13 @@
         </dependency>
 
 
-
-
     </dependencies>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resource</directory>
+            </resource>
+        </resources>
         <testSourceDirectory>src/test/unit/java</testSourceDirectory>
         <plugins>
             <plugin>
@@ -130,7 +133,9 @@
                     <execution>
                         <id>copy-dependencies</id>
                         <phase>package</phase>
-                        <goals><goal>copy-dependencies</goal></goals>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
