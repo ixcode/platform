@@ -12,11 +12,13 @@ import org.eclipse.jetty.servlet.*;
 
 import javax.servlet.*;
 import java.io.*;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
 import static ixcode.platform.logging.ConsoleLog4jLogging.*;
 import static java.lang.String.*;
+import static java.net.InetAddress.getLocalHost;
 
 public class HttpServer {
     private static final Logger log = Logger.getLogger(HttpServer.class);
@@ -73,6 +75,7 @@ public class HttpServer {
         try {
             log.info(format("Starting Http Server [%s] on port [%d]...", serverName, httpPort));
             log.info(format("Serving from http://%s:%d/", hostname, httpPort));
+            log.info(format("Running on host [%s]", getLocalHost().getHostName()));
             server = new Server(httpPort);
             server.setHandler(handlers());
             server.start();
