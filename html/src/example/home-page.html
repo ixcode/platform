@@ -2,6 +2,7 @@
 <head>
     <meta name="derived-from" content="layout/base-page"/>
     <meta name="data-source" content="themes"/>
+    <meta name="data-source" content="current-date"/>
 
     <title>This is my homepage</title>
 
@@ -11,9 +12,10 @@
 
 <body>
 <div id="content">
-    <p>Here is some custom content I've created</p>
+    <p>Here is some custom content I've created. todays date is
+        <span class="current-date">12/04/2012</span></p>
 
-    <div class="message-of-the-day component thick-border">
+    <div class="message-of-the-day component">
         <p>This is where my content will go</p>
     </div>
     
@@ -21,7 +23,10 @@
         <p>This guy won't be styled as a component</p>
     </div>
 </div>
-<div id="right-sidebar"/>
+
+<div id="right-sidebar">
+    <div class="login component small" />
+</div>
 </body>
 
 </html>
