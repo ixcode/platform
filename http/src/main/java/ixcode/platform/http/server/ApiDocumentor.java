@@ -15,19 +15,24 @@ public class ApiDocumentor {
     public final UUID lastUuid = null;
     public final UUID[] uuids = {};
 
-    public void GET(String url, String json) {
-        String mutatedUrl = url;
-        if (url.contains("{uuid}")) {
-            addUuid(randomUUID());
-            mutatedUrl = url.replace("{uuid}", lastUuid.toString());
-        }
-
+    public String GET(String url, String json) {
+        String mutatedUrl = uniquefy(url);
         print_json_GET(mutatedUrl, json);
+        return mutatedUrl;
+    }
+
+    public String uniquefy(String url) {
+        String mutatedUrl = url;
+        if (url.contains("@@uuid@@")) {
+            addUuid(randomUUID());
+            mutatedUrl = url.replace("@@uuid@@", lastUuid.toString());
+        } return mutatedUrl;
     }
 
     public static void print_json_GET(String mutatedUrl, String json) {
         out.println("GET " + mutatedUrl + " HTTP/1.1");
         out.println("HTTP/1.1 200 Ok");
+        out.println("Content-Type: application/json");
         out.println(prettyPrintJson(json));
         out.println();
     }
