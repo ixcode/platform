@@ -4,6 +4,8 @@ import ixcode.platform.http.protocol.response.ResponseLinkBuilder;
 import ixcode.platform.reflect.FieldReflector;
 import ixcode.platform.reflect.ObjectReflector;
 import ixcode.platform.repository.RepositoryKey;
+import ixcode.platform.serialise.JsonSerialiser;
+import ixcode.platform.serialise.TransformToJson;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -17,6 +19,8 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 public abstract class HypermediaRepresentationBuilder<T extends HypermediaRepresentationBuilder> implements LinkCollection {
+
+
     private ReflectiveMapBuilder mapBuilder = new ReflectiveMapBuilder();
     private transient List<Hyperlink> hyperlinks = new ArrayList<Hyperlink>();
     protected List<String> types;
@@ -51,6 +55,10 @@ public abstract class HypermediaRepresentationBuilder<T extends HypermediaRepres
     public T havingLinkBuilder(ResponseLinkBuilder linkBuilder) {
         this.linkBuilder = linkBuilder;
         return (T)this;
+    }
+
+    public T attribute(String key, Object value) {
+        return havingValue(value).as(key);
     }
 
     public KeyValueBuilder<T> havingValue(Object value) {
@@ -125,6 +133,12 @@ public abstract class HypermediaRepresentationBuilder<T extends HypermediaRepres
     public void addHyperlink(URI uri, String relation, String title) {
         hyperlinks.add(hyperlinkTo(uri, relation, title));
     }
+
+
+    public String serialize() {
+        return new JsonSerialiser(new TransformHypermediaToJson()).toJson(this.build());
+    }
+
 
     public static class KeyValueBuilder<T extends HypermediaRepresentationBuilder> {
         private final HypermediaRepresentationBuilder<T> parent;

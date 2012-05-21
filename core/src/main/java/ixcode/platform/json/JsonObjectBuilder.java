@@ -1,16 +1,22 @@
 package ixcode.platform.json;
 
-import java.util.ArrayList;
+import ixcode.platform.serialise.JsonSerialiser;
+import ixcode.platform.serialise.TransformToJson;
+
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class JsonObjectBuilder {
+
 
     Map<String, Object> valueMap = new LinkedHashMap<String, Object>();
 
     public static JsonObjectBuilder jsonObjectWith() {
         return new JsonObjectBuilder();
+    }
+
+    public JsonObjectBuilder attribute(String key, Object value) {
+        return key(key).value(value);
     }
 
     public JsonPairBuilder key(String key) {
@@ -21,8 +27,13 @@ public class JsonObjectBuilder {
         return new JsonObject(valueMap);
     }
 
+
     private void addPair(JsonPair jsonPair) {
         valueMap.put(jsonPair.key, jsonPair.value);
+    }
+
+    public String serialize() {
+        return new JsonSerialiser(new TransformToJson()).toJson(this.valueMap);
     }
 
     public static class JsonPairBuilder {
