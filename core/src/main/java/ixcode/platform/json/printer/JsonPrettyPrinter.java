@@ -24,15 +24,19 @@ public class JsonPrettyPrinter {
 
         char c = input.charAt(0);
 
+        int indent1 = indent;
+        final int TAB_SIZE = 2;
         switch (c) {
-            case '{' :
+            case '{':
             case '[':
-                indent = indent += 2;
+                indent1 = indent1 += TAB_SIZE;
                 break;
+
             case '}':
             case ']':
-                indent = indent -= 2;
+                indent1 = indent1 -= TAB_SIZE;
         }
+        indent = indent1;
 
         switch (c) {
             case ',':
@@ -48,8 +52,6 @@ public class JsonPrettyPrinter {
             default:
                 out.append(c);
         }
-
-
 
 
         appendChar(input.substring(1), out, indent);
