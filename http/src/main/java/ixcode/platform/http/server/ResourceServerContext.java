@@ -6,6 +6,7 @@ import ixcode.platform.http.server.resource.RouteMap;
 import ixcode.platform.http.server.routing.ResourceRoute;
 import ixcode.platform.repository.Repository;
 import ixcode.platform.repository.Resource;
+import org.apache.log4j.Logger;
 import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
@@ -21,6 +22,8 @@ import static ixcode.platform.http.server.resource.RouteMap.aResourceMap;
 import static ixcode.platform.repository.LinkedHashMapRepository.createRepositoryFor;
 
 public class ResourceServerContext {
+
+    private static final Logger log = Logger.getLogger(ResourceServerContext.class);
 
     private final InjectionContext injectionContext = new InjectionContext();
     private final Map<String, Repository<?>> repositoryMap;
@@ -44,6 +47,8 @@ public class ResourceServerContext {
     }
 
     public static Map<String, Repository<?>> reflectivelyBuildRepositoryMap(String rootDomainPackage) {
+        log.info("Configuring resources in package " + rootDomainPackage);
+
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                                                           .setUrls(ClasspathHelper.forPackage(rootDomainPackage))
                                                           .setScanners(new TypeAnnotationsScanner()));

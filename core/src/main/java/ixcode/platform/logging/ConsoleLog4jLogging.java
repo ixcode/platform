@@ -10,7 +10,7 @@ public class ConsoleLog4jLogging {
 
     private static final Level DEFAULT_LOG_LEVEL = Level.INFO;
 
-    private static final String LOG_PATTERN = "[%t] %-5p %-45c %x : %m%n";
+    private static final String LOG_PATTERN = "[%t] %-5p %-25c{1} %x : %m%n";
 
     public static void initialiseLog4j() {
         configure(getRootLogger(), DEFAULT_LOG_LEVEL);

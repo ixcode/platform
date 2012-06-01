@@ -21,6 +21,9 @@ public class ResourceServer {
     private final String serverName;
     private final ResourceServerContext context;
 
+    static {
+        initialiseLog4j();
+    }
 
     public ResourceServer(String serverName,
                           String hostname, int port,
@@ -42,7 +45,6 @@ public class ResourceServer {
         this.port = port;
         this.defaultContentType = defaultContentType;
         this.routeMap = context.theRouteMap().rootedAt(format("http://%s:%s", hostname, port));
-        initialiseLog4j();
     }
 
 

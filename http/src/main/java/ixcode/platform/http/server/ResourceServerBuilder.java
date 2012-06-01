@@ -15,9 +15,19 @@ public class ResourceServerBuilder {
     private ContentType defaultContentType = json;
 
     public static ResourceServerBuilder resourceServer() {
-        return new ResourceServerBuilder();        
+        String fullClassName = getDefaultNameFromCallingClass();
+        return new ResourceServerBuilder()
+                .called(fullClassName)
+                .at("localhost")
+                .withResourcesInPackage(fullClassName.substring(0, fullClassName.lastIndexOf(".")))
+                .jsonByDefault();
     }
-    
+
+    private static String getDefaultNameFromCallingClass() {
+        StackTraceElement[] stackTrace =  new Exception().getStackTrace();
+        return stackTrace[2].getClassName();
+    }
+
     public ResourceServer build() {
         return new ResourceServer(serverName, hostname, port,
                                   rootResourcePackageName, defaultContentType);
