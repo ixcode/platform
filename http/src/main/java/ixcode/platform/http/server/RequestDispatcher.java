@@ -22,6 +22,7 @@ import static ixcode.platform.http.protocol.IanaContentType.json;
 import static ixcode.platform.http.protocol.IanaContentType.xml;
 import static ixcode.platform.http.protocol.request.Request.requestFrom;
 import static ixcode.platform.http.protocol.response.ResponseLinkBuilder.linkBuilderFrom;
+import static java.lang.Thread.currentThread;
 
 public class RequestDispatcher extends HttpServlet {
 
@@ -54,6 +55,7 @@ public class RequestDispatcher extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
         Request request = requestFrom(httpServletRequest);
+        currentThread().setName(currentThread().getName() + "/" + request.getPath());
 
         ContentType contentType = determineContentTypeForResponse(request);
 
