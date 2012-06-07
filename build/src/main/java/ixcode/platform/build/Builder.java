@@ -1,5 +1,7 @@
 package ixcode.platform.build;
 
+import static ixcode.platform.build.RelativeFile.relativeFile;
+
 public class Builder {
 
     private BuildLog buildLog;
@@ -17,9 +19,9 @@ public class Builder {
         buildLog.println("Builder (v.10) - building now!");
         buildLog.println("Module Dir [%s]", moduleDir);
 
-        RelativeFile sourceDir = new RelativeFile(moduleDir, "src/main/java");
-        RelativeFile targetDir = new RelativeFile(moduleDir, "target");
-        RelativeFile targetClassesDir = new RelativeFile(moduleDir, "target/classes");
+        RelativeFile sourceDir = relativeFile(moduleDir, "src/main/java");
+        RelativeFile targetDir = relativeFile(moduleDir, "target");
+        RelativeFile targetClassesDir = relativeFile(moduleDir, "target/classes");
 
         new Clean(buildLog, targetDir).execute();
         new Compilation(buildLog, sourceDir, targetClassesDir).execute();
