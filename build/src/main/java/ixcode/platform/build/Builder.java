@@ -18,12 +18,10 @@ public class Builder {
         buildLog.println("Module Dir [%s]", moduleDir);
 
         RelativeFile sourceDir = new RelativeFile(moduleDir, "src/main/java");
-
         RelativeFile targetDir = new RelativeFile(moduleDir, "target");
-
         RelativeFile targetClassesDir = new RelativeFile(moduleDir, "target/classes");
 
-        new Clean(targetDir).execute();
+        new Clean(buildLog, targetDir).execute();
         new Compilation(buildLog, sourceDir, targetClassesDir).execute();
     }
 

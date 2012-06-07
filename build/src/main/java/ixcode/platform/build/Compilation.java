@@ -14,7 +14,11 @@ public class Compilation {
         this.targetClassesDir = targetClassesDir;
     }
 
-    public void compile() {
-        buildLog.println("Compilation from [%s] to [%s]", sourceDir.geRelativePath(), targetClassesDir.geRelativePath());
+    public void execute() {
+        buildLog.println("Compilation from [%s] to [%s]",
+                         sourceDir.geRelativePath(),
+                         targetClassesDir.geRelativePath());
+
+        targetClassesDir.mkdirs();
     }
 }
