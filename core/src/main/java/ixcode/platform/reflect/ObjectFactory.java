@@ -24,10 +24,18 @@ public class ObjectFactory<T> {
         return true;
     }
 
+    public static Class<?> loadClass(String fullyQualifiedName) {
+        try {
+            return currentThread().getContextClassLoader().loadClass(fullyQualifiedName);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(format("Could not load class [%s] from classloader [%s]",fullyQualifiedName, currentThread().getContextClassLoader()), e);
+        }
+    }
+
 
     public T instantiate(String className) {
         try {
-            return instantiate((Class<T>)forName(className));
+            return instantiate((Class<T>)loadClass(className));
         } catch (Exception e) {
             throw new RuntimeException(format("Could not instantiate [%s] (see cause)", className), e);
         }
@@ -49,7 +57,7 @@ public class ObjectFactory<T> {
 
     public T instantiateWithDefault(String classname, T defaultInstance, boolean shouldLogToError) {
         try {
-            return (T) forName(classname).newInstance();
+            return (T) loadClass(classname).newInstance();
         } catch (Exception e) {
             logNotInstantiated(classname, e, shouldLogToError);
             return defaultInstance;
@@ -79,7 +87,7 @@ public class ObjectFactory<T> {
 
     public T instantiateWithArg(String classname, Class argClass, Object arg, boolean shouldLogToError) {
         try {
-            Class classToInstantiate = forName(classname);
+            Class classToInstantiate = loadClass(classname);
             return instantiateWithArg(classToInstantiate, argClass, arg);
         } catch (Exception e) {
             logNotInstantiated(classname, e, shouldLogToError);

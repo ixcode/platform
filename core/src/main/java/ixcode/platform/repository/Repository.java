@@ -1,6 +1,9 @@
 package ixcode.platform.repository;
 
 import java.util.List;
+import java.util.Map;
+
+import static ixcode.platform.repository.LinkedHashMapRepository.repositoryIdFor;
 
 public interface Repository<T> {
 

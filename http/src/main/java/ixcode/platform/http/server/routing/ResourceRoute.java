@@ -86,7 +86,7 @@ public class ResourceRoute implements GetResource, PostResource {
 
         String[] tags = jsonMetadata.tagsFor(repository.getItemType());
         VanillaHypermedia hypermedia = hypermedia(tags[0], "list");
-        hypermedia.havingValue(links).as("list");
+        hypermedia.havingValue(links).as("items");
 
         respondWith.status().ok()
                    .hypermedia(hypermedia.build());

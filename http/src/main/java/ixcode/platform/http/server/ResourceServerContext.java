@@ -20,6 +20,8 @@ import java.util.Set;
 import static ixcode.platform.collection.MapBuilder.linkedHashMapWith;
 import static ixcode.platform.http.server.resource.RouteMap.aResourceMap;
 import static ixcode.platform.repository.LinkedHashMapRepository.createRepositoryFor;
+import static ixcode.platform.repository.LinkedHashMapRepository.repositoryIdFor;
+import static java.lang.String.format;
 
 public class ResourceServerContext {
 
@@ -68,6 +70,7 @@ public class ResourceServerContext {
         MapBuilder repositoryMapBuilder = linkedHashMapWith();
         for (Repository<?> repository : repositories) {
             repositoryMapBuilder.key(repository.getRepositoryId()).value(repository);
+            log.info(format("Repository: %s", repository.getRepositoryId()));
         }
 
         return repositoryMapBuilder.build();
@@ -80,5 +83,9 @@ public class ResourceServerContext {
 
     public Map<String, Repository<?>> theRepositoryMap() {
         return repositoryMap;
+    }
+
+    public static <T> Repository<T> repositoryFor(Map<String, Repository<?>> repositoryMap, Class<T> itemClass) {
+        return (Repository<T>) repositoryMap.get(repositoryIdFor(itemClass));
     }
 }
