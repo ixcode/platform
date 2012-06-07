@@ -1,6 +1,7 @@
 package ixcode.platform.http.server.routing;
 
 import ixcode.platform.collection.Action;
+import ixcode.platform.collection.MapBuilder;
 import ixcode.platform.http.protocol.request.Request;
 import ixcode.platform.http.protocol.request.RequestParameter;
 import ixcode.platform.http.protocol.response.ResponseBuilder;
@@ -9,12 +10,14 @@ import ixcode.platform.http.representation.VanillaHypermedia;
 import ixcode.platform.http.server.resource.GetResource;
 import ixcode.platform.http.server.resource.PostResource;
 import ixcode.platform.http.server.resource.ResourceHyperlinkBuilder;
+import ixcode.platform.reflect.FieldReflector;
+import ixcode.platform.reflect.ObjectReflector;
+import ixcode.platform.repository.PreviewAttribute;
 import ixcode.platform.repository.Repository;
 import ixcode.platform.repository.RepositoryItem;
 import ixcode.platform.repository.RepositoryKey;
 import ixcode.platform.repository.RepositorySearch;
 import ixcode.platform.serialise.JsonMetadata;
-import ixcode.platform.serialise.JsonSerialiser;
 import ixcode.platform.text.format.UriFormat;
 
 import java.net.URI;
@@ -23,7 +26,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static ixcode.platform.collection.MapBuilder.linkedHashMapWith;
 import static ixcode.platform.http.representation.VanillaHypermedia.hypermedia;
+import static ixcode.platform.reflect.ObjectReflector.reflect;
 import static ixcode.platform.text.format.ArrayFormat.arrayToString;
 import static java.lang.String.format;
 
@@ -51,11 +56,51 @@ public class ResourceRoute implements GetResource, PostResource {
         }
 
         if (resourceIdentifier == null) {
-            respondWithList(request, respondWith, resourceType, repository);
+            if (jsonMetadata.previewList(repository.getItemType())) {
+                respondWithPreviewList(request, respondWith, resourceType, repository);
+            } else {
+                respondWithListOfLinks(request, respondWith, resourceType, repository);
+            }
             return;
         }
 
         respondWithSingleItem(respondWith, resourceIdentifier, repository);
+    }
+
+    private void respondWithPreviewList(Request request, ResponseBuilder respondWith,
+                                        String resourceType, Repository repository) {
+
+        RepositorySearch search = new RepositorySearch();
+        List<RepositoryItem> results = repository.find(search);
+
+        ResponseLinkBuilder responseLinkBuilder = respondWith.linkBuilder;
+
+        ObjectReflector reflector = reflect(repository.getItemType());
+
+        List<Map<String, Object>> previewItems = new ArrayList<Map<String, Object>>();
+        for (final RepositoryItem repositoryItem : results) {
+            String path = format("/%s/%s", resourceType, repositoryItem.repositoryKey.toString());
+            final MapBuilder<String, Object> mapBuilder = linkedHashMapWith()
+                    .key("self").value(responseLinkBuilder.linkTo(path));
+
+            reflector.withEachFieldHavingAnnotation(PreviewAttribute.class, new Action<FieldReflector>() {
+
+                @Override public void to(FieldReflector fieldReflector, Collection<FieldReflector> tail) {
+                    mapBuilder.key(fieldReflector.name).value(fieldReflector.valueFrom(repositoryItem.value));
+                }
+
+            });
+
+            previewItems.add(mapBuilder.build());
+        }
+
+        String[] tags = jsonMetadata.tagsFor(repository.getItemType());
+        VanillaHypermedia hypermedia = hypermedia(tags[0], "preview", "list");
+        hypermedia.havingValue(previewItems).as("items");
+
+        respondWith.status().ok()
+                   .hypermedia(hypermedia.build());
+
     }
 
     private void respondWithSingleItem(ResponseBuilder respondWith, String resourceIdentifier, Repository repository) {
@@ -72,7 +117,7 @@ public class ResourceRoute implements GetResource, PostResource {
                    .hypermedia(hypermedia.build());
     }
 
-    private void respondWithList(Request request, ResponseBuilder respondWith, String resourceType, Repository repository) {
+    private void respondWithListOfLinks(Request request, ResponseBuilder respondWith, String resourceType, Repository repository) {
         RepositorySearch search = new RepositorySearch();
         List<RepositoryItem> results = repository.find(search);
 

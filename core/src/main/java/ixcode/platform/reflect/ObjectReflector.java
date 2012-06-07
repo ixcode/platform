@@ -7,8 +7,8 @@ import ixcode.platform.text.format.Format;
 import ixcode.platform.text.format.FormatRegistry;
 import ixcode.platform.text.format.StringToObjectParser;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -93,6 +93,22 @@ public class ObjectReflector {
 
     public void withEachNonTransientField(Action<FieldReflector> action) {
         this.nonTransientFields.apply(action);
+    }
+
+    public void withEachFieldHavingAnnotation(final Class<? extends Annotation> annotation,
+                                              Action<FieldReflector> action) {
+
+        final FList<FieldReflector> withAnnotationList = new FArrayList<FieldReflector>();
+
+        withEachNonTransientField(new Action<FieldReflector>() {
+            @Override public void to(FieldReflector item, Collection<FieldReflector> tail) {
+               if (item.hasAnnotation(annotation)) {
+                   withAnnotationList.add(item);
+               }
+            }
+        });
+
+        withAnnotationList.apply(action);
     }
 
 
