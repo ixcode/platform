@@ -15,5 +15,10 @@ public class Jar {
 
     public void execute() {
         buildLog.println("Going to create jarfile [%s] from classes in [%s]", jarFile, targetClassesDir);
+        jarFile.remove();
+
+        new SystemCommand(buildLog, jarFile.getParentFile(), "jar -cf " + jarFile.getAbsolutePath() + " -C "+ targetClassesDir.getAbsolutePath() + " .").execute();
+
+        new SystemCommand(buildLog, jarFile.getParentFile(), "jar -tf " + jarFile.getAbsolutePath()).execute();
     }
 }

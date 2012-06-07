@@ -11,7 +11,7 @@ import static java.util.Arrays.asList;
 public class RelativeFile {
 
     private final File rootDir;
-    private final File dir;
+    private final File file;
 
     private final String relativePath;
 
@@ -24,10 +24,10 @@ public class RelativeFile {
     }
 
 
-    public RelativeFile(File rootDir, File dir) {
+    public RelativeFile(File rootDir, File file) {
         this.rootDir = rootDir;
-        this.dir = dir;
-        this.relativePath = dir.getAbsolutePath().substring(rootDir.getAbsolutePath().length());
+        this.file = file;
+        this.relativePath = file.getAbsolutePath().substring(rootDir.getAbsolutePath().length());
     }
 
     public String geRelativePath() {
@@ -35,7 +35,9 @@ public class RelativeFile {
     }
 
     public void remove() {
-        delete(dir);
+        if (file.exists()) {
+            delete(file);
+        }
     }
 
     void delete(File f) {
@@ -50,7 +52,7 @@ public class RelativeFile {
     }
 
     public boolean exists() {
-        return dir.exists();
+        return file.exists();
     }
 
     public String toString() {
@@ -58,16 +60,16 @@ public class RelativeFile {
     }
 
     public void mkdirs() {
-        dir.mkdirs();
+        file.mkdirs();
     }
 
     public String getAbsolutePath() {
-        return dir.getAbsolutePath();
+        return file.getAbsolutePath();
     }
 
     public File[] listAllFilesMatching(String pattern) {
         List<File> files = new ArrayList<File>();
-        listFilesTo(files, dir, createRegex(pattern));
+        listFilesTo(files, file, createRegex(pattern));
         return files.toArray(new File[0]);
     }
 
@@ -104,5 +106,9 @@ public class RelativeFile {
 
     public static String createRegex(String pattern) {
         return pattern.replace(".", "\\.").replace("*", "(.*)");
+    }
+
+    public File getParentFile() {
+        return file.getParentFile();
     }
 }
