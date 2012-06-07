@@ -11,7 +11,7 @@ public class Clean {
 
     public void execute() {
         if (file.exists()) {
-            buildLog.println("Clean [%s]");
+            buildLog.println("Clean [%s]", file.geRelativePath());
             file.remove();
         } else {
             buildLog.println("Directoy [%s] does not exist, no need to clean.", file);

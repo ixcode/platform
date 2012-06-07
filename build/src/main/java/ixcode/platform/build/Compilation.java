@@ -33,10 +33,8 @@ public class Compilation {
         List<String> optionList = Arrays.asList(
                 "-g",
                 "-Xlint",
-                "-Werror",
                 "-sourcepath",
                 sourceDir.getAbsolutePath(),
-                "src/test/to_compile/SimpleClass.java",
                 "-d",
                 "./target/classes");
 

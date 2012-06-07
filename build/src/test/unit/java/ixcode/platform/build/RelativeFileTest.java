@@ -39,7 +39,6 @@ public class RelativeFileTest {
     @Test
     public void lists_all_pngs_in_a_directory_recursively() {
 
-
         RelativeFile relativeFile = relativeFile(getProperty("user.home"), "tmp");
 
         File[] files = relativeFile.listAllFilesMatching("*.png");
