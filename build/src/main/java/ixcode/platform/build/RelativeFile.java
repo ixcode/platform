@@ -16,12 +16,13 @@ public class RelativeFile {
     private final String relativePath;
 
     public static RelativeFile relativeFile(String rootDir, String dir) {
-        return new RelativeFile(rootDir, dir);
+        return new RelativeFile(new File(rootDir), new File(dir));
     }
 
-    public RelativeFile(String rootDir, String dir) {
-        this(new File(rootDir), new File(rootDir, dir));
+    public static RelativeFile relativeFile(File rootDir, String dir) {
+        return new RelativeFile(rootDir, new File(dir));
     }
+
 
     public RelativeFile(File rootDir, File dir) {
         this.rootDir = rootDir;
