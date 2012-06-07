@@ -1,12 +1,15 @@
+package org.xampl;
+
 import java.io.Serializable;
-import java.lang.Deprecated;
+
+import static org.xampl.AnotherClass.someDeprecatedMethod;
 
 
 public class SimpleClass implements Serializable {
 
     public static void main(String[] args) {
         System.out.println("hello world.");
-        AnotherClass.someDeprecatedMethod(3);
+        someDeprecatedMethod(3);
 
         iDontCareIfIUseMyOwnDeprecatedMethods();
 
