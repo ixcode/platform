@@ -45,12 +45,18 @@ function report.completed() {
 
 function command.help() {
 	echo "Usage: ibx <command> args"
-	echo .
+	echo
 	cat "$IBX_HOME/ibex.txt"
-	echo .
-	echo "install  : Installs the Ibex into your system"
-	echo "build    : Runs an intelligent build over your sources."
+	echo
 
+	echo "build    : Runs an intelligent build over your sources."
+    echo "clean    : Removes any generated files (./target dir)."
+    echo
+    echo "install  : Installs the Ibex into your system"
+}
+
+function command.clean() {
+   rm -r $CURRENT_DIR/target
 }
 
 
@@ -58,9 +64,6 @@ function command.build() {
    java -cp "$IBX_HOME/lib/*" ixcode.platform.build.ModuleBuilder "$CURRENT_DIR" "build" "$@"
 }
 
-function command.build() {
-   java -cp "$IBX_HOME/lib/*" ixcode.platform.build.ModuleBuilder "$CURRENT_DIR" "clean" "$@"
-}
 
 function command.install() {
     echo "Ok, I'm going to install myself in your path."
