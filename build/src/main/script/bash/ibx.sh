@@ -61,7 +61,9 @@ function command.build() {
 function command.install() {
     echo "Ok, I'm going to install myself in your path."
     rm "/usr/local/bin/ibx"
-    ln -s "$CURRENT_DIR/ibx.sh" "/usr/local/bin/ibx"
+    cd "$IBX_HOME"
+    ln -s "$PWD/ibx.sh" "/usr/local/bin/ibx"
+    cd -
 }
 
 
