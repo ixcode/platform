@@ -6,7 +6,7 @@ import static ixcode.platform.build.RelativeFile.relativeFile;
 
 public class Builder {
 
-    private BuildLog buildLog;
+    private final BuildLog buildLog;
 
     public static void main(String[] args) {
         new Builder(new ConsoleLog()).buildModule(new File(args[0]));
@@ -32,10 +32,14 @@ public class Builder {
         RelativeFile targetJarfile = relativeFile(moduleDir, "target/dist" + moduleDir.getName() + ".jar");
 
 
-        new Clean(buildLog, targetDir).execute();
-        new Compilation(buildLog, sourceDir, targetClassesDir).execute();
-        new Jar(buildLog, targetJarfile, targetClassesDir, resourcesDir).execute();
-        new Copy(buildLog, targetDistDir, scriptDir, "*.*").execute();
+        new Compilation(sourceDir, targetClassesDir).execute(buildLog);
+        new Jar(targetJarfile, targetClassesDir, resourcesDir).execute(buildLog);
+        new Copy(targetDistDir, scriptDir, "*.*").execute(buildLog);
+    }
+
+    public void cleanModule(File moduleDir) {
+        RelativeFile targetDir = relativeFile(moduleDir, "target");
+        new Clean(targetDir).execute(buildLog);
     }
 
 }

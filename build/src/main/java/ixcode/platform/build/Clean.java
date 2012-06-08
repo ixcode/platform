@@ -1,15 +1,14 @@
 package ixcode.platform.build;
 
-public class Clean {
-    private final BuildLog buildLog;
+public class Clean implements BuildTask {
+
     private final RelativeFile file;
 
-    public Clean(BuildLog buildLog, RelativeFile file) {
-        this.buildLog = buildLog;
+    public Clean(RelativeFile file) {
         this.file = file;
     }
 
-    public void execute() {
+    public void execute(BuildLog buildLog) {
         if (file.exists()) {
             buildLog.println("Clean [%s]", file.geRelativePath());
             file.remove();

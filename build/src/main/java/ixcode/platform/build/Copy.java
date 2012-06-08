@@ -1,11 +1,11 @@
 package ixcode.platform.build;
 
-public class Copy {
-    public Copy(BuildLog buildLog, RelativeFile targetDistDir, RelativeFile scriptDir, String pattern) {
+public class Copy implements BuildTask {
+    public Copy(RelativeFile targetDistDir, RelativeFile scriptDir, String pattern) {
 
     }
 
-    public void execute() {
+    public void execute(BuildLog buildLog) {
 
     }
 }

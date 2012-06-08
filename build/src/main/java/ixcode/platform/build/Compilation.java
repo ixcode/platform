@@ -7,27 +7,26 @@ import java.util.List;
 
 import static javax.tools.ToolProvider.getSystemJavaCompiler;
 
-public class Compilation {
-    private BuildLog buildLog;
+public class Compilation implements BuildTask {
+
     private final RelativeFile sourceDir;
     private final RelativeFile targetClassesDir;
 
-    public Compilation(BuildLog buildLog, RelativeFile sourceDir, RelativeFile targetClassesDir) {
-        this.buildLog = buildLog;
+    public Compilation(RelativeFile sourceDir, RelativeFile targetClassesDir) {
         this.sourceDir = sourceDir;
         this.targetClassesDir = targetClassesDir;
     }
 
-    public void execute() {
+    public void execute(BuildLog buildLog) {
         buildLog.println("Compilation from [%s] to [%s]",
-                         sourceDir.geRelativePath(),
-                         targetClassesDir.geRelativePath());
+                              sourceDir.geRelativePath(),
+                              targetClassesDir.geRelativePath());
 
         targetClassesDir.mkdirs();
-        compile();
+        compile(buildLog);
     }
 
-    private void compile() {
+    private void compile(BuildLog buildLog) {
         JavaCompiler compiler = getSystemJavaCompiler();
 
         List<String> optionList = Arrays.asList(
@@ -36,7 +35,7 @@ public class Compilation {
                 "-sourcepath",
                 sourceDir.getAbsolutePath(),
                 "-d",
-                "./target/classes");
+                targetClassesDir.getAbsolutePath());
 
         StandardJavaFileManager sjfm = compiler.getStandardFileManager(null, null, null);
 
