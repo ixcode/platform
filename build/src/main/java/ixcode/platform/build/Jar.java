@@ -19,6 +19,6 @@ public class Jar implements BuildTask  {
 
         new SystemCommand(jarFile.getParentFile(), "jar -cf " + jarFile.getAbsolutePath() + " -C "+ targetClassesDir.getAbsolutePath() + " .").execute(buildLog);
 
-        new SystemCommand(jarFile.getParentFile(), "jar -tf " + jarFile.getAbsolutePath()).execute(buildLog);
+        //new SystemCommand(jarFile.getParentFile(), "jar -tf " + jarFile.getAbsolutePath()).execute(buildLog);
     }
 }

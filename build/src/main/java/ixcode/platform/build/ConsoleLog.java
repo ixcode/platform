@@ -17,6 +17,7 @@ public class ConsoleLog implements BuildLog {
     @Override public void printTitle(String format, Object... parameters) {
         out.print(ANSI_GREEN);
         println(format, parameters);
+        out.print(ANSI_RESET);
     }
 
     @Override public void println(String format, Object... parameters) {

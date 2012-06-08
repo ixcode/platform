@@ -1,6 +1,7 @@
 package ixcode.platform.build;
 
 import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import java.io.File;
 import java.util.Arrays;
@@ -54,7 +55,7 @@ public class Compilation implements BuildTask {
 
             StandardJavaFileManager sjfm = compiler.getStandardFileManager(null, null, null);
 
-            Iterable fileObjects = sjfm.getJavaFileObjects(sourceDir.listAllFilesMatching("*.java"));
+            Iterable<? extends JavaFileObject> fileObjects = sjfm.getJavaFileObjects(sourceDir.listAllFilesMatching("*.java"));
 
             JavaCompiler.CompilationTask task = compiler.getTask(
                     null, null, null,
