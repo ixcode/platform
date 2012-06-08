@@ -51,7 +51,7 @@ public class Compilation implements BuildTask {
         if (success) {
             buildLog.println("Compilation is successful");
         } else {
-            buildLog.println("Compilation Failed");
+            throw new RuntimeException("Compilation failed");
         }
 
         try {

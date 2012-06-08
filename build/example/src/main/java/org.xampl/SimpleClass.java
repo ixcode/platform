@@ -5,7 +5,9 @@ import java.io.Serializable;
 import static org.xampl.AnotherClass.someDeprecatedMethod;
 
 
+
 public class SimpleClass implements Serializable {
+
 
     public static void main(String[] args) {
         System.out.println("hello world.");

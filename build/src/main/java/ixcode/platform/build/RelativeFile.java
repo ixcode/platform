@@ -3,7 +3,6 @@ package ixcode.platform.build;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -60,11 +59,11 @@ public class RelativeFile {
     }
 
     public void mkdirs() {
-        if (file.isDirectory()) {
-            file.mkdirs();
-        } else {
-            file.getParentFile().mkdirs();
-        }
+        file.mkdirs();
+    }
+
+    public RelativeFile getParent() {
+        return new RelativeFile(rootDir, file.getParentFile());
     }
 
     public String getAbsolutePath() {
@@ -103,10 +102,10 @@ public class RelativeFile {
 
     private static File[] listDirectoriesIn(File dir) {
         return dir.listFiles(new FileFilter() {
-                @Override public boolean accept(File pathname) {
-                    return pathname.isDirectory();
-                }
-            });
+            @Override public boolean accept(File pathname) {
+                return pathname.isDirectory();
+            }
+        });
     }
 
     private static void addLeavesTo(List<File> files, File dir, final String regex) {

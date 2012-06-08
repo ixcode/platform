@@ -15,6 +15,7 @@ public class ModuleBuilder {
     private RelativeFile targetClassesDir;
     private RelativeFile targetDistDir;
     private RelativeFile targetJarfile;
+    private RelativeFile targetLibDir;
 
 
     public static void main(String[] args) {
@@ -35,7 +36,8 @@ public class ModuleBuilder {
         targetDir = relativeFile(moduleDir, "target");
         targetClassesDir = relativeFile(moduleDir, "target/work/classes");
         targetDistDir = relativeFile(moduleDir, "target/dist");
-        targetJarfile = relativeFile(moduleDir, "target/dist/" + moduleDir.getName() + ".jar");
+        targetLibDir = relativeFile(moduleDir, "target/dist/lib");
+        targetJarfile = relativeFile(moduleDir, "target/dist/lib/" + moduleDir.getName() + ".jar");
 
     }
 
