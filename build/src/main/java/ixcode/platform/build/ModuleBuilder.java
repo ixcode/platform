@@ -9,6 +9,7 @@ public class ModuleBuilder {
     private final BuildLog buildLog;
     private File moduleDir;
     private RelativeFile sourceDir;
+    private RelativeFile productionLibDir;
     private RelativeFile resourcesDir;
     private RelativeFile scriptDir;
     private RelativeFile targetDir;
@@ -16,6 +17,7 @@ public class ModuleBuilder {
     private RelativeFile targetDistDir;
     private RelativeFile targetJarfile;
     private RelativeFile targetLibDir;
+
 
 
     public static void main(String[] args) {
@@ -31,6 +33,7 @@ public class ModuleBuilder {
         sourceDir = relativeFile(moduleDir, "src/main/java");
         resourcesDir = relativeFile(moduleDir, "src/main/resource");
         scriptDir = relativeFile(moduleDir, "src/main/script/bash");
+        productionLibDir = relativeFile(moduleDir, "lib/production");
 
 
         targetDir = relativeFile(moduleDir, "target");
@@ -46,12 +49,12 @@ public class ModuleBuilder {
         buildLog.println("Builder (v.10) - building now!");
         buildLog.println("Module Dir [%s]", moduleDir);
 
-        new Compilation(sourceDir, targetClassesDir).execute(buildLog);
+        new Compilation(sourceDir, productionLibDir, targetClassesDir).execute(buildLog);
         new CopyResources(resourcesDir, targetClassesDir).execute(buildLog);
 
         new Jar(targetJarfile, targetClassesDir, resourcesDir).execute(buildLog);
         new Copy(scriptDir, targetDistDir).execute(buildLog);
-
+        new Copy(productionLibDir, targetLibDir).execute(buildLog);
 
         return this;
     }

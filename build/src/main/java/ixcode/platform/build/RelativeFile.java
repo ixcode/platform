@@ -13,6 +13,7 @@ public class RelativeFile {
     private final File file;
 
     private final String relativePath;
+    private String root;
 
     public static RelativeFile relativeFile(String rootDir, String dir) {
         return new RelativeFile(new File(rootDir), new File(dir));
@@ -135,4 +136,7 @@ public class RelativeFile {
     }
 
 
+    public File getRoot() {
+        return rootDir;
+    }
 }

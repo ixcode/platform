@@ -1,13 +1,15 @@
 package org.xampl;
 
+import org.apache.log4j.Logger;
+
 import java.io.Serializable;
 
 import static org.xampl.AnotherClass.someDeprecatedMethod;
 
 
-
 public class SimpleClass implements Serializable {
 
+    private static final Logger log = Logger.getLogger(SimpleClass.class);
 
     public static void main(String[] args) {
         System.out.println("hello world.");
@@ -15,12 +17,11 @@ public class SimpleClass implements Serializable {
 
         iDontCareIfIUseMyOwnDeprecatedMethods();
 
-        String s = (String)"Hello!" ;
+        String s = (String) "Hello!";
 
         int divideByZero = 42 / 0;
 
     }
-
 
 
     /**
@@ -48,9 +49,9 @@ public class SimpleClass implements Serializable {
     public class ClassWithVarargsMethod {
         void varargsMethod(String... s) { }
     }
+
     public class ClassWithOverridingMethod extends ClassWithVarargsMethod {
-        @Override
-        void varargsMethod(String[] s) { }
+        @Override void varargsMethod(String[] s) { }
     }
 
 }
