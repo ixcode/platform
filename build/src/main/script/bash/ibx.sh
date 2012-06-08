@@ -64,6 +64,7 @@ function command.install() {
     cd "$IBX_HOME"
     ln -s "$PWD/ibx.sh" "/usr/local/bin/ibx"
     cd -
+    echo "I've been installed in [/usr/local/bin/ibx]"
 }
 
 
