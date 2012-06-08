@@ -61,7 +61,7 @@ function command.clean() {
 
 
 function command.build() {
-   java -cp "$IBX_HOME/lib/*" ixcode.platform.build.ModuleBuilder "$CURRENT_DIR" "build" "$@"
+   java -cp "$IBX_HOME/lib/*:$IBX_HOME/platform-build.jar" ixcode.platform.build.ModuleBuilder "$CURRENT_DIR" "build" "$@"
 }
 
 
