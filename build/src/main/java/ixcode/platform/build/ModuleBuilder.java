@@ -26,7 +26,7 @@ public class ModuleBuilder {
     private final RelativeFile targetJarfile;
     private final RelativeFile targetLibDir;
     private final String moduleName;
-    private final Map<String, Object> moduleConfiguration;
+    private final Map<String, String> moduleConfiguration;
 
 
     public static void main(String[] args) {
@@ -57,13 +57,14 @@ public class ModuleBuilder {
         buildLog.printTitle("Builder (v.10) - building now!");
     }
 
-    private Map<String, Object> loadModuleConfiguration(File moduleDir) {
+    private Map<String, String> loadModuleConfiguration(File moduleDir) {
         File configFile = new File(moduleDir.getAbsolutePath() + "/module.ibx");
 
         if (!configFile.exists()) {
-            return new HashMap<String, Object>();
+            return new HashMap<String, String>();
         }
 
+        buildLog.println("Loading configuration from [%s]", configFile.getAbsolutePath());
         Properties p = new Properties();
 
         Reader in = null;
@@ -72,14 +73,18 @@ public class ModuleBuilder {
 
             in = new BufferedReader(new FileReader(configFile));
             p.load(in);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
             tryToClose(in);
         }
 
-        Map<String, Object> output = new HashMap<String, Object>();
-        p.putAll(output);
+        Map<String, String> output = new HashMap<String, String>();
+        for (Object key : p.keySet()) {
+            output.put((String)key, p.getProperty((String)key));
+        }
+
         return output;
     }
 
@@ -112,11 +117,11 @@ public class ModuleBuilder {
      *   .git
      * </pre>
      */
-    private static String getModuleName(File moduleDir,
-                                        Map<String, Object> config) {
+    private String getModuleName(File moduleDir,
+                                        Map<String, String> config) {
 
         if (config.containsKey("module.name")) {
-            return (String)config.get("module.name");
+            return config.get("module.name");
         }
 
         return moduleDir.getName();

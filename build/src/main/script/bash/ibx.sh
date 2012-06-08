@@ -55,7 +55,11 @@ function command.help() {
 
 
 function command.build() {
-   java -cp "$IBX_HOME/lib/*" ixcode.platform.build.ModuleBuilder "$CURRENT_DIR" "$@"
+   java -cp "$IBX_HOME/lib/*" ixcode.platform.build.ModuleBuilder "$CURRENT_DIR" "build" "$@"
+}
+
+function command.build() {
+   java -cp "$IBX_HOME/lib/*" ixcode.platform.build.ModuleBuilder "$CURRENT_DIR" "clean" "$@"
 }
 
 function command.install() {
