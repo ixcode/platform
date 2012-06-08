@@ -60,11 +60,26 @@ public class RelativeFile {
     }
 
     public void mkdirs() {
-        file.mkdirs();
+        if (file.isDirectory()) {
+            file.mkdirs();
+        } else {
+            file.getParentFile().mkdirs();
+        }
     }
 
     public String getAbsolutePath() {
         return file.getAbsolutePath();
+    }
+
+    public RelativeFile[] listSubdirs() {
+        List<RelativeFile> subDirs = new ArrayList<RelativeFile>();
+
+        File[] dirs = listDirectoriesIn(file);
+        for (File subdir : dirs) {
+            subDirs.add(new RelativeFile(rootDir, subdir));
+        }
+
+        return subDirs.toArray(new RelativeFile[0]);
     }
 
     public File[] listAllFilesMatching(String pattern) {
@@ -79,15 +94,19 @@ public class RelativeFile {
     }
 
     private static void addDirsTo(List<File> files, File dir, String regex) {
-        File[] dirs = dir.listFiles(new FileFilter() {
-            @Override public boolean accept(File pathname) {
-                return pathname.isDirectory();
-            }
-        });
+        File[] dirs = listDirectoriesIn(dir);
 
         for (File subDir : dirs) {
             listFilesTo(files, subDir, regex);
         }
+    }
+
+    private static File[] listDirectoriesIn(File dir) {
+        return dir.listFiles(new FileFilter() {
+                @Override public boolean accept(File pathname) {
+                    return pathname.isDirectory();
+                }
+            });
     }
 
     private static void addLeavesTo(List<File> files, File dir, final String regex) {
@@ -111,4 +130,10 @@ public class RelativeFile {
     public File getParentFile() {
         return file.getParentFile();
     }
+
+    public boolean isDirectory() {
+        return file.isDirectory();
+    }
+
+
 }

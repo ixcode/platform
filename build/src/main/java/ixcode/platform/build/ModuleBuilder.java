@@ -45,8 +45,11 @@ public class ModuleBuilder {
         buildLog.println("Module Dir [%s]", moduleDir);
 
         new Compilation(sourceDir, targetClassesDir).execute(buildLog);
+        new CopyResources(resourcesDir, targetClassesDir).execute(buildLog);
+
         new Jar(targetJarfile, targetClassesDir, resourcesDir).execute(buildLog);
         new Copy(scriptDir, targetDistDir).execute(buildLog);
+
 
         return this;
     }

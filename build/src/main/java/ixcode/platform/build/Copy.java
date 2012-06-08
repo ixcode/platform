@@ -14,6 +14,8 @@ public class Copy implements BuildTask {
 
         toFile.mkdirs();
 
-        new SystemCommand("cp -aRv %s %s", fromFile.getAbsolutePath() + "/", toFile.getAbsolutePath()).execute(buildLog);
+        String toFileString = (fromFile.isDirectory()) ? fromFile.getAbsolutePath() + "/" : fromFile.getAbsolutePath();
+
+        new SystemCommand("cp -aRv %s %s", toFileString, toFile.getAbsolutePath()).execute(buildLog);
     }
 }
