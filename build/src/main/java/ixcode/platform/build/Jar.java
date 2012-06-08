@@ -15,9 +15,10 @@ public class Jar implements BuildTask  {
     public void execute(BuildLog buildLog) {
         buildLog.println("Going to create jarfile [%s] from classes in [%s]", jarFile, targetClassesDir);
         jarFile.remove();
+        jarFile.mkdirs();
 
-        new SystemCommand(buildLog, jarFile.getParentFile(), "jar -cf " + jarFile.getAbsolutePath() + " -C "+ targetClassesDir.getAbsolutePath() + " .").execute();
+        new SystemCommand(jarFile.getParentFile(), "jar -cf " + jarFile.getAbsolutePath() + " -C "+ targetClassesDir.getAbsolutePath() + " .").execute(buildLog);
 
-        new SystemCommand(buildLog, jarFile.getParentFile(), "jar -tf " + jarFile.getAbsolutePath()).execute();
+        new SystemCommand(jarFile.getParentFile(), "jar -tf " + jarFile.getAbsolutePath()).execute(buildLog);
     }
 }

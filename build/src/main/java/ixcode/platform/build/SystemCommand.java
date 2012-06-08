@@ -8,19 +8,20 @@ import java.io.Reader;
 
 import static java.lang.Runtime.getRuntime;
 
-public class SystemCommand {
+public class SystemCommand implements BuildTask {
 
-    private final BuildLog buildLog;
     private File dir;
     private final String command;
 
-    public SystemCommand(BuildLog buildLog, File dir, String command) {
-        this.buildLog = buildLog;
+    public SystemCommand(String command, Object... formatArgs) {
+        this(new File("."), command, formatArgs);
+    }
+    public SystemCommand(File dir, String command, Object... formatArgs) {
         this.dir = dir;
-        this.command = command;
+        this.command = String.format(command, formatArgs);
     }
 
-    public void execute() {
+    public void execute(BuildLog buildLog) {
         buildLog.println("Executing system command [%s]", command);
 
         BufferedReader reader = null;
