@@ -43,7 +43,6 @@ public class Compilation implements BuildTask {
 
             List<String> optionList = asList(
                     "-g",
-                    "-verbose",
                     "-Xlint",
                     "-cp",
                     classpathFrom(productionLibDir),

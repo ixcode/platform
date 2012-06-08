@@ -75,6 +75,9 @@ public class RelativeFile {
         List<RelativeFile> subDirs = new ArrayList<RelativeFile>();
 
         File[] dirs = listDirectoriesIn(file);
+        if (dirs == null) {
+            return new RelativeFile[0];
+        }
         for (File subdir : dirs) {
             subDirs.add(new RelativeFile(rootDir, subdir));
         }
@@ -95,7 +98,9 @@ public class RelativeFile {
 
     private static void addDirsTo(List<File> files, File dir, String regex) {
         File[] dirs = listDirectoriesIn(dir);
-
+        if (dirs == null) {
+            return;
+        }
         for (File subDir : dirs) {
             listFilesTo(files, subDir, regex);
         }
@@ -116,7 +121,9 @@ public class RelativeFile {
                         && matches(pathname.getAbsolutePath(), regex);
             }
         });
-        files.addAll(asList(leafFiles));
+        if (leafFiles != null) {
+            files.addAll(asList(leafFiles));
+        }
     }
 
     private static boolean matches(String path, String regex) {
