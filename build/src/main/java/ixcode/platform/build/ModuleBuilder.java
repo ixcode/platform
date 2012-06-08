@@ -42,11 +42,12 @@ public class ModuleBuilder {
         targetLibDir = relativeFile(moduleDir, "target/dist/lib");
         targetJarfile = relativeFile(moduleDir, "target/dist/lib/" + moduleDir.getName() + ".jar");
 
+        buildLog.printTitle("Builder (v.10) - building now!");
     }
 
 
     public ModuleBuilder build() {
-        buildLog.println("Builder (v.10) - building now!");
+
         buildLog.println("Module Dir [%s]", moduleDir);
 
         new Compilation(sourceDir, productionLibDir, targetClassesDir).execute(buildLog);
