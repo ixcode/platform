@@ -1,6 +1,13 @@
 package ixcode.platform.build;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 import static ixcode.platform.build.RelativeFile.relativeFile;
 import static java.lang.String.format;
@@ -19,6 +26,7 @@ public class ModuleBuilder {
     private final RelativeFile targetJarfile;
     private final RelativeFile targetLibDir;
     private final String moduleName;
+    private final Map<String, Object> moduleConfiguration;
 
 
     public static void main(String[] args) {
@@ -30,7 +38,8 @@ public class ModuleBuilder {
     public ModuleBuilder(BuildLog consoleLog, File moduleDir) {
         this.buildLog = consoleLog;
         this.moduleDir = moduleDir;
-        this.moduleName = calculateModuleName(moduleDir);
+        this.moduleConfiguration = loadModuleConfiguration(moduleDir);
+        this.moduleName = getModuleName(moduleDir, moduleConfiguration);
 
         sourceDir = relativeFile(moduleDir, "src/main/java");
         resourcesDir = relativeFile(moduleDir, "src/main/resource");
@@ -46,6 +55,44 @@ public class ModuleBuilder {
         targetJarfile = relativeFile(moduleDir, "target/dist/lib/" + moduleName + ".jar");
 
         buildLog.printTitle("Builder (v.10) - building now!");
+    }
+
+    private Map<String, Object> loadModuleConfiguration(File moduleDir) {
+        File configFile = new File(moduleDir.getAbsolutePath() + "/module.ibx");
+
+        if (!configFile.exists()) {
+            return new HashMap<String, Object>();
+        }
+
+        Properties p = new Properties();
+
+        Reader in = null;
+
+        try {
+
+            in = new BufferedReader(new FileReader(configFile));
+            p.load(in);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            tryToClose(in);
+        }
+
+        Map<String, Object> output = new HashMap<String, Object>();
+        p.putAll(output);
+        return output;
+    }
+
+    private static void tryToClose(Reader in) {
+        if (in == null) {
+            return;
+        }
+
+        try {
+            in.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -65,12 +112,11 @@ public class ModuleBuilder {
      *   .git
      * </pre>
      */
-    private static String calculateModuleName(File moduleDir) {
-        RelativeFile relativeFile = new RelativeFile(moduleDir, moduleDir);
+    private static String getModuleName(File moduleDir,
+                                        Map<String, Object> config) {
 
-        File[] files = relativeFile.listAllFilesMatching(".git");
-        if (files.length == 0) {
-            return format("%s-%s", moduleDir.getParentFile().getName(), moduleDir.getName());
+        if (config.containsKey("module.name")) {
+            return (String)config.get("module.name");
         }
 
         return moduleDir.getName();
