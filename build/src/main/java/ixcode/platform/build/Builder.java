@@ -23,14 +23,19 @@ public class Builder {
 
         RelativeFile sourceDir = relativeFile(moduleDir, "src/main/java");
         RelativeFile resourcesDir = relativeFile(moduleDir, "src/main/resource");
+        RelativeFile scriptDir = relativeFile(moduleDir, "src/main/script");
+
 
         RelativeFile targetDir = relativeFile(moduleDir, "target");
-        RelativeFile targetClassesDir = relativeFile(moduleDir, "target/classes");
-        RelativeFile targetJarfile = relativeFile(moduleDir, "target/" + moduleDir.getName() + ".jar");
+        RelativeFile targetClassesDir = relativeFile(moduleDir, "target/work/classes");
+        RelativeFile targetDistDir = relativeFile(moduleDir, "target/dist");
+        RelativeFile targetJarfile = relativeFile(moduleDir, "target/dist" + moduleDir.getName() + ".jar");
+
 
         new Clean(buildLog, targetDir).execute();
         new Compilation(buildLog, sourceDir, targetClassesDir).execute();
         new Jar(buildLog, targetJarfile, targetClassesDir, resourcesDir).execute();
+        new Copy(buildLog, targetDistDir, scriptDir, "*.*").execute();
     }
 
 }
