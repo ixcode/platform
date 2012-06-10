@@ -27,6 +27,7 @@ public class ModuleBuilder {
     private final RelativeFile targetLibDir;
     private final String moduleName;
     private final Map<String, String> moduleConfiguration;
+    private final RelativeFile targetTarball;
 
 
     public static void main(String[] args) {
@@ -53,6 +54,7 @@ public class ModuleBuilder {
         targetLibDir = relativeFile(moduleDir, "target/dist/lib");
 
         targetJarfile = relativeFile(moduleDir, "target/dist/" + moduleName + ".jar");
+        targetTarball = relativeFile(moduleDir, "target/" + moduleName + ".tar.gz");
 
         buildLog.printTitle("Builder (v.10) - building now!");
     }
@@ -138,6 +140,8 @@ public class ModuleBuilder {
         new Jar(targetJarfile, targetClassesDir, resourcesDir).execute(buildLog);
         new Copy(scriptDir, targetDistDir).execute(buildLog);
         new Copy(productionLibDir, targetLibDir).execute(buildLog);
+
+        new Tar(targetTarball, targetDistDir).execute(buildLog);
 
         return this;
     }

@@ -146,4 +146,8 @@ public class RelativeFile {
     public File getRoot() {
         return rootDir;
     }
+
+    public File asFile() {
+        return file;
+    }
 }

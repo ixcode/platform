@@ -22,7 +22,7 @@ public class SystemCommand implements BuildTask {
     }
 
     public void execute(BuildLog buildLog) {
-        buildLog.println("Executing system command [%s]", command);
+        buildLog.println("Executing system command [%s] in dir [%s]", command, dir.getAbsolutePath());
 
         BufferedReader reader = null;
         Process p = null;
@@ -33,7 +33,7 @@ public class SystemCommand implements BuildTask {
             reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line = reader.readLine();
             while (line != null) {
-                buildLog.println(line);
+                buildLog.printlndirect(line);
                 line = reader.readLine();
             }
 

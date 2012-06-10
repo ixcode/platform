@@ -24,5 +24,9 @@ public class ConsoleLog implements BuildLog {
         out.println(format(format, parameters));
     }
 
+    @Override public void printlndirect(String line) {
+        out.println(line);
+    }
+
 
 }
