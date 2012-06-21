@@ -33,11 +33,11 @@ public class HttpServer {
     private List<Redirection> redirections = new ArrayList<Redirection>();
 
 
-    public HttpServer(Class serverClass, int port, RequestDispatcher rootServlet) {
+    public HttpServer(Class serverClass, int port, Servlet rootServlet) {
         this(serverClass.getSimpleName(), "localhost", "web", port, "/", rootServlet);
     }
 
-    public HttpServer(String serverName, String hostname, int port, RequestDispatcher rootServlet) {
+    public HttpServer(String serverName, String hostname, int port, Servlet rootServlet) {
         this(serverName, hostname, "web", port, "/", rootServlet);
     }
 
