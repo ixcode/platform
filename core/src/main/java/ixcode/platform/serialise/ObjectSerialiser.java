@@ -38,7 +38,7 @@ public class ObjectSerialiser {
 
             Class<?> classToBuild = loadClass(className);
 
-            ObjectReflector reflector = reflect(in.getClass());
+            ObjectReflector reflector = reflect(classToBuild);
 
             final ObjectBuilder builder = new ObjectBuilder(classToBuild);
 
@@ -48,6 +48,7 @@ public class ObjectSerialiser {
                 }
             });
 
+            return builder.build();
 
         } catch (IOException e) {
             throw new RuntimeException(format("Could not read object from bytes (See Cause)"), e);
@@ -56,7 +57,7 @@ public class ObjectSerialiser {
         } finally {
             closeQuietly(bytesIn);
         }
-        return null;
+
     }
 
     public byte[] toByteArray(final Object in) {

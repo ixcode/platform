@@ -14,6 +14,7 @@ public class CopyResources implements BuildTask {
 
         targetClassesDir.mkdirs();
 
+
         RelativeFile[] subdirs = resourceDir.listSubdirs();
 
         for (RelativeFile subdir : subdirs) {

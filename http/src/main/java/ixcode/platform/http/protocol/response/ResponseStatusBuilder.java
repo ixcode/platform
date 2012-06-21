@@ -19,6 +19,10 @@ public class ResponseStatusBuilder {
         return parent.responseStatus(ok);
     }
 
+    public ResponseBuilder badRequest() {
+        return parent.responseStatus(ResponseStatusCodes.bad_request);
+    }
+
     public ResponseBuilder notFound() {
         return parent.responseStatus(not_found);
     }
@@ -40,6 +44,7 @@ public class ResponseStatusBuilder {
     public ResponseBuilder custom(int code, String message) {
         return parent.responseStatus(ResponseStatusCodes.customStatus(code, message));
     }
+
 
 
 }

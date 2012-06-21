@@ -4,11 +4,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Resource {
+public @interface RequestHandler {
 
-    String collectionName() default "";
+    String[] objectTags();
 
-    boolean previewList() default false;
-
-    boolean queryable() default true;
+    Class<?> handler();
 }

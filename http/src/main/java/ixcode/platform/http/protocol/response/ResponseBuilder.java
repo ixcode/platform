@@ -43,6 +43,8 @@ public class ResponseBuilder implements ContentTypeBuilder.ContentTypeAcceptor {
     }
 
     public void translateTo(HttpServletResponse httpServletResponse) {
+        httpServletResponse.setContentType(contentType.identifier());
+
         httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
 
         for (Header header : headers) {

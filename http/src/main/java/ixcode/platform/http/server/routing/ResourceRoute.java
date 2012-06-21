@@ -67,6 +67,38 @@ public class ResourceRoute implements GetResource, PostResource {
         respondWithSingleItem(respondWith, resourceIdentifier, repository);
     }
 
+    @Override
+    public void POST(Request request, ResponseBuilder respondWith, ResourceHyperlinkBuilder hyperlinkBuilder) {
+        String resourceType = request.parameters.getFirstValueOf("resourceType");
+        String resourceIdentifier = request.parameters.getFirstValueOf("resourceIdentifier");
+
+        Repository repository = getRepositoryForType(resourceType);
+
+        if (repository == null) {
+            respondWithDebug(request, respondWith);
+            return;
+        }
+
+        if (resourceIdentifier != null) {
+            throw new RuntimeException("Don't handle anything other than querys at the moment");
+        }
+
+        if (!jsonMetadata.isQueryable(repository.getItemType())) {
+            respondWith.body("{ \"is\" : \"error\", \"message\" : \"Cannot query this resource, sorry\" }")
+                    .contentType().json()
+                    .status().badRequest();
+            return;
+        }
+
+        if (jsonMetadata.previewList(repository.getItemType())) {
+            respondWithPreviewList(request, respondWith, resourceType, repository);
+        } else {
+            respondWithListOfLinks(request, respondWith, resourceType, repository);
+        }
+
+
+    }
+
     private void respondWithPreviewList(Request request, ResponseBuilder respondWith,
                                         String resourceType, Repository repository) {
 
@@ -95,7 +127,8 @@ public class ResourceRoute implements GetResource, PostResource {
         }
 
         String[] tags = jsonMetadata.tagsFor(repository.getItemType());
-        VanillaHypermedia hypermedia = hypermedia(tags[0], "preview", "list");
+        String queryable = (jsonMetadata.isQueryable(repository.getItemType())) ? "queryable" : "";
+        VanillaHypermedia hypermedia = hypermedia(tags[0], "preview", queryable, "list");
         hypermedia.havingValue(previewItems).as("items");
 
         respondWith.status().ok()
@@ -158,9 +191,5 @@ public class ResourceRoute implements GetResource, PostResource {
                    .hypermedia(hypermedia.build());
     }
 
-    @Override
-    public void POST(Request request, ResponseBuilder respondWith, ResourceHyperlinkBuilder hyperlinkBuilder) {
-
-    }
 
 }

@@ -12,4 +12,8 @@ public class JsonMetadata {
     public boolean previewList(Class<?> itemType) {
         return itemType.getAnnotation(Resource.class).previewList();
     }
+
+    public boolean isQueryable(Class<?> itemType) {
+        return itemType.getAnnotation(Resource.class).queryable();
+    }
 }
