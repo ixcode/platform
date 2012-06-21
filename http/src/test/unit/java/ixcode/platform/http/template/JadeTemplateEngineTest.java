@@ -22,7 +22,7 @@ public class JadeTemplateEngineTest {
 
         TemplateLoader loader = new ClasspathJadeTemplateLoader(this.getClass());
 
-        Template t = new JadeTemplateEngine(loader).findTemplate("test.jade");
+        Template t = new JadeTemplateEngine(loader).findTemplate("test");
 
         String output = t.render(ctx);
 

@@ -1,5 +1,7 @@
 package ixcode.platform.http.template;
 
+import static java.lang.String.format;
+
 public class JadeTemplateEngine implements TemplateEngine {
 
     private final TemplateLoader templateLoader;
@@ -9,6 +11,6 @@ public class JadeTemplateEngine implements TemplateEngine {
     }
 
     @Override public Template findTemplate(String templateName) {
-        return templateLoader.load(templateName);
+        return templateLoader.load(format("%s.jade", templateName));
     }
 }
