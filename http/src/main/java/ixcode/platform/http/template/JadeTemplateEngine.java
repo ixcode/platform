@@ -11,6 +11,6 @@ public class JadeTemplateEngine implements TemplateEngine {
     }
 
     @Override public Template findTemplate(String templateName) {
-        return templateLoader.load(format("%s.jade", templateName));
+        return templateLoader.load(templateName);
     }
 }

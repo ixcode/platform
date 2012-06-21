@@ -39,10 +39,11 @@ public class ClasspathJadeTemplateLoader implements TemplateLoader, de.neuland.j
     }
 
     @Override public Reader getReader(String name) throws IOException {
-        InputStream in = aClass.getResourceAsStream(name);
+        String templateName = format("%s.jade", name);
+        InputStream in = aClass.getResourceAsStream(templateName);
 
         if (in == null) {
-            throw new RuntimeException(format("Could not find template called [%s] on the classpath.", name));
+            throw new RuntimeException(format("Could not find template called [%s] on the classpath.", templateName));
         }
 
         return new BufferedReader(new InputStreamReader(in));
