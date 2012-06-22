@@ -1,6 +1,7 @@
 package ixcode.platform.http.template;
 
 import de.neuland.jade4j.JadeConfiguration;
+import de.neuland.jade4j.filter.MarkdownFilter;
 import de.neuland.jade4j.template.FileTemplateLoader;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ public class FileJadeTemplateLoader implements TemplateLoader {
 
         JadeConfiguration config = new JadeConfiguration();
         config.setTemplateLoader(new FileTemplateLoader(rootPath + "/", "UTF-8"));
+        config.setFilter("markdown", new MarkdownFilter());
 
         try {
             de.neuland.jade4j.template.JadeTemplate template = config.getTemplate(templateName);

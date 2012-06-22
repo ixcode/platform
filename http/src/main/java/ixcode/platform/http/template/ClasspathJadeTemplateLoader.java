@@ -1,6 +1,7 @@
 package ixcode.platform.http.template;
 
 import de.neuland.jade4j.JadeConfiguration;
+import de.neuland.jade4j.filter.MarkdownFilter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class ClasspathJadeTemplateLoader implements TemplateLoader, de.neuland.j
 
         JadeConfiguration config = new JadeConfiguration();
         config.setTemplateLoader(this);
+        config.setFilter("markdown", new MarkdownFilter());
 
         try {
             de.neuland.jade4j.template.JadeTemplate template = config.getTemplate(templateName);
