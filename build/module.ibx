@@ -7,7 +7,7 @@
     ],
     "production" : [
       "log4j",
-      "org.ixcode:platform-json:1.0"
+      "org.ixcode:platform-core:1.0"
     ],
     "repositories" : [
       "http://platform.ixcode.org/artifacts"

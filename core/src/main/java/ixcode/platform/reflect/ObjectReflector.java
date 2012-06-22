@@ -70,7 +70,7 @@ public class ObjectReflector {
         if (fieldReflector.isCollection()) {
             return (Class<?>) fieldReflector.genericTypeArguments()[0];
         }
-        throw new RuntimeException(format("Oh dear, the field [%s] is not a collection it's a [%s]", fieldReflector.type));
+        throw new RuntimeException(format("Oh dear, the field [%s] is not a collection", fieldReflector.type));
     }
 
     public boolean hasField(String propertyName) {

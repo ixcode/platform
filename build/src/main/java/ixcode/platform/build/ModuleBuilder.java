@@ -1,14 +1,9 @@
 package ixcode.platform.build;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
+import static ixcode.platform.build.Module.loadModule;
 import static ixcode.platform.build.RelativeFile.relativeFile;
 import static java.lang.String.format;
 
@@ -26,7 +21,7 @@ public class ModuleBuilder {
     private final RelativeFile targetJarfile;
     private final RelativeFile targetLibDir;
     private final String moduleName;
-    private final Map<String, String> moduleConfiguration;
+    private final Module module;
     private final RelativeFile targetTarball;
 
 
@@ -39,8 +34,8 @@ public class ModuleBuilder {
     public ModuleBuilder(BuildLog consoleLog, File moduleDir) {
         this.buildLog = consoleLog;
         this.moduleDir = moduleDir;
-        this.moduleConfiguration = loadModuleConfiguration(moduleDir);
-        this.moduleName = getModuleName(moduleDir, moduleConfiguration);
+        this.module = loadModule(moduleDir, buildLog);
+        this.moduleName = module.name;
 
         sourceDir = relativeFile(moduleDir, "src/main/java");
         resourcesDir = relativeFile(moduleDir, "src/main/resource");
@@ -59,48 +54,6 @@ public class ModuleBuilder {
         buildLog.printTitle("Builder (v.10) - building now!");
     }
 
-    private Map<String, String> loadModuleConfiguration(File moduleDir) {
-        File configFile = new File(moduleDir.getAbsolutePath() + "/module.ibx");
-
-        if (!configFile.exists()) {
-            return new HashMap<String, String>();
-        }
-
-        buildLog.println("Loading configuration from [%s]", configFile.getAbsolutePath());
-        Properties p = new Properties();
-
-        Reader in = null;
-
-        try {
-
-            in = new BufferedReader(new FileReader(configFile));
-            p.load(in);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            tryToClose(in);
-        }
-
-        Map<String, String> output = new HashMap<String, String>();
-        for (Object key : p.keySet()) {
-            output.put((String)key, p.getProperty((String)key));
-        }
-
-        return output;
-    }
-
-    private static void tryToClose(Reader in) {
-        if (in == null) {
-            return;
-        }
-
-        try {
-            in.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     /**
      * <p/>

@@ -60,6 +60,13 @@ public class IoStreamHandling {
         }
     }
 
+    public static String readFileAsString(File file, String charsetName) {
+        try {
+            return readFully(new FileInputStream(file), charsetName);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static String readFully(InputStream inputStream, String charsetName) {
 
