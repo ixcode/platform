@@ -26,7 +26,7 @@ public class Module {
         File configFile = new File(moduleDir.getAbsolutePath() + "/module.ibx");
 
         if (!configFile.exists()) {
-            return new Module(moduleDir.getParentFile());
+            return new Module(moduleDir);
         }
 
         buildLog.println("Loading configuration from [%s]", configFile.getAbsolutePath());
