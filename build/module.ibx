@@ -1,1 +1,16 @@
-module.name=platform-build
+{
+  "is" : "ibx-module",
+  "module" : ["platform.ixcode.org", "platform-build", "1.0"],
+  "dependencies" : {
+    "development" : [
+      "hamcrest"
+    ],
+    "production" : [
+      "log4j",
+      "org.ixcode:platform-json:1.0"
+    ],
+    "repositories" : [
+      "http://platform.ixcode.org/artifacts"
+    ]
+  }
+}
