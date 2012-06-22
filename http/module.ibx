@@ -1,1 +1,4 @@
-module.name=platform-http
+{
+  "is" : "ibx-module",
+  "module" : ["platform.ixcode.org", "platform-http", "1.0"]
+}

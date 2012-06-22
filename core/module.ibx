@@ -1,1 +1,4 @@
-module.name=platform-core
+{
+  "is" : "ibx-module",
+  "module" : ["platform.ixcode.org", "platform-core", "1.0"]
+}
