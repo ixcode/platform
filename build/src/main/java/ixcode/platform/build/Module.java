@@ -3,7 +3,9 @@ package ixcode.platform.build;
 import ixcode.platform.serialise.JsonDeserialiser;
 import ixcode.platform.serialise.KindToClassMap;
 
+import javax.swing.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,13 +16,30 @@ import static java.nio.charset.Charset.defaultCharset;
 public class Module {
 
     public final String name;
+    public final List<DependencyRepo> repositories;
+    public final List<Dependency> developmentDeps;
+    public final List<Dependency> productionDeps;
 
     private Module(File moduleDir) {
         name = moduleDir.getName();
+        repositories = new ArrayList<DependencyRepo>();
+        developmentDeps = new ArrayList<Dependency>();
+        productionDeps = new ArrayList<Dependency>();
     }
 
     private Module(ModuleData moduleData) {
         name = moduleData.module.get(1);
+        repositories = parseRepostiories((List<Object>)moduleData.dependencies.get("repositories"));
+        developmentDeps = new ArrayList<Dependency>();
+        productionDeps = new ArrayList<Dependency>();
+    }
+
+    private List<DependencyRepo> parseRepostiories(List<Object> objects) {
+        List<DependencyRepo> repositories = new ArrayList<DependencyRepo>();
+        for (Object o : objects) {
+            repositories.add(new DependencyRepo((String)o));
+        }
+        return repositories;
     }
 
     public static  Module loadModule(File moduleDir, BuildLog buildLog) {

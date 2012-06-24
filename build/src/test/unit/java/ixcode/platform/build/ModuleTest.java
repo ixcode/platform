@@ -19,6 +19,9 @@ public class ModuleTest {
         Module module = loadModule(moduleDir, new ConsoleLog());
 
         assertThat(module.name, is("platform-build"));
+        assertThat(module.repositories.size(), is(1));
+        assertThat(module.repositories.get(0).location, is("http://platform.ixcode.org/artifacts"));
+
 
     }
 
