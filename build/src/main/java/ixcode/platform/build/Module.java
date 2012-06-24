@@ -5,6 +5,7 @@ import ixcode.platform.serialise.KindToClassMap;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import static ixcode.platform.io.IoStreamHandling.readFileAsString;
 import static ixcode.platform.serialise.KindToClassMap.map;
@@ -43,9 +44,11 @@ public class Module {
     private static class ModuleData {
 
         public final List<String> module;
+        public final Map<String, Object> dependencies;
 
-        private ModuleData(List<String> module) {
+        private ModuleData(List<String> module, Map<String, Object> dependencies) {
             this.module = module;
+            this.dependencies = dependencies;
         }
     }
 

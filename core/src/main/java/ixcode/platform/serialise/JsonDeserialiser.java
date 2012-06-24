@@ -10,7 +10,9 @@ import ixcode.platform.text.format.FormatRegistry;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JsonDeserialiser {
 
@@ -39,10 +41,50 @@ public class JsonDeserialiser {
         } else if (value instanceof JsonObject) {
             if (kindToClassMap.canMap(key)) {
                 objectBuilder.setProperty(key).asObject(parseJsonObject((JsonObject) value, kindToClassMap.classFor(key)));
+            } else {
+                Map<String, Object> map = parseMapFrom((JsonObject)value);
+                objectBuilder.setProperty(key).asObject(map);
             }
         } else {
             objectBuilder.setProperty(key).asObject(value);
         }
+    }
+
+    private static Map<String, Object> parseMapFrom(JsonObject jsonObject) {
+        final Map<String, Object> map = new HashMap<String, Object>();
+
+        jsonObject.apply(new Action<JsonPair>() {
+            @Override public void to(JsonPair item, Collection<JsonPair> tail) {
+               if (item.value instanceof JsonObject) {
+                   map.put(item.key, parseMapFrom((JsonObject) item.value));
+               } else if (item.value instanceof JsonArray) {
+                   List<Object> list = parseListFrom((JsonArray) item.value);
+                   map.put(item.key, list);
+               } else {
+                   map.put(item.key, item.value);
+               }
+            }
+        });
+
+        return map;
+    }
+
+    private static List<Object> parseListFrom(JsonArray jsonArray) {
+        final List<Object> list = new ArrayList<Object>();
+
+        jsonArray.apply(new Action<Object>() {
+            @Override public void to(Object item, Collection<Object> tail) {
+                if (item instanceof JsonObject) {
+                    list.add(parseMapFrom((JsonObject)item));
+                } else if (item instanceof JsonArray) {
+                    list.add(parseListFrom((JsonArray)item));
+                } else {
+                    list.add(item);
+                }
+            }
+        });
+
+        return list;
     }
 
     protected void populateProperty(ObjectBuilder objectBuilder, String propertyName, String value) {
