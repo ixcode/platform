@@ -10,7 +10,7 @@ import ixcode.platform.text.format.FormatRegistry;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +51,7 @@ public class JsonDeserialiser {
     }
 
     private static Map<String, Object> parseMapFrom(JsonObject jsonObject) {
-        final Map<String, Object> map = new HashMap<String, Object>();
+        final Map<String, Object> map = new LinkedHashMap<String, Object>();
 
         jsonObject.apply(new Action<JsonPair>() {
             @Override public void to(JsonPair item, Collection<JsonPair> tail) {

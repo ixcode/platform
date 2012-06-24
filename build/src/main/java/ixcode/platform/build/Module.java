@@ -30,11 +30,21 @@ public class Module {
     private Module(ModuleData moduleData) {
         name = moduleData.module.get(1);
         repositories = parseRepostiories((List<Object>)moduleData.dependencies.get("repositories"));
-        developmentDeps = new ArrayList<Dependency>();
-        productionDeps = new ArrayList<Dependency>();
+        developmentDeps = parseDependencies((List<Object>)moduleData.dependencies.get("development"));
+        productionDeps = parseDependencies((List<Object>)moduleData.dependencies.get("production"));
     }
 
-    private List<DependencyRepo> parseRepostiories(List<Object> objects) {
+    private static List<Dependency> parseDependencies(List<Object> objects) {
+        List<Dependency> dependencies = new ArrayList<Dependency>();
+
+        for(Object o : objects) {
+            dependencies.add(Dependency.parseFromString((String)o));
+        }
+
+        return dependencies;
+    }
+
+    private static List<DependencyRepo> parseRepostiories(List<Object> objects) {
         List<DependencyRepo> repositories = new ArrayList<DependencyRepo>();
         for (Object o : objects) {
             repositories.add(new DependencyRepo((String)o));

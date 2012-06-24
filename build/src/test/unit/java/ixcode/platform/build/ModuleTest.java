@@ -22,6 +22,12 @@ public class ModuleTest {
         assertThat(module.repositories.size(), is(1));
         assertThat(module.repositories.get(0).location, is("http://platform.ixcode.org/artifacts"));
 
+        assertThat(module.developmentDeps.size(), is(1));
+        assertThat(module.developmentDeps.get(0).toString(), is("hamcrest:null:null"));
+
+        assertThat(module.productionDeps.size(), is(2));
+        assertThat(module.productionDeps.get(0).toString(), is("log4j:null:null"));
+        assertThat(module.productionDeps.get(1).toString(), is("org.ixcode:platform-core:1.0"));
 
     }
 
