@@ -3,12 +3,11 @@ package ixcode.platform.build;
 import static java.lang.String.format;
 
 /**
- * This class could get more complex to allow fancy defaulting
- * such as:
- *
- * 1) Only specify the group if group and artifact are the same
- * 2) Don't bother with the version and have it default to "latest"
- *
+ * This class could get more complex to allow fancy defaulting such as:
+ * <p/>
+ * 1) Only specify the group if group and artifact are the same 2) Don't bother with the version and have it default to
+ * "latest"
+ * <p/>
  * But for now, we must have them all
  */
 public class Dependency {
@@ -35,7 +34,7 @@ public class Dependency {
     }
 
     private static String getIfPresent(String[] parts, int index) {
-        if (index > parts.length-1) {
+        if (index > parts.length - 1) {
             return null;
         }
         return parts[index];
@@ -50,11 +49,13 @@ public class Dependency {
     }
 
     public String toMavenRepositoryPath() {
-        String jarName = format("%s-%s.jar", artifact, version);
-
         return format("%s/%s/%s/%s", group.replaceAll("\\.", "/"),
                       artifact,
                       version,
-                      jarName);
+                      toJarFileName());
+    }
+
+    public String toJarFileName() {
+        return format("%s-%s.jar", artifact, version);
     }
 }
