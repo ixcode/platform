@@ -2,6 +2,7 @@ package ixcode.platform.build;
 
 import ixcode.platform.serialise.JsonDeserialiser;
 import ixcode.platform.serialise.KindToClassMap;
+import ixcode.platform.text.format.UriFormat;
 
 import javax.swing.*;
 import java.io.File;
@@ -47,7 +48,7 @@ public class Module {
     private static List<DependencyRepo> parseRepostiories(List<Object> objects) {
         List<DependencyRepo> repositories = new ArrayList<DependencyRepo>();
         for (Object o : objects) {
-            repositories.add(new DependencyRepo((String)o));
+            repositories.add(new DependencyRepo(new UriFormat().parseString((String)o)));
         }
         return repositories;
     }

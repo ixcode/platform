@@ -20,7 +20,7 @@ public class ModuleTest {
 
         assertThat(module.name, is("platform-build"));
         assertThat(module.repositories.size(), is(1));
-        assertThat(module.repositories.get(0).location, is("http://platform.ixcode.org/artifacts"));
+        assertThat(module.repositories.get(0).location.toURL().toExternalForm(), is("http://platform.ixcode.org/artifacts"));
 
         assertThat(module.developmentDeps.size(), is(1));
         assertThat(module.developmentDeps.get(0).toString(), is("hamcrest:null:null"));

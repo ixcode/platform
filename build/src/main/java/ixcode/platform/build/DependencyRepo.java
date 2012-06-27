@@ -1,9 +1,12 @@
 package ixcode.platform.build;
 
-public class DependencyRepo {
-    public final String location;
+import java.net.URI;
+import java.net.URL;
 
-    public DependencyRepo(String location) {
+public class DependencyRepo {
+    public final URI location;
+
+    public DependencyRepo(URI location) {
         this.location = location;
     }
 }
