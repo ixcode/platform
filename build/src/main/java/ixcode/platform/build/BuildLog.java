@@ -7,4 +7,6 @@ public interface BuildLog {
     public void println(String format, Object... parameters);
 
     void printlndirect(String line);
+
+
 }

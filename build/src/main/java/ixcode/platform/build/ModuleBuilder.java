@@ -12,6 +12,8 @@ public class ModuleBuilder {
     private final BuildLog buildLog;
     private final File moduleDir;
     private final RelativeFile sourceDir;
+
+    private final RelativeFile libDir;
     private final RelativeFile productionLibDir;
     private final RelativeFile resourcesDir;
     private final RelativeFile scriptDir;
@@ -23,6 +25,7 @@ public class ModuleBuilder {
 
     private final Module module;
     private final RelativeFile targetTarball;
+
 
 
     public static void main(String[] args) {
@@ -39,7 +42,9 @@ public class ModuleBuilder {
         sourceDir = relativeFile(moduleDir, "src/main/java");
         resourcesDir = relativeFile(moduleDir, "src/main/resource");
         scriptDir = relativeFile(moduleDir, "src/main/script/bash");
-        productionLibDir = relativeFile(moduleDir, "lib/production");
+
+        libDir = relativeFile(moduleDir, "lib-ibx/production");
+        productionLibDir = relativeFile(moduleDir, "lib-ibx/production");
 
 
         targetDir = relativeFile(moduleDir, "target");
@@ -56,6 +61,8 @@ public class ModuleBuilder {
     public ModuleBuilder build() {
 
         buildLog.println("Module Dir [%s]", moduleDir);
+
+        new ResolveDependencies(module, productionLibDir).execute(buildLog);
 
         new Compilation(sourceDir, productionLibDir, targetClassesDir).execute(buildLog);
         new Copy(resourcesDir, targetClassesDir).execute(buildLog);

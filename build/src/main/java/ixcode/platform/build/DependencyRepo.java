@@ -9,4 +9,8 @@ public class DependencyRepo {
     public DependencyRepo(URI location) {
         this.location = location;
     }
+
+    public boolean resolveDependencyTo(RelativeFile productionLibDir) {
+        return false;
+    }
 }
