@@ -35,6 +35,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="platform-core" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../../core/src/test/resource" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

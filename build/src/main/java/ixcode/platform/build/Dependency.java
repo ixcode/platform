@@ -1,5 +1,7 @@
 package ixcode.platform.build;
 
+import static java.lang.String.format;
+
 /**
  * This class could get more complex to allow fancy defaulting
  * such as:
@@ -45,5 +47,14 @@ public class Dependency {
         sb.append(group).append(":").append(artifact).append(":").append(version);
 
         return sb.toString();
+    }
+
+    public String toMavenRepositoryPath() {
+        String jarName = format("%s-%s.jar", artifact, version);
+
+        return format("%s/%s/%s/%s", group.replaceAll("\\.", "/"),
+                      artifact,
+                      version,
+                      jarName);
     }
 }

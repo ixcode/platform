@@ -6,7 +6,7 @@
       "hamcrest"
     ],
     "production" : [
-      "log4j",
+      "log4j:log4j:1.2.16",
       "org.ixcode:platform-core:1.0"
     ],
     "repositories" : [

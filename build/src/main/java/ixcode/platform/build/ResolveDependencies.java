@@ -35,7 +35,7 @@ public class ResolveDependencies implements BuildTask {
     private void resolveDependency(Dependency d, BuildLog buildLog) {
         boolean success = false;
         for (DependencyRepo repo: searchRepositories) {
-            if (repo.resolveDependencyTo(productionLibDir)) {
+            if (repo.resolveDependencyTo(d, productionLibDir)) {
                 success = true;
                 break;
             }
@@ -48,15 +48,15 @@ public class ResolveDependencies implements BuildTask {
 
 
     private static List<DependencyRepo> buildRepoList(Module module) {
-        File localMvnRepo = new File(format("%s/%s", getProperty("user.home"), "/.m2/repository"));
+        File localMvnRepo = new File(format("%s/%s", getProperty("user.home"), ".m2/repository"));
 
         List<DependencyRepo> repoList = new ArrayList<DependencyRepo>(module.repositories);
+
+        repoList.add(0, new DependencyRepo(new UriFormat().parseString("http://mvn.repo")));
 
         if (localMvnRepo.exists()) {
             repoList.add(0, new DependencyRepo(localMvnRepo.toURI()));
         }
-
-        repoList.add(0, new DependencyRepo(new UriFormat().parseString("http://mvn.repo")));
 
         return repoList;
     }
