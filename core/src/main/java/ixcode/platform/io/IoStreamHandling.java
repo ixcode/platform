@@ -1,6 +1,9 @@
 package ixcode.platform.io;
 
+import javax.management.RuntimeMBeanException;
 import java.io.*;
+
+import static java.lang.String.format;
 
 public class IoStreamHandling {
 
@@ -99,4 +102,31 @@ public class IoStreamHandling {
         }
     }
 
+    public static void writeToFile(String content, File f) {
+        writeToFile(content, f, "UTF-8");
+    }
+    public static void writeToFile(String content, File f, String charsetName) {
+        Writer out = null;
+
+
+        try {
+            if (f.isDirectory()) {
+                throw new RuntimeException(format("File [%s] is a directory! Cannot write here", f.getAbsolutePath()));
+            }
+            if (!f.exists()) {
+                f.getParentFile().mkdirs();
+                f.createNewFile();
+            }
+
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), charsetName));
+
+            out.write(content);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeQuietly(out);
+        }
+
+    }
 }
