@@ -1,4 +1,4 @@
-package ixcode.platform.build;
+package ixcode.platform.build.task;
 
 import org.junit.Test;
 

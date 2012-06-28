@@ -1,8 +1,10 @@
-package ixcode.platform.build;
+package ixcode.platform.build.task;
 
+import ixcode.platform.build.BuildLog;
+import ixcode.platform.build.BuildTask;
 import ixcode.platform.io.RelativeFile;
 
-public class Jar implements BuildTask  {
+public class Jar implements BuildTask {
 
     private final RelativeFile jarFile;
     private final RelativeFile targetClassesDir;

@@ -1,4 +1,4 @@
-package ixcode.platform.build;
+package ixcode.platform.build.dependency;
 
 import ixcode.platform.io.ExecuteSystemCommand;
 import ixcode.platform.io.RelativeFile;

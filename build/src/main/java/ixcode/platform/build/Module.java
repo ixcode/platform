@@ -1,5 +1,7 @@
 package ixcode.platform.build;
 
+import ixcode.platform.build.dependency.DependencyRepo;
+import ixcode.platform.build.dependency.MavenArtifact;
 import ixcode.platform.serialise.JsonDeserialiser;
 import ixcode.platform.serialise.KindToClassMap;
 import ixcode.platform.text.format.UriFormat;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static ixcode.platform.build.dependency.MavenArtifact.parseFromString;
 import static ixcode.platform.io.IoStreamHandling.readFileAsString;
 import static ixcode.platform.serialise.KindToClassMap.map;
 import static java.nio.charset.Charset.defaultCharset;
@@ -38,7 +41,7 @@ public class Module {
         List<MavenArtifact> dependencies = new ArrayList<MavenArtifact>();
 
         for(Object o : objects) {
-            dependencies.add(MavenArtifact.parseFromString((String) o));
+            dependencies.add(parseFromString((String) o));
         }
 
         return dependencies;

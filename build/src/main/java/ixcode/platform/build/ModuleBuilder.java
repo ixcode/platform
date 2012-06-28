@@ -1,5 +1,12 @@
 package ixcode.platform.build;
 
+import ixcode.platform.build.logging.ConsoleLog;
+import ixcode.platform.build.task.Clean;
+import ixcode.platform.build.task.Compilation;
+import ixcode.platform.build.task.Copy;
+import ixcode.platform.build.task.Jar;
+import ixcode.platform.build.task.ResolveDependencies;
+import ixcode.platform.build.task.Tar;
 import ixcode.platform.io.RelativeFile;
 
 import java.io.File;

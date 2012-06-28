@@ -1,5 +1,10 @@
-package ixcode.platform.build;
+package ixcode.platform.build.task;
 
+import ixcode.platform.build.BuildLog;
+import ixcode.platform.build.BuildTask;
+import ixcode.platform.build.dependency.DependencyRepo;
+import ixcode.platform.build.dependency.MavenArtifact;
+import ixcode.platform.build.Module;
 import ixcode.platform.io.RelativeFile;
 import ixcode.platform.text.format.UriFormat;
 import org.apache.log4j.Logger;

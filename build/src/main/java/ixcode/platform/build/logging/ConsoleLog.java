@@ -1,4 +1,6 @@
-package ixcode.platform.build;
+package ixcode.platform.build.logging;
+
+import ixcode.platform.build.BuildLog;
 
 import static java.lang.String.format;
 import static java.lang.System.out;

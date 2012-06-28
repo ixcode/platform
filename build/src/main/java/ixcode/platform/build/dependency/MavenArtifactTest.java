@@ -1,8 +1,9 @@
-package ixcode.platform.build;
+package ixcode.platform.build.dependency;
 
+import ixcode.platform.build.dependency.MavenArtifact;
 import org.junit.Test;
 
-import static ixcode.platform.build.MavenArtifact.parseFromString;
+import static ixcode.platform.build.dependency.MavenArtifact.parseFromString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

@@ -1,5 +1,6 @@
 package ixcode.platform.build;
 
+import ixcode.platform.build.logging.ConsoleLog;
 import org.junit.Test;
 
 import java.io.File;

@@ -1,4 +1,7 @@
-package ixcode.platform.build;
+package ixcode.platform.build.task;
+
+import ixcode.platform.build.BuildLog;
+import ixcode.platform.build.BuildTask;
 
 import java.io.BufferedReader;
 import java.io.File;

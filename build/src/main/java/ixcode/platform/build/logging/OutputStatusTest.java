@@ -1,4 +1,4 @@
-package ixcode.platform.build;
+package ixcode.platform.build.logging;
 
 import org.junit.Test;
 

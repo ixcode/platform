@@ -1,4 +1,4 @@
-package ixcode.platform.build;
+package ixcode.platform.build.dependency;
 
 import static java.lang.String.format;
 

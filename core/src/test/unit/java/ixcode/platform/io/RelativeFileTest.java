@@ -1,6 +1,5 @@
-package ixcode.platform.build;
+package ixcode.platform.io;
 
-import ixcode.platform.io.RelativeFile;
 import org.junit.Test;
 
 import java.io.File;
