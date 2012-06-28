@@ -1,5 +1,7 @@
 package ixcode.platform.build;
 
+import ixcode.platform.io.RelativeFile;
+
 public class Copy implements BuildTask {
     private final RelativeFile fromFile;
     private final RelativeFile toFile;

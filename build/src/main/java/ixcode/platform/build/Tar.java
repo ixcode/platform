@@ -1,5 +1,7 @@
 package ixcode.platform.build;
 
+import ixcode.platform.io.RelativeFile;
+
 public class Tar implements BuildTask {
     private final RelativeFile tarFile;
     private final RelativeFile dir;

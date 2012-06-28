@@ -1,5 +1,7 @@
 package ixcode.platform.build;
 
+import ixcode.platform.io.RelativeFile;
+
 public class Jar implements BuildTask  {
 
     private final RelativeFile jarFile;

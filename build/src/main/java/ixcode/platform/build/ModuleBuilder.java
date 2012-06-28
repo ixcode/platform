@@ -1,11 +1,11 @@
 package ixcode.platform.build;
 
+import ixcode.platform.io.RelativeFile;
+
 import java.io.File;
-import java.util.Map;
 
 import static ixcode.platform.build.Module.loadModule;
-import static ixcode.platform.build.RelativeFile.relativeFile;
-import static java.lang.String.format;
+import static ixcode.platform.io.RelativeFile.relativeFile;
 
 public class ModuleBuilder {
 
@@ -25,7 +25,6 @@ public class ModuleBuilder {
 
     private final Module module;
     private final RelativeFile targetTarball;
-
 
 
     public static void main(String[] args) {

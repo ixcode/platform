@@ -1,10 +1,11 @@
 package ixcode.platform.build;
 
+import ixcode.platform.io.RelativeFile;
 import org.junit.Test;
 
 import java.io.File;
 
-import static ixcode.platform.build.RelativeFile.relativeFile;
+import static ixcode.platform.io.RelativeFile.relativeFile;
 import static java.lang.System.getProperty;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

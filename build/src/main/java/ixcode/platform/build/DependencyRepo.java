@@ -1,6 +1,7 @@
 package ixcode.platform.build;
 
 import ixcode.platform.io.ExecuteSystemCommand;
+import ixcode.platform.io.RelativeFile;
 import ixcode.platform.text.format.UriFormat;
 import org.apache.log4j.Logger;
 

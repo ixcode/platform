@@ -1,10 +1,11 @@
 package ixcode.platform.build;
 
+import ixcode.platform.io.RelativeFile;
+
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.System.setProperty;

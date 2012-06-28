@@ -1,5 +1,6 @@
 package ixcode.platform.build;
 
+import ixcode.platform.io.RelativeFile;
 import ixcode.platform.text.format.UriFormat;
 import org.apache.log4j.Logger;
 
@@ -33,7 +34,7 @@ public class ResolveDependencies implements BuildTask {
 
     private void resolveDependency(MavenArtifact d, BuildLog buildLog) {
         boolean success = false;
-        for (DependencyRepo repo: searchRepositories) {
+        for (DependencyRepo repo : searchRepositories) {
             if (repo.resolveDependencyTo(d, productionLibDir)) {
                 success = true;
                 break;
@@ -41,7 +42,7 @@ public class ResolveDependencies implements BuildTask {
         }
 
         if (!success) {
-           throw new RuntimeException(format("Could not resolve dependency [%s] in either local or remote repositories", d)) ;
+            throw new RuntimeException(format("Could not resolve dependency [%s] in either local or remote repositories", d));
         }
     }
 
