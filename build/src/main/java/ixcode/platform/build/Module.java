@@ -8,6 +8,7 @@ import ixcode.platform.text.format.UriFormat;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,9 +33,16 @@ public class Module {
 
     private Module(ModuleData moduleData) {
         name = moduleData.module.get(1);
-        repositories = parseRepostiories((List<Object>)moduleData.dependencies.get("repositories"));
-        developmentDeps = parseDependencies((List<Object>)moduleData.dependencies.get("development"));
-        productionDeps = parseDependencies((List<Object>)moduleData.dependencies.get("production"));
+        repositories = parseRepostiories(getDependenciesProperty(moduleData, "repositories"));
+        developmentDeps = parseDependencies(getDependenciesProperty(moduleData, "development"));
+        productionDeps = parseDependencies(getDependenciesProperty(moduleData, "production"));
+    }
+
+    private List<Object> getDependenciesProperty(ModuleData moduleData, String name) {
+        if (!moduleData.dependencies.containsKey(name)) {
+            return new ArrayList<Object>();
+        }
+        return (List<Object>)moduleData.dependencies.get(name);
     }
 
     private static List<MavenArtifact> parseDependencies(List<Object> objects) {
@@ -77,6 +85,10 @@ public class Module {
 
         public final List<String> module;
         public final Map<String, Object> dependencies;
+
+        private ModuleData(List<String> module) {
+            this(module, new HashMap<String, Object>());
+        }
 
         private ModuleData(List<String> module, Map<String, Object> dependencies) {
             this.module = module;

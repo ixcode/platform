@@ -45,7 +45,7 @@ public class ModuleBuilder {
         this.moduleDir = moduleDir;
         this.module = loadModule(moduleDir, buildLog);
 
-        sourceDir = relativeFile(moduleDir, "src/main/java");
+        sourceDir = locateSourceDir(moduleDir);
         resourcesDir = relativeFile(moduleDir, "src/main/resource");
         scriptDir = relativeFile(moduleDir, "src/main/script/bash");
 
@@ -62,6 +62,20 @@ public class ModuleBuilder {
         targetTarball = relativeFile(moduleDir, "target/" + module.name + ".tar.gz");
 
         buildLog.printTitle("Builder (v.10) - building now!");
+    }
+
+    private static RelativeFile locateSourceDir(File moduleDir) {
+        RelativeFile sourceDir = relativeFile(moduleDir, "src/main/java");
+
+        if (!sourceDir.exists()) {
+            sourceDir = relativeFile(moduleDir, "src");
+        }
+
+        if (!sourceDir.exists()) {
+            throw new RuntimeException("Could not locate your source, where have you put it?!");
+        }
+
+        return sourceDir;
     }
 
     public ModuleBuilder build() {

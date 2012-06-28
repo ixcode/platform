@@ -1,4 +1,9 @@
 {
-  "is" : "ibx-module",
-  "module" : ["platform.ixcode.org", "platform-core", "1.0"]
+  "is" : ["ibx-module"],
+  "module" : ["platform.ixcode.org", "platform-core", "1.0"],
+  "dependencies" : {
+    "production" : [
+      "log4j:log4j:1.2.16"
+    ]
+  }
 }
