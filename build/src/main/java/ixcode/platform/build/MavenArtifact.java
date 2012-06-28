@@ -10,24 +10,24 @@ import static java.lang.String.format;
  * <p/>
  * But for now, we must have them all
  */
-public class Dependency {
+public class MavenArtifact {
 
 
     private final String group;
     private final String artifact;
     private final String version;
 
-    public static Dependency parseFromString(String value) {
+    public static MavenArtifact parseFromString(String value) {
         String[] parts = value.split(":");
 
         String group = getIfPresent(parts, 0);
         String artifact = getIfPresent(parts, 1);
         String version = getIfPresent(parts, 2);
 
-        return new Dependency(group, artifact, version);
+        return new MavenArtifact(group, artifact, version);
     }
 
-    private Dependency(String group, String artifact, String version) {
+    private MavenArtifact(String group, String artifact, String version) {
         this.group = group;
         this.artifact = artifact;
         this.version = version;

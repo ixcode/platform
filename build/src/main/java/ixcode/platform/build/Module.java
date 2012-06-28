@@ -4,7 +4,6 @@ import ixcode.platform.serialise.JsonDeserialiser;
 import ixcode.platform.serialise.KindToClassMap;
 import ixcode.platform.text.format.UriFormat;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,14 +17,14 @@ public class Module {
 
     public final String name;
     public final List<DependencyRepo> repositories;
-    public final List<Dependency> developmentDeps;
-    public final List<Dependency> productionDeps;
+    public final List<MavenArtifact> developmentDeps;
+    public final List<MavenArtifact> productionDeps;
 
     private Module(File moduleDir) {
         name = moduleDir.getName();
         repositories = new ArrayList<DependencyRepo>();
-        developmentDeps = new ArrayList<Dependency>();
-        productionDeps = new ArrayList<Dependency>();
+        developmentDeps = new ArrayList<MavenArtifact>();
+        productionDeps = new ArrayList<MavenArtifact>();
     }
 
     private Module(ModuleData moduleData) {
@@ -35,11 +34,11 @@ public class Module {
         productionDeps = parseDependencies((List<Object>)moduleData.dependencies.get("production"));
     }
 
-    private static List<Dependency> parseDependencies(List<Object> objects) {
-        List<Dependency> dependencies = new ArrayList<Dependency>();
+    private static List<MavenArtifact> parseDependencies(List<Object> objects) {
+        List<MavenArtifact> dependencies = new ArrayList<MavenArtifact>();
 
         for(Object o : objects) {
-            dependencies.add(Dependency.parseFromString((String)o));
+            dependencies.add(MavenArtifact.parseFromString((String) o));
         }
 
         return dependencies;

@@ -4,7 +4,6 @@ import ixcode.platform.text.format.UriFormat;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +26,12 @@ public class ResolveDependencies implements BuildTask {
     }
 
     @Override public void execute(BuildLog buildLog) {
-        for (Dependency d : module.productionDeps) {
+        for (MavenArtifact d : module.productionDeps) {
             resolveDependency(d, buildLog);
         }
     }
 
-    private void resolveDependency(Dependency d, BuildLog buildLog) {
+    private void resolveDependency(MavenArtifact d, BuildLog buildLog) {
         boolean success = false;
         for (DependencyRepo repo: searchRepositories) {
             if (repo.resolveDependencyTo(d, productionLibDir)) {

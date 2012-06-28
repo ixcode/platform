@@ -20,7 +20,7 @@ public class DependencyRepo {
         this.location = location;
     }
 
-    public boolean resolveDependencyTo(Dependency dependency, RelativeFile libDir) {
+    public boolean resolveDependencyTo(MavenArtifact dependency, RelativeFile libDir) {
         libDir.mkdirs();
 
         if ("file".equals(location.getScheme())) {
@@ -30,9 +30,9 @@ public class DependencyRepo {
         return false;
     }
 
-    private boolean resolveLocalDependency(Dependency dependency, RelativeFile libDir) {
+    private boolean resolveLocalDependency(MavenArtifact dependency, RelativeFile libDir) {
         URI sourceFilePath = new UriFormat().parseString(format("%s%s", new UriFormat().format(location),
-                                       dependency.toMavenRepositoryPath()));
+                                                                dependency.toMavenRepositoryPath()));
 
         File sourceFile = new File(sourceFilePath);
         if (!sourceFile.exists()) {
