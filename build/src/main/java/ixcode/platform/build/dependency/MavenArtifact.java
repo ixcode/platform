@@ -18,14 +18,17 @@ public class MavenArtifact {
     private final String version;
 
     public static MavenArtifact parseFromString(String value) {
-        String[] parts = value.split(":");
+        return parseFromArray(value.split(":"));
+    }
 
+    public static MavenArtifact parseFromArray(String... parts) {
         String group = getIfPresent(parts, 0);
         String artifact = getIfPresent(parts, 1);
         String version = getIfPresent(parts, 2);
 
         return new MavenArtifact(group, artifact, version);
     }
+
 
     private MavenArtifact(String group, String artifact, String version) {
         this.group = group;

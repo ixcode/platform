@@ -58,7 +58,7 @@ public class ModuleBuilder {
         targetDistDir = relativeFile(moduleDir, "target/dist");
         targetLibDir = relativeFile(moduleDir, "target/dist/lib");
 
-        targetJarfile = relativeFile(moduleDir, "target/dist/" + module.name + ".jar");
+        targetJarfile = relativeFile(moduleDir, "target/dist/" + module.artifact.toJarFileName());
         targetTarball = relativeFile(moduleDir, "target/" + module.name + ".tar.gz");
 
         buildLog.printTitle("Builder (v.10) - building now!");

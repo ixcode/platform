@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ixcode.platform.build.dependency.MavenArtifact.parseFromArray;
 import static ixcode.platform.build.dependency.MavenArtifact.parseFromString;
 import static ixcode.platform.io.IoStreamHandling.readFileAsString;
 import static ixcode.platform.serialise.KindToClassMap.map;
@@ -20,19 +21,24 @@ import static java.nio.charset.Charset.defaultCharset;
 public class Module {
 
     public final String name;
+    public final MavenArtifact artifact;
     public final List<DependencyRepo> repositories;
     public final List<MavenArtifact> developmentDeps;
     public final List<MavenArtifact> productionDeps;
 
     private Module(File moduleDir) {
         name = moduleDir.getName();
+
         repositories = new ArrayList<DependencyRepo>();
         developmentDeps = new ArrayList<MavenArtifact>();
         productionDeps = new ArrayList<MavenArtifact>();
+        artifact = parseFromString(name);
     }
 
     private Module(ModuleData moduleData) {
         name = moduleData.module.get(1);
+
+        artifact = parseFromArray(moduleData.module.toArray(new String[0]));
         repositories = parseRepostiories(getDependenciesProperty(moduleData, "repositories"));
         developmentDeps = parseDependencies(getDependenciesProperty(moduleData, "development"));
         productionDeps = parseDependencies(getDependenciesProperty(moduleData, "production"));
