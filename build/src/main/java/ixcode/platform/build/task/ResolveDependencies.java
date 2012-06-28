@@ -25,10 +25,10 @@ public class ResolveDependencies implements BuildTask {
 
     private final List<DependencyRepo> searchRepositories;
 
-    public ResolveDependencies(Module module, RelativeFile productionLibDir) {
+    public ResolveDependencies(Module module, RelativeFile productionLibDir, List<DependencyRepo> defaultRepositories) {
         this.module = module;
         this.productionLibDir = productionLibDir;
-        this.searchRepositories = buildRepoList(module);
+        this.searchRepositories = buildRepoList(module, defaultRepositories);
     }
 
     @Override public void execute(BuildLog buildLog) {
@@ -52,15 +52,12 @@ public class ResolveDependencies implements BuildTask {
     }
 
 
-    private static List<DependencyRepo> buildRepoList(Module module) {
-        File localMvnRepo = new File(format("%s/%s", getProperty("user.home"), ".m2/repository"));
+    private static List<DependencyRepo> buildRepoList(Module module, List<DependencyRepo> defaultRepositories) {
 
         List<DependencyRepo> repoList = new ArrayList<DependencyRepo>(module.repositories);
 
-        repoList.add(0, new DependencyRepo(new UriFormat().parseString("http://mvn.repo")));
-
-        if (localMvnRepo.exists()) {
-            repoList.add(0, new DependencyRepo(localMvnRepo.toURI()));
+        for (DependencyRepo defaultRepo : defaultRepositories) {
+            repoList.add(0, defaultRepo);
         }
 
         return repoList;

@@ -1,18 +1,26 @@
 package ixcode.platform.build;
 
+import ixcode.platform.build.dependency.DependencyRepo;
 import ixcode.platform.build.logging.ConsoleLog;
 import ixcode.platform.build.task.Clean;
 import ixcode.platform.build.task.Compilation;
 import ixcode.platform.build.task.Copy;
 import ixcode.platform.build.task.Jar;
+import ixcode.platform.build.task.Publish;
 import ixcode.platform.build.task.ResolveDependencies;
 import ixcode.platform.build.task.Tar;
 import ixcode.platform.io.RelativeFile;
+import ixcode.platform.text.format.UriFormat;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ixcode.platform.build.Module.loadModule;
 import static ixcode.platform.io.RelativeFile.relativeFile;
+import static java.lang.String.format;
+import static java.lang.System.getProperty;
+import static java.util.Arrays.asList;
 
 public class ModuleBuilder {
 
@@ -32,6 +40,7 @@ public class ModuleBuilder {
 
     private final Module module;
     private final RelativeFile targetTarball;
+    private DependencyRepo localMavenRepo;
 
 
     public static void main(String[] args) {
@@ -61,6 +70,8 @@ public class ModuleBuilder {
         targetJarfile = relativeFile(moduleDir, "target/dist/" + module.artifact.toJarFileName());
         targetTarball = relativeFile(moduleDir, "target/" + module.name + ".tar.gz");
 
+        localMavenRepo = localRepo();
+
         buildLog.printTitle("Builder (v.10) - building now!");
     }
 
@@ -82,18 +93,40 @@ public class ModuleBuilder {
 
         buildLog.println("Module Dir [%s]", moduleDir);
 
-        new ResolveDependencies(module, productionLibDir).execute(buildLog);
+        new ResolveDependencies(module, productionLibDir, defaultRepos()).execute(buildLog);
 
         new Compilation(sourceDir, productionLibDir, targetClassesDir).execute(buildLog);
         new Copy(resourcesDir, targetClassesDir).execute(buildLog);
 
         new Jar(targetJarfile, targetClassesDir, resourcesDir).execute(buildLog);
+
+        if (localMavenRepo.exists()) {
+            new Publish(localMavenRepo, module.artifact, targetJarfile);
+        }
+
         new Copy(scriptDir, targetDistDir).execute(buildLog);
         new Copy(productionLibDir, targetLibDir).execute(buildLog);
 
         new Tar(targetTarball, targetDistDir).execute(buildLog);
 
         return this;
+    }
+
+    private List<DependencyRepo> defaultRepos() {
+        List<DependencyRepo> defaultRepos = new ArrayList<DependencyRepo>();
+
+        defaultRepos.add(new DependencyRepo(new UriFormat().parseString("http://mvn.repo")));
+
+        if (localMavenRepo.exists()) {
+            defaultRepos.add(localMavenRepo);
+        }
+
+
+        return defaultRepos;
+    }
+
+    private DependencyRepo localRepo() {File localMvnRepoFile = new File(format("%s/%s", getProperty("user.home"), ".m2/repository"));
+        return new DependencyRepo(localMvnRepoFile.toURI());
     }
 
     public ModuleBuilder clean() {

@@ -31,6 +31,13 @@ public class DependencyRepo {
         return false;
     }
 
+    public boolean exists() {
+        if ("file".equals(location.getScheme())) {
+            return new File(location).exists();
+        }
+        return false;
+    }
+
     private boolean resolveLocalDependency(MavenArtifact dependency, RelativeFile libDir) {
         URI sourceFilePath = new UriFormat().parseString(format("%s%s", new UriFormat().format(location),
                                                                 dependency.toMavenRepositoryPath()));
@@ -59,4 +66,10 @@ public class DependencyRepo {
 
         return true;
     }
+
+    public void publishArtifact(MavenArtifact artifact, RelativeFile artifactFile) {
+
+    }
+
+
 }
