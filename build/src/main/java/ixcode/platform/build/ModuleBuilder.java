@@ -58,8 +58,8 @@ public class ModuleBuilder {
         resourcesDir = relativeFile(moduleDir, "src/main/resource");
         scriptDir = relativeFile(moduleDir, "src/main/script/bash");
 
-        libDir = relativeFile(moduleDir, "lib-ibx/production");
-        productionLibDir = relativeFile(moduleDir, "lib-ibx/production");
+        libDir = relativeFile(moduleDir, "lib/production");
+        productionLibDir = relativeFile(moduleDir, "lib/production");
 
 
         targetDir = relativeFile(moduleDir, "target");
@@ -93,7 +93,7 @@ public class ModuleBuilder {
 
         buildLog.println("Module Dir [%s]", moduleDir);
 
-        new ResolveDependencies(module, productionLibDir, defaultRepos()).execute(buildLog);
+        //new ResolveDependencies(module, productionLibDir, defaultRepos()).execute(buildLog);
 
         new Compilation(sourceDir, productionLibDir, targetClassesDir).execute(buildLog);
         new Copy(resourcesDir, targetClassesDir).execute(buildLog);
