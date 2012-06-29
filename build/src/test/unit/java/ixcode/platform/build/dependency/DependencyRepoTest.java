@@ -1,7 +1,5 @@
 package ixcode.platform.build.dependency;
 
-import ixcode.platform.io.IoStreamHandling;
-import ixcode.platform.io.TempFileGenerator;
 import org.junit.Test;
 
 import java.io.File;
