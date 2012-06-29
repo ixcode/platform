@@ -74,6 +74,8 @@ public class DependencyRepo {
                                                                 artifact.toMavenRepositoryPath()));
 
         buildLog.println("Going to publish artifact to [%s]", destFilePath);
+
+        new Copy(artifactFile.asFile(), new File(destFilePath)).execute(buildLog);
         
     }
 

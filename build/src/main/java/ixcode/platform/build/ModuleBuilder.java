@@ -101,7 +101,7 @@ public class ModuleBuilder {
         new Jar(targetJarfile, targetClassesDir, resourcesDir).execute(buildLog);
 
         if (localMavenRepo.exists()) {
-            new Publish(localMavenRepo, module.artifact, targetJarfile);
+            new Publish(localMavenRepo, module.artifact, targetJarfile).execute(buildLog);
         }
 
         new Copy(scriptDir, targetDistDir).execute(buildLog);
