@@ -3,6 +3,7 @@ package ixcode.platform.build.task;
 import ixcode.platform.build.BuildLog;
 import ixcode.platform.build.BuildTask;
 import ixcode.platform.io.RelativeFile;
+import org.apache.log4j.Logger;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
@@ -10,11 +11,15 @@ import javax.tools.StandardJavaFileManager;
 import java.io.File;
 import java.util.List;
 
+import static java.lang.String.format;
+import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static javax.tools.ToolProvider.getSystemJavaCompiler;
 
 public class Compilation implements BuildTask {
+
+    private static final Logger log = Logger.getLogger(Compilation.class);
 
     private final RelativeFile sourceDir;
     private final RelativeFile productionLibDir;
@@ -38,18 +43,22 @@ public class Compilation implements BuildTask {
     }
 
     private void compile(BuildLog buildLog) {
-        String oldUserDir = System.getProperty("user.dir");
+        String oldUserDir = getProperty("user.dir");
 
         try {
             setProperty("user.dir", productionLibDir.getRoot().getAbsolutePath());
 
             JavaCompiler compiler = getSystemJavaCompiler();
 
+            String classpath = classpathFrom(productionLibDir);
+
+            log.debug(format("\nClasspath for compilation is :\n%s\n", classpath));
+
             List<String> optionList = asList(
                     "-g",
                     "-Xlint",
                     "-cp",
-                    classpathFrom(productionLibDir),
+                    classpath,
                     "-sourcepath",
                     sourceDir.getAbsolutePath(),
                     "-d",
@@ -92,7 +101,7 @@ public class Compilation implements BuildTask {
         for (File jarfile : jarfiles) {
             sb.append(jarfile.getAbsolutePath());
             if (jarfile != jarfiles[jarfiles.length - 1]) {
-                sb.append(":");
+                sb.append(getProperty("path.separator"));
             }
         }
 
