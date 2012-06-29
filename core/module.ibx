@@ -3,7 +3,11 @@
   "module" : ["platform.ixcode.org", "platform-core", "1.0"],
   "dependencies" : {
     "production" : [
-      "log4j:log4j:1.2.16"
+      "log4j:log4j:1.2.16",
+      "org.ixcode:json-parser:1.0",
+      "org.antlr:antlr:3.1.3",
+      "org.antlr:antlr-runtime:3.1.3",
+      "com.thoughtworks.paranamer:paranamer:2.4.1"
     ]
   }
 }
