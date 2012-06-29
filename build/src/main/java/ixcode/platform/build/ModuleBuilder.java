@@ -45,7 +45,7 @@ public class ModuleBuilder {
 
     public static void main(String[] args) {
         new ModuleBuilder(new ConsoleLog(), new File(args[0]))
-                //.clean()
+                .clean()
                 .build();
     }
 
@@ -120,7 +120,6 @@ public class ModuleBuilder {
         if (localMavenRepo.exists()) {
             defaultRepos.add(localMavenRepo);
         }
-
 
         return defaultRepos;
     }

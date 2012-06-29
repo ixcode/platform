@@ -40,7 +40,7 @@ public class ResolveDependencies implements BuildTask {
     private void resolveDependency(MavenArtifact d, BuildLog buildLog) {
         boolean success = false;
         for (DependencyRepo repo : searchRepositories) {
-            if (repo.resolveDependencyTo(d, productionLibDir)) {
+            if (repo.resolveDependencyTo(d, productionLibDir, buildLog)) {
                 success = true;
                 break;
             }

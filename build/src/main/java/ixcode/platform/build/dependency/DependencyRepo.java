@@ -1,5 +1,7 @@
 package ixcode.platform.build.dependency;
 
+import ixcode.platform.build.BuildLog;
+import ixcode.platform.build.task.Copy;
 import ixcode.platform.io.ExecuteSystemCommand;
 import ixcode.platform.io.RelativeFile;
 import ixcode.platform.text.format.UriFormat;
@@ -21,11 +23,11 @@ public class DependencyRepo {
         this.location = location;
     }
 
-    public boolean resolveDependencyTo(MavenArtifact dependency, RelativeFile libDir) {
+    public boolean resolveDependencyTo(MavenArtifact dependency, RelativeFile libDir, BuildLog buildLog) {
         libDir.mkdirs();
 
         if ("file".equals(location.getScheme())) {
-            return resolveLocalDependency(dependency, libDir);
+            return resolveLocalDependency(dependency, libDir, buildLog);
         }
 
         return false;
@@ -38,7 +40,7 @@ public class DependencyRepo {
         return false;
     }
 
-    private boolean resolveLocalDependency(MavenArtifact dependency, RelativeFile libDir) {
+    private boolean resolveLocalDependency(MavenArtifact dependency, RelativeFile libDir, BuildLog buildLog) {
         URI sourceFilePath = new UriFormat().parseString(format("%s%s", new UriFormat().format(location),
                                                                 dependency.toMavenRepositoryPath()));
 
@@ -52,13 +54,7 @@ public class DependencyRepo {
 
         File destFile = new File(libDir.getAbsolutePath(), dependency.toJarFileName());
 
-        executeSystemCommand(format("cp %s %s", sourceFile.getAbsolutePath(), libDir.getAbsolutePath()),
-                             libDir.getParentFile(),
-                             new ExecuteSystemCommand.OutputHandler() {
-                                 @Override public void handleLine(String line) {
-                                     log.debug(line);
-                                 }
-                             });
+        new Copy(sourceFile, destFile).execute(buildLog);
 
         if (!destFile.exists()) {
             throw new RuntimeException(format("Failed to copy file [%s] to [%s]", sourceFile.getAbsolutePath(), destFile.getAbsolutePath()));
@@ -67,8 +63,18 @@ public class DependencyRepo {
         return true;
     }
 
-    public void publishArtifact(MavenArtifact artifact, RelativeFile artifactFile) {
+    public void publishArtifact(MavenArtifact artifact, RelativeFile artifactFile, BuildLog buildLog) {
+        if ("file".equals(location.getScheme())) {
+            publishLocalArtifact(location, artifact, artifactFile, buildLog);
+        }
+    }
 
+    private void publishLocalArtifact(URI location, MavenArtifact artifact, RelativeFile artifactFile, BuildLog buildLog) {
+        URI destFilePath = new UriFormat().parseString(format("%s%s", new UriFormat().format(location),
+                                                                artifact.toMavenRepositoryPath()));
+
+        buildLog.println("Going to publish artifact to [%s]", destFilePath);
+        
     }
 
 

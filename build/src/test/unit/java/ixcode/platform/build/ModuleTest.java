@@ -11,8 +11,6 @@ import static org.hamcrest.Matchers.is;
 
 public class ModuleTest {
 
-
-
     @Test
     public void can_load_from_a_file() throws Exception {
         File moduleDir = new File(".").getCanonicalFile();

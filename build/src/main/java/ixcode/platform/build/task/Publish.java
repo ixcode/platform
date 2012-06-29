@@ -23,6 +23,6 @@ public class Publish implements BuildTask {
 
 
     @Override public void execute(BuildLog buildLog) {
-        repo.publishArtifact(artifact, artifactFile);
+        repo.publishArtifact(artifact, artifactFile, buildLog);
     }
 }
