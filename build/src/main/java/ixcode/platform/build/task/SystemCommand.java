@@ -21,33 +21,12 @@ public class SystemCommand implements BuildTask {
 
     private static final CygwinPathFormat CYGWIN_PATH_FORMAT = new CygwinPathFormat();
 
-    private static boolean isCygwin() {
+    public static boolean isCygwin() {
         return "cygwin".equals(getenv("TERM"));
     }
 
     public SystemCommand(String command, Object... formatArgs) {
-        this(expandCurrentDir(), command, formatArgs);
-    }
-
-    public static String getOsSpecificFilename(File file) {
-        if (!IS_CYGWIN) {
-            return file.getAbsolutePath();
-        }
-        try {
-            String fileName = file.getCanonicalFile().getAbsolutePath();
-            return CYGWIN_PATH_FORMAT.format(fileName);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static File expandCurrentDir() {
-        try {
-            return new File(".").getCanonicalFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this(null, command, formatArgs);
     }
 
     public SystemCommand(File dir, String command, Object... formatArgs) {
@@ -55,8 +34,25 @@ public class SystemCommand implements BuildTask {
         this.command = String.format(command, formatArgs);
     }
 
+    private static File expandCurrentDir() {
+        try {
+            return new File(getOsSpecificFilename(new File(".").getCanonicalFile().getAbsolutePath()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String getOsSpecificFilename(String absolutePath) {
+        if (!IS_CYGWIN) {
+            return absolutePath;
+        }
+
+        return CYGWIN_PATH_FORMAT.format(absolutePath);
+
+    }
+
     public void execute(BuildLog buildLog) {
-        buildLog.println("Executing system command [%s] in dir [%s]", command, dir.getAbsolutePath());
+        buildLog.println("Executing system command [%s] in dir [%s]", command, dir);
 
         BufferedReader reader = null;
         Process p = null;

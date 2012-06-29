@@ -6,6 +6,9 @@ import ixcode.platform.io.RelativeFile;
 
 import java.io.File;
 
+import static ixcode.platform.build.task.SystemCommand.getOsSpecificFilename;
+import static ixcode.platform.build.task.SystemCommand.isCygwin;
+
 public class Copy implements BuildTask {
     private final File fromFile;
     private final File toFile;
@@ -22,10 +25,16 @@ public class Copy implements BuildTask {
     public void execute(BuildLog buildLog) {
         buildLog.println("Coying from [%s] to [%s]", fromFile.getAbsolutePath(), toFile.getAbsolutePath());
 
+        if (!fromFile.exists()) {
+            buildLog.println("Nothing to copy");
+            return;
+        }
+
         toFile.mkdirs();
 
-        String toFileString = (fromFile.isDirectory()) ? fromFile.getAbsolutePath() + "/" : fromFile.getAbsolutePath();
+        String osDirCopy = (isCygwin()) ? "/*" : "/";
+        String toFileString = (fromFile.isDirectory()) ? fromFile.getAbsolutePath() + osDirCopy : fromFile.getAbsolutePath();
 
-        new SystemCommand("cp -aRv %s %s", toFileString, toFile.getAbsolutePath()).execute(buildLog);
+        new SystemCommand("cp -aRv %s %s", getOsSpecificFilename(toFileString), getOsSpecificFilename(toFile.getAbsolutePath())).execute(buildLog);
     }
 }
