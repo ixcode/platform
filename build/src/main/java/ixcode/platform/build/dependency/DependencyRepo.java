@@ -50,12 +50,12 @@ public class DependencyRepo {
             return false;
         }
 
-        log.debug(format("Going to copy [%s] to [%s]", sourceFilePath, libDir.getAbsolutePath()));
+        log.debug(format("Going to copy [%s] to [%s]", sourceFilePath, libDir.asFile().getAbsolutePath()));
+
+
+        new Copy(sourceFile, libDir.asFile()).execute(buildLog);
 
         File destFile = new File(libDir.getAbsolutePath(), dependency.toJarFileName());
-
-        new Copy(sourceFile, destFile).execute(buildLog);
-
         if (!destFile.exists()) {
             throw new RuntimeException(format("Failed to copy file [%s] to [%s]", sourceFile.getAbsolutePath(), destFile.getAbsolutePath()));
         }

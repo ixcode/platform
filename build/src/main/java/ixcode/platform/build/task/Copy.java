@@ -20,7 +20,7 @@ public class Copy implements BuildTask {
     }
 
     public void execute(BuildLog buildLog) {
-        buildLog.println("Coying from [%s] to [%s]", fromFile, toFile);
+        buildLog.println("Coying from [%s] to [%s]", fromFile.getAbsolutePath(), toFile.getAbsolutePath());
 
         toFile.mkdirs();
 
