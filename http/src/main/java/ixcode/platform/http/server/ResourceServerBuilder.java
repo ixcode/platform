@@ -13,6 +13,7 @@ public class ResourceServerBuilder {
     private int port = 8080;
     private String rootResourcePackageName;
     private ContentType defaultContentType = json;
+    private String staticContentRoot = ".";
 
     public static ResourceServerBuilder resourceServer() {
         String fullClassName = getDefaultNameFromCallingClass();
@@ -30,7 +31,7 @@ public class ResourceServerBuilder {
 
     public ResourceServer build() {
         return new ResourceServer(serverName, hostname, port,
-                                  rootResourcePackageName, defaultContentType);
+                                  rootResourcePackageName, defaultContentType, this.staticContentRoot);
     }
 
     public ResourceServerBuilder onPort(int port) {
@@ -63,4 +64,8 @@ public class ResourceServerBuilder {
         return this;
     }
 
+    public ResourceServerBuilder servingStaticContentFrom(String staticContentRoot) {
+        this.staticContentRoot = staticContentRoot;
+        return this;
+    }
 }

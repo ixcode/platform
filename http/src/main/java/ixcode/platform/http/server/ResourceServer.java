@@ -20,6 +20,7 @@ public class ResourceServer {
     private final RouteMap routeMap;
     private final String serverName;
     private final ResourceServerContext context;
+    private final String staticContentRoot;
 
     static {
         initialiseLog4j();
@@ -28,16 +29,20 @@ public class ResourceServer {
     public ResourceServer(String serverName,
                           String hostname, int port,
                           String rootResourcePackageName,
-                          ContentType defaultcontentType) {
+                          ContentType defaultcontentType,
+                          String staticContentRoot) {
+
         this(serverName, hostname, port,
              new ResourceServerContext(reflectivelyBuildRepositoryMap(rootResourcePackageName)),
-             defaultcontentType);
+             defaultcontentType,
+             staticContentRoot);
     }
 
     private ResourceServer(String serverName,
                            String hostname, int port,
                            ResourceServerContext resourceServerContext,
-                           ContentType defaultContentType) {
+                           ContentType defaultContentType,
+                           String staticContentRoot) {
 
         this.serverName = serverName;
         this.context = resourceServerContext;
@@ -45,6 +50,7 @@ public class ResourceServer {
         this.port = port;
         this.defaultContentType = defaultContentType;
         this.routeMap = context.theRouteMap().rootedAt(format("http://%s:%s", hostname, port));
+        this.staticContentRoot = staticContentRoot;
     }
 
 
@@ -53,7 +59,7 @@ public class ResourceServer {
 
         new HttpServer(serverName, hostname, port, requestDispatcher)
                 .withRedirection(new RedirectTrailingSlashes())
-                .servingStaticContentFrom("./")
+                .servingStaticContentFrom(staticContentRoot)
                 .start();
     }
 

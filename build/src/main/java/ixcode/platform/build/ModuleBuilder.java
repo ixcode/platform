@@ -32,15 +32,19 @@ public class ModuleBuilder {
     private final RelativeFile productionLibDir;
     private final RelativeFile resourcesDir;
     private final RelativeFile scriptDir;
+    private final RelativeFile webDir;
+
     private final RelativeFile targetDir;
     private final RelativeFile targetClassesDir;
     private final RelativeFile targetDistDir;
     private final RelativeFile targetJarfile;
     private final RelativeFile targetLibDir;
+    private final RelativeFile targetWebDir;
 
     private final Module module;
     private final RelativeFile targetTarball;
     private DependencyRepo localMavenRepo;
+
 
 
     public static void main(String[] args) {
@@ -57,6 +61,7 @@ public class ModuleBuilder {
         sourceDir = locateSourceDir(moduleDir);
         resourcesDir = relativeFile(moduleDir, "src/main/resource");
         scriptDir = relativeFile(moduleDir, "src/main/script/bash");
+        webDir = relativeFile(moduleDir, "src/main/web");
 
         libDir = relativeFile(moduleDir, "lib/production");
         productionLibDir = relativeFile(moduleDir, "lib/production");
@@ -65,6 +70,7 @@ public class ModuleBuilder {
         targetDir = relativeFile(moduleDir, "target");
         targetClassesDir = relativeFile(moduleDir, "target/work/classes");
         targetDistDir = relativeFile(moduleDir, "target/dist");
+        targetWebDir = relativeFile(moduleDir, "target/dist/web");
         targetLibDir = relativeFile(moduleDir, "target/dist/lib");
 
         targetJarfile = relativeFile(moduleDir, "target/dist/" + module.artifact.toJarFileName());
@@ -101,10 +107,12 @@ public class ModuleBuilder {
         new Jar(targetJarfile, targetClassesDir, resourcesDir).execute(buildLog);
 
         if (localMavenRepo.exists()) {
-            new Publish(localMavenRepo, module.artifact, targetJarfile).execute(buildLog);
+            //new Publish(localMavenRepo, module.artifact, targetJarfile).execute(buildLog);
         }
 
         new Copy(scriptDir, targetDistDir).execute(buildLog);
+        new Copy(webDir, targetWebDir).execute(buildLog);
+
         new Copy(productionLibDir, targetLibDir).execute(buildLog);
 
         new Tar(targetTarball, targetDistDir).execute(buildLog);
