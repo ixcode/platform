@@ -4,6 +4,9 @@ import ixcode.platform.build.BuildLog;
 import ixcode.platform.build.BuildTask;
 import ixcode.platform.io.RelativeFile;
 
+import static ixcode.platform.build.task.SystemCommand.getOsSpecificFilename;
+import static ixcode.platform.build.task.SystemCommand.isCygwin;
+
 public class Tar implements BuildTask {
     private final RelativeFile tarFile;
     private final RelativeFile dir;
@@ -15,6 +18,10 @@ public class Tar implements BuildTask {
 
     @Override public void execute(BuildLog buildLog) {
         buildLog.println("tar'ing up [%s] to [%s]", dir, tarFile);
-        new SystemCommand(dir.asFile(), "tar cfz %s . -i *", tarFile.getAbsolutePath()).execute(buildLog);
+
+        String tarCommand = (isCygwin()) ? "C:\\Git\\bin\\tar.exe" : "tar";
+
+        new SystemCommand(dir.asFile(), "%s cfzv %s . -i *",tarCommand,
+                          getOsSpecificFilename(tarFile.getAbsolutePath())).execute(buildLog);
     }
 }
