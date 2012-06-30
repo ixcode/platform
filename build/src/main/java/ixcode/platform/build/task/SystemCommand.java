@@ -26,7 +26,7 @@ public class SystemCommand implements BuildTask {
     }
 
     public SystemCommand(String command, Object... formatArgs) {
-        this(null, command, formatArgs);
+        this(expandCurrentDir(), command, formatArgs);
     }
 
     public SystemCommand(File dir, String command, Object... formatArgs) {
@@ -36,7 +36,7 @@ public class SystemCommand implements BuildTask {
 
     private static File expandCurrentDir() {
         try {
-            return new File(getOsSpecificFilename(new File(".").getCanonicalFile().getAbsolutePath()));
+            return new File(new File(".").getCanonicalFile().getAbsolutePath());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -59,7 +59,8 @@ public class SystemCommand implements BuildTask {
 
         try {
             p = getRuntime().exec(command, new String[0], dir);
-            p.waitFor();
+            //p.waitFor();
+
             reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line = reader.readLine();
             while (line != null) {

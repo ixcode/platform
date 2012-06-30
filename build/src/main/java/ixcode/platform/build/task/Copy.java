@@ -32,9 +32,15 @@ public class Copy implements BuildTask {
 
         toFile.mkdirs();
 
-        String osDirCopy = (isCygwin()) ? "/*" : "/";
-        String toFileString = (fromFile.isDirectory()) ? fromFile.getAbsolutePath() + osDirCopy : fromFile.getAbsolutePath();
 
-        new SystemCommand("cp -aRv %s %s", getOsSpecificFilename(toFileString), getOsSpecificFilename(toFile.getAbsolutePath())).execute(buildLog);
+        String osDirFromCopy = (isCygwin()) ? "\\*" : "/";
+        String osDirToCopy = (isCygwin()) ? "\\"  : "";
+
+        String fromFileString = (fromFile.isDirectory()) ? fromFile.getAbsolutePath() + osDirFromCopy : fromFile.getAbsolutePath();
+        String toFileString = (toFile.isDirectory()) ? toFile.getAbsolutePath() + osDirToCopy : toFile.getAbsolutePath();
+
+        String copyCommand = (isCygwin()) ? "C:\\Git\\bin\\cp.exe -aRv" : "cp -aRv";
+
+        new SystemCommand("%s %s %s", copyCommand, getOsSpecificFilename(fromFileString), getOsSpecificFilename(toFileString)).execute(buildLog);
     }
 }
