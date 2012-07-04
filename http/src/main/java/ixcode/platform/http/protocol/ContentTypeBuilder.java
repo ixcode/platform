@@ -35,6 +35,10 @@ public class ContentTypeBuilder {
     public void png() {
         target.acceptContentTypeHeader(IanaContentType.png);
     }
+    public void html() {
+        target.acceptContentTypeHeader(IanaContentType.html);
+    }
+
 
 
 }

@@ -32,4 +32,9 @@ public class ResponseContentTypeBuilder {
         contentTypeBuilder.png();
         return parent;
     }
+
+    public ResponseBuilder html() {
+        contentTypeBuilder.html();
+        return parent;
+    }
 }

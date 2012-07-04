@@ -37,22 +37,20 @@ public class RequestParameters {
         Set<String> parameterNames = httpServletRequest.getParameterMap().keySet();
         RequestParameters requestParameters = new RequestParameters();
 
-        addQueryStringParameters(httpServletRequest, parameterNames, requestParameters, httpServletRequest.getQueryString());
+        addParameters(httpServletRequest, parameterNames, requestParameters, httpServletRequest.getQueryString());
 
         return requestParameters;
     }
 
-    private static void addQueryStringParameters(HttpServletRequest httpServletRequest, Set<String> parameterNames, RequestParameters requestParameters, String queryString) {
-        if (queryString == null) {
-            return;
-        }
+    private static void addParameters(HttpServletRequest httpServletRequest, Set<String> parameterNames, RequestParameters requestParameters, String queryString) {
         for (String parameterName : parameterNames) {
-            RequestParameter.ParameterSource parameterSource = (queryString.contains(parameterName)) ? querystring : body;
+            RequestParameter.ParameterSource parameterSource = (queryString != null && queryString.contains(parameterName)) ? querystring : body;
             requestParameters.withParameter(parameterSource,
                                             parameterName,
                                             httpServletRequest.getParameterValues(parameterName));
         }
     }
+
 
 
     public void apply(Action<RequestParameter> action) {
