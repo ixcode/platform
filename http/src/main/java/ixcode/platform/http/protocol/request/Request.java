@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import static ixcode.platform.http.protocol.request.RequestParameters.requestParametersFrom;
 import static ixcode.platform.io.IoStreamHandling.readFully;
+import static java.lang.String.format;
 
 public class Request {
     private transient HttpServletRequest httpServletRequest;
@@ -45,4 +46,7 @@ public class Request {
     }
 
 
+    public String getUrl() {
+        return httpServletRequest.getRequestURL().toString();
+    }
 }
