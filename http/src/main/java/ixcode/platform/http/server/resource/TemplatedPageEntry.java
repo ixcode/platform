@@ -23,21 +23,24 @@ public class TemplatedPageEntry {
 
     public final Map<String, Object> data;
 
-    public final URI redirectUri = null;
+    public final String redirectTo;
     public final List<DataProvider> dataProviders = new ArrayList<DataProvider>();
     public final List<DataConsumer> dataConsumers = new ArrayList<DataConsumer>();
 
     public TemplatedPageEntry(String path, String templateName) {
-        this(path, templateName, null, new HashMap<String, Object>());
+        this(path, templateName, null, new HashMap<String, Object>(), null);
     }
 
     public TemplatedPageEntry(String path,
                               String templateName,
                               File sourceFile,
-                              Map<String, Object> data) {
+                              Map<String, Object> data,
+                              String redirectTo) {
         this.path = path;
-        this.templateName = templateName; this.sourceFile = sourceFile;
+        this.templateName = templateName;
+        this.sourceFile = sourceFile;
         this.data = data;
+        this.redirectTo = redirectTo;
     }
 
     public static TemplatedPageEntry loadTemplatedPageEntryFrom(String templatePath, String templateName, File templateConfig) {

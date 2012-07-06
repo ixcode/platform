@@ -5,6 +5,7 @@ import ixcode.platform.http.protocol.response.ResponseBuilder;
 import ixcode.platform.http.template.Template;
 import ixcode.platform.http.template.TemplateContext;
 import ixcode.platform.http.template.TemplateEngine;
+import ixcode.platform.text.format.UriFormat;
 
 import java.io.File;
 import java.net.URI;
@@ -20,7 +21,7 @@ public class TemplatedPageResource implements GetResource, PostResource{
     private final String templateName;
     private final TemplateEngine templateEngine;
     private Map<String, Object> data;
-    private URI redirectUri;
+    private String redirectTo;
 
     public TemplatedPageResource(TemplateEngine templateEngine,
                                  File configurationFile,
@@ -28,13 +29,13 @@ public class TemplatedPageResource implements GetResource, PostResource{
                                  Map<String, Object> data,
                                  List<DataProvider> dataProviders,
                                  List<DataConsumer> dataConsumers,
-                                 URI redirectUri) {
+                                 String redirectTo) {
 
         this.configurationFile = configurationFile;
         this.templateName = templateName;
         this.templateEngine = templateEngine;
         this.data = data;
-        this.redirectUri = redirectUri;
+        this.redirectTo = redirectTo;
     }
 
 
@@ -42,10 +43,14 @@ public class TemplatedPageResource implements GetResource, PostResource{
                               ResponseBuilder respondWith,
                               ResourceHyperlinkBuilder hyperlinkBuilder) {
 
-        TemplatedPageEntry templatedPageEntry = loadTemplatedPageEntryFrom(templateName, templateName, configurationFile);
+        Map<String, Object> templateData = data;
+        if (configurationFile != null && configurationFile.exists()) {
+            TemplatedPageEntry templatedPageEntry = loadTemplatedPageEntryFrom(templateName, templateName, configurationFile);
+            templateData = templatedPageEntry.data;
+        }
 
 
-        TemplateContext ctx = templateContext().fromMap(templatedPageEntry.data);
+        TemplateContext ctx = templateContext().fromMap(templateData);
 
 
         Template template = templateEngine.findTemplate(templateName);
@@ -61,10 +66,17 @@ public class TemplatedPageResource implements GetResource, PostResource{
                      ResponseBuilder respondWith,
                      ResourceHyperlinkBuilder resourceHyperlinkBuilder) {
 
+        String requestPath = request.getPath();
+        String redirectPath = redirectTo;
+        if (redirectPath.startsWith(".")) {
+            redirectPath = requestPath.substring(0, requestPath.lastIndexOf("/")) + redirectTo.substring(1);
+        }
+        String urlRoot = request.getUrl().substring(0, requestPath.length());
+        URI redirectUri = new UriFormat().parseString(urlRoot + redirectPath);
 
         respondWith.status().seeOther(redirectUri)
                    .contentType().html()
-                   .body(format("<html><body>Answer is <a href='%s'>here</a></body></html>", "" + redirectUri));
+                   .body(format("<html><body>We tried to redirect you to <a href='%s'>here</a></body></html>", "" + redirectUri));
 
 
     }

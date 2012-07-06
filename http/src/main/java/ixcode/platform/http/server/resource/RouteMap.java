@@ -146,7 +146,7 @@ public class RouteMap implements ResourceLookup, ResourceHyperlinkBuilder {
                     entry.data,
                     entry.dataProviders,
                     entry.dataConsumers,
-                    entry.redirectUri
+                    entry.redirectTo
             );
 
             registerMapping(this.uriRoot, entry.path, resource, entry.methods);
