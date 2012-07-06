@@ -16,5 +16,8 @@ public class TemplatedPageDirectoryTest {
         assertThat(pages.size(), is(3));
         assertThat(pages.get(0).path, is("/auto-config/a-template"));
         assertThat(pages.get(0).templateName, is("auto-config/a-template"));
+
+        assertThat(pages.get(2).templateName, is("subsection/some-page"));
+        assertThat((String)pages.get(2).data.get("message"), is("This is my message to you"));
     }
 }
