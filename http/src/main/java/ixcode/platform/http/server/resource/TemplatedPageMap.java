@@ -75,6 +75,10 @@ public class TemplatedPageMap {
             return null;
         }
 
+        public FixedDataProvider value(String key, String value) {
+            return null;
+        }
+
 
 
         public PageBuilder map() {
