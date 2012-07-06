@@ -14,6 +14,11 @@ public class TemplateContext {
         return new TemplateValueBuilder(this, key);
     }
 
+    public TemplateContext fromMap(Map<String, Object> data) {
+        this.context = data;
+        return this;
+    }
+
     public static class TemplateValueBuilder {
         private final TemplateContext parent;
         private final String key;

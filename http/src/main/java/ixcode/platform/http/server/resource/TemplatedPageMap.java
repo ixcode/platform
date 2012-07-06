@@ -1,88 +1,40 @@
 package ixcode.platform.http.server.resource;
 
+import ixcode.platform.http.template.FileJadeTemplateLoader;
+import ixcode.platform.http.template.JadeTemplateEngine;
 import ixcode.platform.http.template.TemplateEngine;
+import org.apache.log4j.Logger;
 
-public class TemplatedPageMap {
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-    public static TemplatedPageMap pageMap(TemplateEngine templateEngine) {
-        return new TemplatedPageMap(templateEngine);
-    }
+import static java.lang.String.format;
+
+public class TemplatedPageMap implements Iterable<TemplatedPageEntry> {
+
+    private static final Logger log = Logger.getLogger(TemplatedPageMap.class);
+
+    public final TemplateEngine templateEngine;
+
+    private final List<TemplatedPageEntry> entries = new ArrayList<TemplatedPageEntry>();
 
     private TemplatedPageMap(TemplateEngine templateEngine) {
+        this.templateEngine = templateEngine;
+
+        entries.add(new TemplatedPageEntry());
 
     }
 
-
-
-    public PageBuilder page(String pathMapping) {
-        return null;
+    public static TemplatedPageMap loadTemplatedPagesFrom(String rootPath) {
+        log.info(format("Pages are served from [%s]", rootPath));
+        return new TemplatedPageMap(
+                new JadeTemplateEngine(
+                        new FileJadeTemplateLoader(rootPath)));
     }
 
-    public static class PageBuilder {
-        public RouteBuilder GET() {
-            return null;
-        }
 
-        public RouteBuilder POST() {
-            return null;
-        }
-
-
-        public TemplatedPageMap withNoData() {
-            return null;
-        }
-    }
-
-    public static class RouteBuilder {
-
-        public FixedDataProvider withData() {
-            return null;
-        }
-
-        public TemplatedPageMap withNoData() {
-            return null;
-        }
-
-        public TemplatedPageMap redirectTo(String pathMapping) {
-            return null;
-        }
-
-        public RouteBuilder processRequestWith(PostHandler postHandler) {
-            return null;
-        }
-
-        public TemplatedPageMap withDataFrom(DataProvider dataProvider) {
-            return null;
-        }
-
-        public TemplatedPageMap redirectToSelf(String s) {
-
-            return null;
-        }
-
-        public PageBuilder redirectToChildPage(String childPath) {
-            return null;
-        }
-    }
-
-    public static class FixedDataProvider {
-
-        public FixedDataProvider key(String key) {
-            return null;
-        }
-
-        public FixedDataProvider value(String value) {
-            return null;
-        }
-
-        public FixedDataProvider value(String key, String value) {
-            return null;
-        }
-
-
-
-        public PageBuilder map() {
-            return null;
-        }
+    @Override public Iterator<TemplatedPageEntry> iterator() {
+        return entries.iterator();
     }
 }

@@ -10,6 +10,8 @@ import ixcode.platform.reflect.ObjectFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ixcode.platform.http.protocol.HttpMethod.GET;
+import static ixcode.platform.http.protocol.HttpMethod.POST;
 import static ixcode.platform.http.server.resource.path.UriTemplate.uriTemplateFrom;
 import static java.lang.String.format;
 import static java.util.Collections.sort;
@@ -122,7 +124,7 @@ public class RouteMap implements ResourceLookup, ResourceHyperlinkBuilder {
     }
 
 
-    private void registerMapping(String uriRoot, String path, Resource resource, HttpMethod[] httpMethods) {
+    private void registerMapping(String uriRoot, String path, Resource resource, HttpMethod... httpMethods) {
         resourceMappings.add(new ResourceMapping(resource, httpMethods, uriTemplateFrom(uriRoot, path)));
     }
 
@@ -136,6 +138,20 @@ public class RouteMap implements ResourceLookup, ResourceHyperlinkBuilder {
     }
 
     public RouteMap withTemplatedPages(TemplatedPageMap templatedPages) {
+        for (TemplatedPageEntry entry : templatedPages) {
+            TemplatedPageResource resource = new TemplatedPageResource(
+                    templatedPages.templateEngine,
+                    entry.templateName,
+                    entry.data,
+                    entry.dataProviders,
+                    entry.dataConsumers,
+                    entry.redirectUri
+            );
+
+            registerMapping(this.uriRoot, entry.path, resource, entry.methods);
+        }
+
+
         return this;
     }
 
@@ -170,10 +186,10 @@ public class RouteMap implements ResourceLookup, ResourceHyperlinkBuilder {
             List<HttpMethod> httpMethods = new ArrayList<HttpMethod>();
 
             if (GetResource.class.isAssignableFrom(resourceClass)) {
-                httpMethods.add(HttpMethod.GET);
+                httpMethods.add(GET);
             }
             if (PostResource.class.isAssignableFrom(resourceClass)) {
-                httpMethods.add(HttpMethod.POST);
+                httpMethods.add(POST);
             }
 
             return httpMethods.toArray(new HttpMethod[0]);
