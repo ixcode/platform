@@ -28,6 +28,9 @@ public class TemplatedPageMap {
         }
 
 
+        public TemplatedPageMap withNoData() {
+            return null;
+        }
     }
 
     public static class RouteBuilder {
@@ -44,7 +47,20 @@ public class TemplatedPageMap {
             return null;
         }
 
-        public RouteBuilder processRequestWith(PostHandler iHandlePostingToThisThing) {
+        public RouteBuilder processRequestWith(PostHandler postHandler) {
+            return null;
+        }
+
+        public TemplatedPageMap withDataFrom(DataProvider dataProvider) {
+            return null;
+        }
+
+        public TemplatedPageMap redirectToSelf(String s) {
+
+            return null;
+        }
+
+        public PageBuilder redirectToChildPage(String childPath) {
             return null;
         }
     }
