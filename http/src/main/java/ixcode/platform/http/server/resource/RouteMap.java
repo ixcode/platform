@@ -135,7 +135,10 @@ public class RouteMap implements ResourceLookup, ResourceHyperlinkBuilder {
         return this;
     }
 
-    
+    public RouteMap withTemplatedPages(TemplatedPageMap templatedPages) {
+        return this;
+    }
+
 
     public static class EntryBuilder {
         private final RouteMap parent;
