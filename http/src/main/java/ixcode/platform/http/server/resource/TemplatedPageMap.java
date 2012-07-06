@@ -5,7 +5,7 @@ import ixcode.platform.http.template.JadeTemplateEngine;
 import ixcode.platform.http.template.TemplateEngine;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,21 +17,28 @@ public class TemplatedPageMap implements Iterable<TemplatedPageEntry> {
 
     public final TemplateEngine templateEngine;
 
-    private final List<TemplatedPageEntry> entries = new ArrayList<TemplatedPageEntry>();
+    private final List<TemplatedPageEntry> entries;
 
-    private TemplatedPageMap(TemplateEngine templateEngine) {
+    private TemplatedPageMap(TemplateEngine templateEngine,
+                             List<TemplatedPageEntry> entries) {
+
         this.templateEngine = templateEngine;
-
-        entries.add(new TemplatedPageEntry());
-
+        this.entries = entries;
     }
 
     public static TemplatedPageMap loadTemplatedPagesFrom(String rootPath) {
         log.info(format("Pages are served from [%s]", rootPath));
+
+        List<TemplatedPageEntry> entries = new TemplatedPageDirectory(rootPath, ".jade")
+                .findPages();
+
         return new TemplatedPageMap(
                 new JadeTemplateEngine(
-                        new FileJadeTemplateLoader(rootPath)));
+                        new FileJadeTemplateLoader(rootPath)),
+                entries);
     }
+
+
 
 
     @Override public Iterator<TemplatedPageEntry> iterator() {
