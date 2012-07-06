@@ -141,6 +141,7 @@ public class RouteMap implements ResourceLookup, ResourceHyperlinkBuilder {
         for (TemplatedPageEntry entry : templatedPages) {
             TemplatedPageResource resource = new TemplatedPageResource(
                     templatedPages.templateEngine,
+                    entry.sourceFile,
                     entry.templateName,
                     entry.data,
                     entry.dataProviders,

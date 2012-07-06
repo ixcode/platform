@@ -6,26 +6,31 @@ import ixcode.platform.http.template.Template;
 import ixcode.platform.http.template.TemplateContext;
 import ixcode.platform.http.template.TemplateEngine;
 
+import java.io.File;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import static ixcode.platform.http.server.resource.TemplatedPageEntry.loadTemplatedPageEntryFrom;
 import static ixcode.platform.http.template.TemplateContext.templateContext;
 import static java.lang.String.format;
 
 public class TemplatedPageResource implements GetResource, PostResource{
+    private File configurationFile;
     private final String templateName;
     private final TemplateEngine templateEngine;
     private Map<String, Object> data;
     private URI redirectUri;
 
     public TemplatedPageResource(TemplateEngine templateEngine,
+                                 File configurationFile,
                                  String templateName,
                                  Map<String, Object> data,
                                  List<DataProvider> dataProviders,
                                  List<DataConsumer> dataConsumers,
                                  URI redirectUri) {
 
+        this.configurationFile = configurationFile;
         this.templateName = templateName;
         this.templateEngine = templateEngine;
         this.data = data;
@@ -37,8 +42,10 @@ public class TemplatedPageResource implements GetResource, PostResource{
                               ResponseBuilder respondWith,
                               ResourceHyperlinkBuilder hyperlinkBuilder) {
 
+        TemplatedPageEntry templatedPageEntry = loadTemplatedPageEntryFrom(templateName, templateName, configurationFile);
 
-        TemplateContext ctx = templateContext().fromMap(data);
+
+        TemplateContext ctx = templateContext().fromMap(templatedPageEntry.data);
 
 
         Template template = templateEngine.findTemplate(templateName);
