@@ -4,7 +4,6 @@ import ixcode.platform.http.protocol.HttpMethod;
 import ixcode.platform.serialise.JsonDeserialiser;
 
 import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,23 +22,34 @@ public class TemplatedPageEntry {
 
     public final Map<String, Object> data;
 
+    public final List<DataProvider> dataProviders;
+    public final List<DataConsumer> dataConsumers;
+
     public final String redirectTo;
-    public final List<DataProvider> dataProviders = new ArrayList<DataProvider>();
-    public final List<DataConsumer> dataConsumers = new ArrayList<DataConsumer>();
 
     public TemplatedPageEntry(String path, String templateName) {
-        this(path, templateName, null, new HashMap<String, Object>(), null);
+        this(path,
+             templateName,
+             (File) null,
+             new HashMap<String, Object>(),
+             new ArrayList<DataProvider>(),
+             new ArrayList<DataConsumer>(),
+             (String) null);
     }
 
     public TemplatedPageEntry(String path,
                               String templateName,
                               File sourceFile,
                               Map<String, Object> data,
+                              List<DataProvider> dataProviders,
+                              List<DataConsumer> dataConsumers,
                               String redirectTo) {
         this.path = path;
         this.templateName = templateName;
         this.sourceFile = sourceFile;
         this.data = data;
+        this.dataProviders = dataProviders;
+        this.dataConsumers = dataConsumers;
         this.redirectTo = redirectTo;
     }
 
