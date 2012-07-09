@@ -33,6 +33,9 @@ class TemplateConfig {
 
     private static List<DataProvider> loadDataProviders(List<String> providerNames, InjectionContext di) {
         List<DataProvider> providers =  new ArrayList<DataProvider>();
+        if (providerNames == null) {
+            return providers;
+        }
 
         for (String providerName : providerNames) {
             providers.add(di.<DataProvider>getA(providerName.replaceAll("/", ".")));
