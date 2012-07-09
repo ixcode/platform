@@ -3,6 +3,7 @@ package ixcode.platform.http.server.resource;
 import ixcode.platform.di.InjectionContext;
 import ixcode.platform.http.protocol.HttpMethod;
 import ixcode.platform.http.protocol.request.Request;
+import ixcode.platform.http.protocol.response.ResponseStatusBuilder;
 import ixcode.platform.http.template.TemplateContext;
 import ixcode.platform.serialise.JsonDeserialiser;
 
@@ -103,4 +104,9 @@ public class TemplatedPage {
     }
 
 
+    public void handlePOST(Request request) {
+        for (DataConsumer consumer : dataConsumers) {
+            consumer.consumeRequest(request);
+        }
+    }
 }
