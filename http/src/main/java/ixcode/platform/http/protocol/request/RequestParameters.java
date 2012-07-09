@@ -5,6 +5,7 @@ import ixcode.platform.collection.FArrayList;
 import ixcode.platform.collection.FList;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -96,6 +97,16 @@ public class RequestParameters {
 
     public String getFirstValueOf(String key) {
         return get(key)[0];
+    }
+
+    public void addToMap(final Map<String, Object> data) {
+        apply(new Action<RequestParameter>() {
+            @Override public void to(RequestParameter item, Collection<RequestParameter> tail) {
+                if (RequestParameter.ParameterSource.uri.equals(item.source)) {
+                    data.put(item.name, item.parameterValues[0]);
+                }
+            }
+        });
     }
 
     public static class ParameterTypeQuery {

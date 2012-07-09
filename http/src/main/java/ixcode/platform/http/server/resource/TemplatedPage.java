@@ -83,6 +83,8 @@ public class TemplatedPage {
                 ? new HashMap<String, Object>()
                 : new HashMap<String, Object>(data);
 
+        request.parameters.addToMap(templateData);
+
         for (DataProvider provider : dataProviders) {
             provider.populateData(request, templateData);
         }
