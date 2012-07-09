@@ -4,6 +4,7 @@ import ixcode.platform.di.InjectionContext;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,9 @@ class TemplateConfig {
     public final Map<String, Object> get;
     public final Map<String, Object> post;
 
+    TemplateConfig(Map<String, Object> get) {
+        this(get, new HashMap<String, Object>());
+    }
 
     TemplateConfig(Map<String, Object> get,
                    Map<String, Object> post) {
@@ -26,7 +30,7 @@ class TemplateConfig {
                                  sourceFile,
                                  (Map<String, Object>) get.get("data"),
                                  loadDataProviders((List<String>) get.get("data-providers"), injectionContext),
-                                 loadDataConsumers((List<String>) get.get("data-providers"), injectionContext),
+                                 loadDataConsumers((List<String>) post.get("data-consumers"), injectionContext),
                                  (String) post.get("redirect-to"),
                                  injectionContext);
     }
@@ -44,7 +48,16 @@ class TemplateConfig {
         return providers;
     }
 
-    private static List<DataConsumer> loadDataConsumers(List<String> consumerNames, InjectionContext injectionContext) {
-        return new ArrayList<DataConsumer>();
+    private static List<DataConsumer> loadDataConsumers(List<String> consumerNames, InjectionContext di) {
+        List<DataConsumer> consumers =  new ArrayList<DataConsumer>();
+        if (consumerNames == null) {
+            return consumers;
+        }
+
+        for (String consumerName : consumerNames) {
+            consumers.add(di.<DataConsumer>getA(consumerName.replaceAll("/", ".")));
+        }
+
+        return consumers;
     }
 }
