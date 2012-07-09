@@ -138,16 +138,9 @@ public class RouteMap implements ResourceLookup, ResourceHyperlinkBuilder {
     }
 
     public RouteMap withTemplatedPages(TemplatedPageMap templatedPages) {
-        for (TemplatedPageEntry entry : templatedPages) {
+        for (TemplatedPage entry : templatedPages) {
             TemplatedPageResource resource = new TemplatedPageResource(
-                    templatedPages.templateEngine,
-                    entry.sourceFile,
-                    entry.templateName,
-                    entry.data,
-                    entry.dataProviders,
-                    entry.dataConsumers,
-                    entry.redirectTo
-            );
+                    templatedPages.templateEngine, entry);
 
             registerMapping(this.uriRoot, entry.path, resource, entry.methods);
         }

@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
+import static ixcode.platform.reflect.ObjectFactory.loadClass;
 import static java.lang.String.format;
 
 public class InjectionContext {
@@ -13,6 +14,10 @@ public class InjectionContext {
     private static final Logger log = Logger.getLogger(InjectionContext.class);
 
     private Map<Class<?>, Object> context = new HashMap<Class<?>, Object>();
+
+    public <T> T getA(String targetClassName) {
+        return (T)getA(loadClass(targetClassName));
+    }
 
     public <T> T getA(Class<T> targetClass) {
         if (!context.containsKey(targetClass)) {

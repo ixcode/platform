@@ -1,22 +1,28 @@
 package ixcode.platform.http.server.resource;
 
+import ixcode.platform.di.InjectionContext;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ixcode.platform.http.server.resource.TemplatedPageEntry.loadTemplatedPageEntryFrom;
+import static ixcode.platform.http.server.resource.TemplatedPage.loadTemplatedPageEntryFrom;
 
 public class TemplatedPageDirectory {
     private final String rootPath;
     private final String templateExtension;
+    private InjectionContext injectionContext;
 
-    public TemplatedPageDirectory(String rootPath, String templateExtension) {
+    public TemplatedPageDirectory(String rootPath,
+                                  String templateExtension,
+                                  InjectionContext injectionContext) {
         this.rootPath = rootPath;
         this.templateExtension = templateExtension;
+        this.injectionContext = injectionContext;
     }
 
-    public List<TemplatedPageEntry> findPages() {
-        List<TemplatedPageEntry> pages = new ArrayList<TemplatedPageEntry>();
+    public List<TemplatedPage> findPages() {
+        List<TemplatedPage> pages = new ArrayList<TemplatedPage>();
 
         File dir = new File(rootPath);
 
@@ -25,7 +31,7 @@ public class TemplatedPageDirectory {
         return pages;
     }
 
-    private void loadDir(List<TemplatedPageEntry> pages, File dir) {
+    private void loadDir(List<TemplatedPage> pages, File dir) {
         File[] children = dir.listFiles();
 
         for (File child : children) {
@@ -37,7 +43,7 @@ public class TemplatedPageDirectory {
         }
     }
 
-    private TemplatedPageEntry loadEntryFrom(File child) {
+    private TemplatedPage loadEntryFrom(File child) {
         String templatePath = getPathFrom(child);
         String templateName = templatePath.substring(1);
 
@@ -46,10 +52,10 @@ public class TemplatedPageDirectory {
         File templateConfig = new File(templateFilePath + ".json");
 
         if (!templateConfig.exists()) {
-            return new TemplatedPageEntry(templatePath, templateName);
+            return new TemplatedPage(templatePath, templateName, injectionContext);
         }
 
-        return loadTemplatedPageEntryFrom(templatePath, templateName, templateConfig);
+        return loadTemplatedPageEntryFrom(templatePath, templateName, templateConfig, injectionContext);
     }
 
     private String getPathFrom(File child) {

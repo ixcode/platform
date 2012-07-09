@@ -3,6 +3,7 @@ package ixcode.platform.reflect;
 import org.apache.log4j.*;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import static java.lang.Class.forName;
 import static java.lang.String.format;
@@ -41,12 +42,18 @@ public class ObjectFactory<T> {
         }
     }
 
-    public T instantiate(Class<T> rootEntityClass) {
+    public T instantiate(Class<T> classToInstantiate) {
         try {
-            return rootEntityClass.newInstance();
+            Constructor constructor = classToInstantiate.getConstructor();
+            constructor.setAccessible(true);
+            return (T) constructor.newInstance();
         } catch (InstantiationException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
