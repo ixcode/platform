@@ -77,7 +77,10 @@ public class TemplatedPage {
     }
 
     public TemplateContext buildTemplateContextFrom(Request request) {
-        Map<String, Object> templateData = new HashMap<String, Object>(data);
+
+        Map<String, Object> templateData = (data == null)
+                ? new HashMap<String, Object>()
+                : new HashMap<String, Object>(data);
 
         for (DataProvider provider : dataProviders) {
             provider.populateData(request, templateData);
