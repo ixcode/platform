@@ -104,9 +104,9 @@ public class TemplatedPage {
     }
 
 
-    public void handlePOST(Request request) {
+    public void handlePOST(Request request, RedirectionParameters redirectionParameters) {
         for (DataConsumer consumer : dataConsumers) {
-            consumer.consumeRequest(request);
+            consumer.consumeRequest(request, redirectionParameters);
         }
     }
 }

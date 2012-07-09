@@ -8,6 +8,8 @@ public class Redirection {
     private final String requestUrl;
     private final String requestPath;
 
+    private String redirectionUri;
+
     public static Redirection redirect(String requestUrl, String requestPath) {
         return new Redirection(requestUrl, requestPath);
     }
@@ -17,12 +19,21 @@ public class Redirection {
         this.requestPath = requestPath;
     }
 
-    public URI to(String redirectPath) {
+    public Redirection to(String redirectPath) {
         String redirectTo = redirectPath;
         if (redirectPath.startsWith(".")) {
             redirectTo = requestPath.substring(0, requestPath.lastIndexOf("/")) + redirectPath.substring(1);
         }
         String urlRoot = requestUrl.substring(0, requestUrl.length() - requestPath.length());
-        return new UriFormat().parseString(urlRoot + redirectTo);
+        redirectionUri = urlRoot + redirectTo;
+        return this;
+    }
+
+    public URI withParameters(RedirectionParameters redirectionParameters) {
+        return new UriFormat().parseString(redirectionUri + redirectionParameters.toUrlSection());
+    }
+
+    public URI withNoParameters() {
+        return withParameters(new RedirectionParameters());
     }
 }

@@ -25,7 +25,9 @@ class TemplateConfig {
     public TemplatedPage toEntry(String path, String templateName,
                                  File sourceFile,
                                  InjectionContext injectionContext) {
-        return new TemplatedPage(path,
+        String pathWithParameters = addParametersTo(path);
+
+        return new TemplatedPage(pathWithParameters,
                                  templateName,
                                  sourceFile,
                                  (Map<String, Object>) get.get("data"),
@@ -33,6 +35,21 @@ class TemplateConfig {
                                  loadDataConsumers((List<String>) post.get("data-consumers"), injectionContext),
                                  (String) post.get("redirect-to"),
                                  injectionContext);
+    }
+
+    private String addParametersTo(String path) {
+        List<String> parameters = (List<String>)get.get("parameters");
+
+        if (parameters == null) {
+            return path;
+        }
+
+        StringBuilder sb = new StringBuilder(path);
+
+        for (String parameter : parameters) {
+            sb.append("/{").append(parameter).append("}");
+        }
+        return sb.toString();
     }
 
     private static List<DataProvider> loadDataProviders(List<String> providerNames, InjectionContext di) {

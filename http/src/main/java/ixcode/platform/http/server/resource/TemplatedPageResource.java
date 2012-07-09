@@ -48,10 +48,12 @@ public class TemplatedPageResource implements GetResource, PostResource {
 
         page = page.autoRefresh();
 
-        page.handlePOST(request);
+        RedirectionParameters redirectionParameters = new RedirectionParameters();
+
+        page.handlePOST(request, redirectionParameters);
 
         URI redirectUri = redirect(request.getUrl(), request.getPath())
-                .to(page.redirectTo);
+                .to(page.redirectTo).withParameters(redirectionParameters);
 
         respondWith.status().seeOther(redirectUri)
                    .contentType().html()
