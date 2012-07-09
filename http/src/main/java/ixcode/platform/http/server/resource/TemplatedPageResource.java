@@ -5,10 +5,10 @@ import ixcode.platform.http.protocol.response.ResponseBuilder;
 import ixcode.platform.http.template.Template;
 import ixcode.platform.http.template.TemplateContext;
 import ixcode.platform.http.template.TemplateEngine;
-import ixcode.platform.text.format.UriFormat;
 
 import java.net.URI;
 
+import static ixcode.platform.http.server.resource.Redirection.redirect;
 import static java.lang.String.format;
 
 public class TemplatedPageResource implements GetResource, PostResource {
@@ -48,13 +48,8 @@ public class TemplatedPageResource implements GetResource, PostResource {
 
         page = page.autoRefresh();
 
-        String requestPath = request.getPath();
-        String redirectPath = page.redirectTo;
-        if (redirectPath.startsWith(".")) {
-            redirectPath = requestPath.substring(0, requestPath.lastIndexOf("/")) + page.redirectTo.substring(1);
-        }
-        String urlRoot = request.getUrl().substring(0, requestPath.length());
-        URI redirectUri = new UriFormat().parseString(urlRoot + redirectPath);
+        URI redirectUri = redirect(request.getUrl(), request.getPath())
+                .to(page.redirectTo);
 
         respondWith.status().seeOther(redirectUri)
                    .contentType().html()
@@ -62,5 +57,6 @@ public class TemplatedPageResource implements GetResource, PostResource {
 
 
     }
+
 
 }
