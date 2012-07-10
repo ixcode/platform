@@ -44,10 +44,12 @@ public class TemplatedPageDirectory {
     }
 
     private TemplatedPage loadEntryFrom(File child) {
-        String templatePath = getPathFrom(child);
+        String childPath = child.getPath();
+
+        String templatePath = getTemplatePathFrom(childPath);
         String templateName = templatePath.substring(1);
 
-        String templateFilePath = child.getPath().substring(0, child.getPath().length() - templateExtension.length());
+        String templateFilePath = childPath.substring(0, childPath.length() - templateExtension.length());
 
         File templateConfig = new File(templateFilePath + ".json");
 
@@ -58,8 +60,7 @@ public class TemplatedPageDirectory {
         return loadTemplatedPageEntryFrom(templatePath, templateName, templateConfig, injectionContext);
     }
 
-    private String getPathFrom(File child) {
-        String path = child.getPath();
+    private String getTemplatePathFrom(String path) {
         String pathWithoutRoot = path.substring(rootPath.length());
         return pathWithoutRoot.substring(0, pathWithoutRoot.length() - templateExtension.length());
     }

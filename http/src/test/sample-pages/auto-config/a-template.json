@@ -1,0 +1,13 @@
+{
+  "is" : ["page"],
+  "get" : {
+    "data" : {
+      "numberA" : "2",
+      "numberB" : "2"
+    }
+  },
+  "post" : {
+    "redirect-to" : "./result"
+  }
+
+}

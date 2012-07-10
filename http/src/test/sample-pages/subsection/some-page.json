@@ -1,0 +1,12 @@
+{
+  "is" : ["page"],
+  "get" : {
+    "data" : {
+      "message" : "This is my message to you"
+    }
+  },
+  "post" : {
+    "redirect-to" : "./result"
+  }
+
+}
