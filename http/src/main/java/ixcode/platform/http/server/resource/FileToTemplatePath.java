@@ -1,6 +1,7 @@
 package ixcode.platform.http.server.resource;
 
 class FileToTemplatePath {
+
     private final String rootPath;
     private final String templateExtension;
 
