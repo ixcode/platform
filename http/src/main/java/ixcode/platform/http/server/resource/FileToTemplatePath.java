@@ -13,6 +13,8 @@ class FileToTemplatePath {
 
     public String pathFrom(String path) {
         String pathWithoutRoot = path.substring(rootPath.length());
-        return pathWithoutRoot.substring(0, pathWithoutRoot.length() - templateExtension.length());
+        String pathWithoutExtension = pathWithoutRoot.substring(0, pathWithoutRoot.length() - templateExtension.length());
+
+        return pathWithoutExtension.replaceAll("\\\\", "/");
     }
 }
