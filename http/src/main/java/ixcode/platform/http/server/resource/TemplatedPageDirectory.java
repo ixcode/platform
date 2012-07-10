@@ -13,12 +13,16 @@ public class TemplatedPageDirectory {
     private final String templateExtension;
     private InjectionContext injectionContext;
 
+    private FileToTemplatePath fileToTemplatePath;
+
     public TemplatedPageDirectory(String rootPath,
                                   String templateExtension,
                                   InjectionContext injectionContext) {
         this.rootPath = rootPath;
         this.templateExtension = templateExtension;
         this.injectionContext = injectionContext;
+
+        fileToTemplatePath = new FileToTemplatePath(rootPath, templateExtension);
     }
 
     public List<TemplatedPage> findPages() {
@@ -46,7 +50,7 @@ public class TemplatedPageDirectory {
     private TemplatedPage loadEntryFrom(File child) {
         String childPath = child.getPath();
 
-        String templatePath = getTemplatePathFrom(childPath);
+        String templatePath = fileToTemplatePath.pathFrom(childPath);
         String templateName = templatePath.substring(1);
 
         String templateFilePath = childPath.substring(0, childPath.length() - templateExtension.length());
@@ -58,11 +62,6 @@ public class TemplatedPageDirectory {
         }
 
         return loadTemplatedPageEntryFrom(templatePath, templateName, templateConfig, injectionContext);
-    }
-
-    private String getTemplatePathFrom(String path) {
-        String pathWithoutRoot = path.substring(rootPath.length());
-        return pathWithoutRoot.substring(0, pathWithoutRoot.length() - templateExtension.length());
     }
 
 }
