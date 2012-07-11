@@ -134,4 +134,8 @@ public class HttpServer {
     }
 
 
+    public HttpServer servingSassFrom(String sassRoom) {
+
+        return this;
+    }
 }
