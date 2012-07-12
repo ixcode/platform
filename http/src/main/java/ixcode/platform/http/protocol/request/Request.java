@@ -49,4 +49,8 @@ public class Request {
     public String getUrl() {
         return httpServletRequest.getRequestURL().toString();
     }
+
+    public void logout() {
+        httpServletRequest.getSession().invalidate();
+    }
 }

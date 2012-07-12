@@ -13,7 +13,6 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.HandlerWrapper;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -91,26 +90,23 @@ public class HttpServer {
 
             server = new Server(httpPort);
 
-            server.setHandler(handlers());
+            server.setHandler(handler());
 
             server.start();
             new SystemProcess().writeProcessIdToFile(format(".webserver.%s.pid", serverName));
+
             log.info(format("Http Server Started. Serving using the dispatcher [%s] ", rootServlet.getClass().getName()));
             log.info((format("Static content is from [%s]", new File(webrootDir).getCanonicalPath())));
+
             server.join();
+
         } catch (Exception e) {
             throw new HttpServerStartupException(e);
         }
     }
 
-    public HttpServer withRedirection(Redirection redirection) {
-        this.redirections.add(redirection);
-        return this;
-    }
-
-    private Handler handlers() {
+    private Handler handler() {
         HandlerList handlers = new HandlerList();
-
 
         handlers.setHandlers(new Handler[]{
                 redirectionHandler(),
@@ -138,7 +134,7 @@ public class HttpServer {
     }
 
     private ServletContextHandler servletHandler() {
-        ServletContextHandler servletContextHandler = new ServletContextHandler(NO_SESSIONS);
+        ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
         servletContextHandler.setContextPath(contextPath);
         servletContextHandler.setResourceBase(webrootDir);
@@ -164,6 +160,12 @@ public class HttpServer {
 
         return this;
     }
+
+    public HttpServer withRedirection(Redirection redirection) {
+        this.redirections.add(redirection);
+        return this;
+    }
+
 
     public HttpServer basicAuthenticationFrom(String fileName) {
 
