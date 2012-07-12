@@ -1,24 +1,36 @@
 package ixcode.platform.http.server;
 
 import ixcode.platform.http.server.redirection.Redirection;
-import ixcode.platform.io.*;
-import ixcode.platform.reflect.*;
-import org.apache.log4j.*;
-import org.eclipse.jetty.http.security.*;
-import org.eclipse.jetty.security.*;
-import org.eclipse.jetty.server.*;
-import org.eclipse.jetty.server.handler.*;
-import org.eclipse.jetty.servlet.*;
+import ixcode.platform.io.SystemProcess;
+import ixcode.platform.reflect.ObjectFactory;
+import org.apache.log4j.Logger;
+import org.eclipse.jetty.http.security.Constraint;
+import org.eclipse.jetty.security.ConstraintMapping;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.LoginService;
+import org.eclipse.jetty.security.authentication.BasicAuthenticator;
+import org.eclipse.jetty.security.authentication.FormAuthenticator;
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ErrorHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
-import javax.servlet.*;
-import java.io.*;
-import java.net.InetAddress;
+import javax.servlet.Servlet;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ixcode.platform.logging.ConsoleLog4jLogging.*;
-import static java.lang.String.*;
+import static ixcode.platform.logging.ConsoleLog4jLogging.initialiseLog4j;
+import static java.lang.String.format;
+import static java.lang.System.getProperty;
 import static java.net.InetAddress.getLocalHost;
+import static java.util.Arrays.asList;
+import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
 
 public class HttpServer {
     private static final Logger log = Logger.getLogger(HttpServer.class);
@@ -31,6 +43,7 @@ public class HttpServer {
     private int httpPort;
     private String webrootDir;
     private List<Redirection> redirections = new ArrayList<Redirection>();
+    private ConstraintSecurityHandler securityHandler;
 
 
     public HttpServer(Class serverClass, int port, Servlet rootServlet) {
@@ -111,18 +124,26 @@ public class HttpServer {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setResourceBase(webrootDir);
 
+
         return resourceHandler;
     }
 
     private ServletContextHandler servletHandler() {
-        ServletContextHandler servletHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        ServletContextHandler servletHandler = new ServletContextHandler(NO_SESSIONS);
 
         servletHandler.setContextPath(contextPath);
         servletHandler.setResourceBase(webrootDir);
+
         ErrorHandler errorHandler = new ErrorHandler();
         errorHandler.setServer(server);
         servletHandler.setErrorHandler(errorHandler);
+
         servletHandler.addServlet(new ServletHolder(rootServlet), "/*");
+
+        if (securityHandler != null) {
+            servletHandler.setSecurityHandler(securityHandler);
+        }
+
         return servletHandler;
     }
 
@@ -138,4 +159,54 @@ public class HttpServer {
 
         return this;
     }
+
+    public HttpServer basicAuthenticationFrom(String fileName) {
+
+        File f = getCannonicalFileFor(fileName);
+
+        if (!f.exists()) {
+            return this;
+        }
+
+
+
+        HashLoginService loginService = new HashLoginService(this.serverName, f.getAbsolutePath());
+        try {
+            loginService.loadUsers();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Constraint constraint = new Constraint();
+        constraint.setName(Constraint.__BASIC_AUTH);
+        constraint.setAuthenticate(true);
+        constraint.setRoles(new String[]{"user"});
+
+
+        ConstraintMapping root = mapConstraintTo(constraint, "/*");
+
+
+        BasicAuthenticator authenticator = new BasicAuthenticator();
+
+        securityHandler = new ConstraintSecurityHandler();
+        securityHandler.setRealmName("someRealm");
+        securityHandler.setAuthenticator(authenticator);
+        securityHandler.setConstraintMappings(asList(root));
+        securityHandler.setLoginService(loginService);
+
+        return this;
+    }
+
+    private File getCannonicalFileFor(String fileName) {
+        try {
+            return new File(fileName.replace("~", getProperty("user.home")))
+                    .getCanonicalFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
 }
