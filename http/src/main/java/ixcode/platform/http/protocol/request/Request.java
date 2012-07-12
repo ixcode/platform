@@ -50,7 +50,5 @@ public class Request {
         return httpServletRequest.getRequestURL().toString();
     }
 
-    public void logout() {
-        httpServletRequest.getSession().invalidate();
-    }
+
 }

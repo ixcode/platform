@@ -149,11 +149,6 @@ public class RouteMap implements ResourceLookup, ResourceHyperlinkBuilder {
         return this;
     }
 
-    public RouteMap withLogoutAt(String path) {
-        registerMapping(this.uriRoot, path, new LogoutResource(), HttpMethod.GET);
-        return this;
-    }
-
 
     public static class EntryBuilder {
         private final RouteMap parent;

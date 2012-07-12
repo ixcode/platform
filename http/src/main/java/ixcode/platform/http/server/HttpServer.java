@@ -195,7 +195,7 @@ public class HttpServer {
         BasicAuthenticator authenticator = new BasicAuthenticator();
 
         securityHandler = new ConstraintSecurityHandler();
-        securityHandler.setRealmName("someRealm");
+        securityHandler.setRealmName("realm");
         securityHandler.setAuthenticator(authenticator);
         securityHandler.setConstraintMappings(asList(root));
         securityHandler.setLoginService(loginService);
