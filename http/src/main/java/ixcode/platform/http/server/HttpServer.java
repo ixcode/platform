@@ -1,19 +1,24 @@
 package ixcode.platform.http.server;
 
+import ixcode.platform.http.server.authentication.SessionFreeFormAuthenticator;
 import ixcode.platform.http.server.redirection.Redirection;
 import ixcode.platform.io.SystemProcess;
 import ixcode.platform.reflect.ObjectFactory;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.security.Constraint;
+import org.eclipse.jetty.security.Authenticator;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
+import org.eclipse.jetty.security.authentication.DigestAuthenticator;
+import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
@@ -28,6 +33,8 @@ import static java.lang.String.format;
 import static java.lang.System.getProperty;
 import static java.net.InetAddress.getLocalHost;
 import static java.util.Arrays.asList;
+import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
+import static org.eclipse.jetty.servlet.ServletContextHandler.SESSIONS;
 
 public class HttpServer {
     private static final Logger log = Logger.getLogger(HttpServer.class);
@@ -91,6 +98,7 @@ public class HttpServer {
 
             server.setHandler(handler());
 
+
             server.start();
             new SystemProcess().writeProcessIdToFile(format(".webserver.%s.pid", serverName));
 
@@ -133,7 +141,8 @@ public class HttpServer {
     }
 
     private ServletContextHandler servletHandler() {
-        ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        ServletContextHandler servletContextHandler = new ServletContextHandler(NO_SESSIONS);
+
 
         servletContextHandler.setContextPath(contextPath);
         servletContextHandler.setResourceBase(webrootDir);
@@ -166,19 +175,29 @@ public class HttpServer {
     }
 
 
-    public HttpServer basicAuthenticationFrom(String filename) {
-        BasicAuthenticator authenticator = new BasicAuthenticator();
-
-        securityHandler = createSecurityHandler(filename, authenticator);
+    /**
+     * We are not even going to think about basic auth, although
+     * you could see how to do it.
+     *
+     * At least digest encrypts the password
+     *
+     * @See http://tools.ietf.org/html/rfc2617
+     */
+    public HttpServer cloakWithDigestAuth(String filename) {
+        securityHandler = createSecurityHandler(filename, new DigestAuthenticator());
 
         return this;
     }
 
-    public HttpServer formAuthenticationFrom(String filename) {
-        return null;
+    public HttpServer cloakWithFormAuth(String filename) {
+        SessionFreeFormAuthenticator formAuthenticator = new SessionFreeFormAuthenticator();
+
+        securityHandler = createSecurityHandler(filename, new DigestAuthenticator());
+
+        return this;
     }
 
-    private ConstraintSecurityHandler createSecurityHandler(String filename, BasicAuthenticator authenticator) {
+    private ConstraintSecurityHandler createSecurityHandler(String filename, Authenticator authenticator) {
 
         File f = getCannonicalFileFor(filename);
         if (!f.exists()) {
@@ -204,6 +223,8 @@ public class HttpServer {
         handler.setAuthenticator(authenticator);
         handler.setConstraintMappings(asList(root));
         handler.setLoginService(loginService);
+
+
 
         return handler;
     }
