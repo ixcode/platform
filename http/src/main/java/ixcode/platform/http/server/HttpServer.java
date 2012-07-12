@@ -167,7 +167,7 @@ public class HttpServer {
     }
 
 
-    public HttpServer basicAuthenticationFrom(String fileName) {
+    public HttpServer basicAuthentication(String fileName) {
 
         File f = getCannonicalFileFor(fileName);
 
@@ -195,7 +195,7 @@ public class HttpServer {
         BasicAuthenticator authenticator = new BasicAuthenticator();
 
         securityHandler = new ConstraintSecurityHandler();
-        securityHandler.setRealmName("realm");
+        securityHandler.setRealmName(this.serverName);
         securityHandler.setAuthenticator(authenticator);
         securityHandler.setConstraintMappings(asList(root));
         securityHandler.setLoginService(loginService);
