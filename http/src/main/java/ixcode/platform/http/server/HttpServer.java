@@ -8,13 +8,12 @@ import org.eclipse.jetty.http.security.Constraint;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
-import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
-import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.HandlerWrapper;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -89,8 +88,11 @@ public class HttpServer {
             log.info(format("Starting Http Server [%s] on port [%d]...", serverName, httpPort));
             log.info(format("Serving from http://%s:%d/", hostname, httpPort));
             log.info(format("Running on host [%s]", getLocalHost().getHostName()));
+
             server = new Server(httpPort);
+
             server.setHandler(handlers());
+
             server.start();
             new SystemProcess().writeProcessIdToFile(format(".webserver.%s.pid", serverName));
             log.info(format("Http Server Started. Serving using the dispatcher [%s] ", rootServlet.getClass().getName()));
@@ -106,13 +108,20 @@ public class HttpServer {
         return this;
     }
 
-    private HandlerList handlers() {
+    private Handler handlers() {
         HandlerList handlers = new HandlerList();
+
+
         handlers.setHandlers(new Handler[]{
                 redirectionHandler(),
                 resourceHandler(),
-                servletHandler()
-        });
+                servletHandler()});
+
+        if (securityHandler != null) {
+            securityHandler.setHandler(handlers);
+            return securityHandler;
+        }
+
         return handlers;
     }
 
@@ -129,22 +138,18 @@ public class HttpServer {
     }
 
     private ServletContextHandler servletHandler() {
-        ServletContextHandler servletHandler = new ServletContextHandler(NO_SESSIONS);
+        ServletContextHandler servletContextHandler = new ServletContextHandler(NO_SESSIONS);
 
-        servletHandler.setContextPath(contextPath);
-        servletHandler.setResourceBase(webrootDir);
+        servletContextHandler.setContextPath(contextPath);
+        servletContextHandler.setResourceBase(webrootDir);
 
         ErrorHandler errorHandler = new ErrorHandler();
         errorHandler.setServer(server);
-        servletHandler.setErrorHandler(errorHandler);
+        servletContextHandler.setErrorHandler(errorHandler);
 
-        servletHandler.addServlet(new ServletHolder(rootServlet), "/*");
+        servletContextHandler.addServlet(new ServletHolder(rootServlet), "/*");
 
-        if (securityHandler != null) {
-            servletHandler.setSecurityHandler(securityHandler);
-        }
-
-        return servletHandler;
+        return servletContextHandler;
     }
 
     private static ConstraintMapping mapConstraintTo(Constraint constraint, String path) {
@@ -167,7 +172,6 @@ public class HttpServer {
         if (!f.exists()) {
             return this;
         }
-
 
 
         HashLoginService loginService = new HashLoginService(this.serverName, f.getAbsolutePath());
@@ -205,8 +209,6 @@ public class HttpServer {
             throw new RuntimeException(e);
         }
     }
-
-
 
 
 }
