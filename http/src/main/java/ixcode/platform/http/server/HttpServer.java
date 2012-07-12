@@ -28,7 +28,6 @@ import static java.lang.String.format;
 import static java.lang.System.getProperty;
 import static java.net.InetAddress.getLocalHost;
 import static java.util.Arrays.asList;
-import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
 
 public class HttpServer {
     private static final Logger log = Logger.getLogger(HttpServer.class);
@@ -167,15 +166,24 @@ public class HttpServer {
     }
 
 
-    public HttpServer basicAuthentication(String fileName) {
+    public HttpServer basicAuthenticationFrom(String filename) {
+        BasicAuthenticator authenticator = new BasicAuthenticator();
 
-        File f = getCannonicalFileFor(fileName);
+        securityHandler = createSecurityHandler(filename, authenticator);
 
+        return this;
+    }
+
+    public HttpServer formAuthenticationFrom(String filename) {
+        return null;
+    }
+
+    private ConstraintSecurityHandler createSecurityHandler(String filename, BasicAuthenticator authenticator) {
+
+        File f = getCannonicalFileFor(filename);
         if (!f.exists()) {
-            return this;
+            return null;
         }
-
-
         HashLoginService loginService = new HashLoginService(this.serverName, f.getAbsolutePath());
         try {
             loginService.loadUsers();
@@ -191,16 +199,13 @@ public class HttpServer {
 
         ConstraintMapping root = mapConstraintTo(constraint, "/*");
 
+        ConstraintSecurityHandler handler = new ConstraintSecurityHandler();
+        handler.setRealmName(this.serverName);
+        handler.setAuthenticator(authenticator);
+        handler.setConstraintMappings(asList(root));
+        handler.setLoginService(loginService);
 
-        BasicAuthenticator authenticator = new BasicAuthenticator();
-
-        securityHandler = new ConstraintSecurityHandler();
-        securityHandler.setRealmName(this.serverName);
-        securityHandler.setAuthenticator(authenticator);
-        securityHandler.setConstraintMappings(asList(root));
-        securityHandler.setLoginService(loginService);
-
-        return this;
+        return handler;
     }
 
     private File getCannonicalFileFor(String fileName) {
