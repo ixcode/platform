@@ -192,7 +192,7 @@ public class HttpServer {
     public HttpServer cloakWithFormAuth(String filename) {
         SessionFreeFormAuthenticator formAuthenticator = new SessionFreeFormAuthenticator();
 
-        securityHandler = createSecurityHandler(filename, new DigestAuthenticator());
+        securityHandler = createSecurityHandler(filename, formAuthenticator);
 
         return this;
     }

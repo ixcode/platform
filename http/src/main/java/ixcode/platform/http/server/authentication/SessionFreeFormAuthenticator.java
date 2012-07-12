@@ -20,7 +20,8 @@ import static org.eclipse.jetty.server.Authentication.SEND_FAILURE;
  * The normal FormAuthenticator requires the use of the HttpSession, which is
  * not always available.
  *
- * This one uses the
+ * This one uses an AuthenticationCache abstraction so that you could
+ * put whatever behind it - maybe mongo.
  */
 public class SessionFreeFormAuthenticator extends LoginAuthenticator {
 
@@ -41,21 +42,25 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
         HttpServletResponse httpResponse = (HttpServletResponse)response;
 
         log.info("Ooh, Im in charge now!!");
+        log.info("Yer ip address be: " + request.getRemoteAddr() + " - " + request.getRemoteHost() );
 
 
-        respondWithForbiddenMessage(httpResponse);
+
+
+
+        respondWithUnauthorizedMessage(httpResponse);
 
 
         return SEND_FAILURE;
     }
 
-    private void respondWithForbiddenMessage(HttpServletResponse httpResponse) {
+    private void respondWithUnauthorizedMessage(HttpServletResponse httpResponse) {
         httpResponse.setContentType("text/html");
-        httpResponse.setStatus(403);
+        httpResponse.setStatus(401);
         PrintWriter writer = null;
         try {
             writer = httpResponse.getWriter();
-            writer.println("<html><body><h1>(403 - Forbidden) BAD ROBOT - NO GO HERE!</h1></body></html>");
+            writer.println("<html><body><h1>(401 - Unauthorized) BAD ROBOT - NO GO HERE!</h1></body></html>");
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
