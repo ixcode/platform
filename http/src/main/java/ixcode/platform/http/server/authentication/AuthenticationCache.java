@@ -1,7 +1,9 @@
 package ixcode.platform.http.server.authentication;
 
-public interface AuthenticationCache {
-    String getSessionSecret(String sessionId);
+import org.eclipse.jetty.server.UserIdentity;
 
-    void setSessionSecret(String sessionId, String encryptedSecret);
+public interface AuthenticationCache {
+    Session getSession(String sessionId);
+
+    Session createSession(String sessionId, String encryptedSecret, UserIdentity user);
 }

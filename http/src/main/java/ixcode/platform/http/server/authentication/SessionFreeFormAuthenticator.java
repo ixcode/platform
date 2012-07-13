@@ -5,7 +5,9 @@ import ixcode.platform.cryptography.Encryption;
 import ixcode.platform.http.server.CookieJar;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.security.ServerAuthException;
+import org.eclipse.jetty.security.UserAuthentication;
 import org.eclipse.jetty.security.authentication.LoginAuthenticator;
+import org.eclipse.jetty.security.authentication.SessionAuthentication;
 import org.eclipse.jetty.server.Authentication;
 import org.eclipse.jetty.server.UserIdentity;
 
@@ -22,8 +24,6 @@ import static ixcode.platform.http.server.CookieJar.cookieJarFrom;
 import static ixcode.platform.io.IoStreamHandling.closeQuietly;
 import static org.eclipse.jetty.server.Authentication.NOT_CHECKED;
 import static org.eclipse.jetty.server.Authentication.SEND_CONTINUE;
-import static org.eclipse.jetty.server.Authentication.SEND_FAILURE;
-import static org.eclipse.jetty.server.Authentication.SEND_SUCCESS;
 
 /**
  * The normal FormAuthenticator requires the use of the HttpSession, which is not always available.
@@ -70,9 +70,11 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
 
             if (isLoginHandler(httpRequest)) {
                 if ("POST".equals(httpRequest.getMethod())) {
-                    if (handleLoginSubmission(httpRequest, httpResponse)) {
-                        startSession(httpRequest, httpResponse);
-                        return SEND_SUCCESS;
+                    UserIdentity user = handleLoginSubmission(httpRequest, httpResponse);
+                    if (user != null) {
+                        startSession(httpRequest, httpResponse, user);
+                        redirectToRequestedPage(httpRequest, cookieJar, httpResponse);
+                        return new FormAuthentication("FORM", user);
                     }
                     redirectToLoginPage(httpRequest, cookieJar, httpResponse);
                     return SEND_CONTINUE;
@@ -87,15 +89,33 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
                 return SEND_CONTINUE;
             }
 
-            respondWithUnauthorizedMessage(httpResponse);
 
-
-            return SEND_FAILURE;
+            return new SessionAuthentication("FORM", session.user, session.secret);
 
         } catch (Exception e) {
             log.error("Exception trying to validate request", e);
             throw new RuntimeException(e);
         }
+    }
+
+    private void redirectToRequestedPage(HttpServletRequest httpRequest, CookieJar cookieJar, HttpServletResponse httpResponse) {
+        log.info("Redirecting back to requested page...");
+        String redirectPath = "/";
+        if (cookieJar.contains("_loginSource")) {
+            redirectPath = cookieJar.get("_loginSource");
+            Cookie redirectBackToCookie = new Cookie("_loginSource", redirectPath);
+            redirectBackToCookie.setPath("/");
+            redirectBackToCookie.setMaxAge(0);
+            httpResponse.addCookie(redirectBackToCookie);
+        }
+
+        try {
+            httpResponse.sendRedirect(redirectPath);
+        } catch (IOException e) {
+            log.error("Failed to redirect", e);
+            throw new RuntimeException(e);
+        }
+
     }
 
     private void redirectToLoginPage(HttpServletRequest httpRequest,
@@ -116,7 +136,7 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
 
     }
 
-    private boolean handleLoginSubmission(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+    private UserIdentity handleLoginSubmission(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         String username = httpRequest.getParameter("x_username");
         String password = httpRequest.getParameter("x_password");
 
@@ -124,13 +144,7 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
             throw new RuntimeException("Could not process login request, you need to specify the fields x_username and x_password");
         }
 
-        UserIdentity user = _loginService.login(username, password);
-        if (user == null) {
-            log.info("Login failed for user: " + username);
-            return false;
-        }
-
-        return true;
+        return  _loginService.login(username, password);
     }
 
     private boolean isLoginHandler(HttpServletRequest httpRequest) {
@@ -147,12 +161,12 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
             return Session.invalid();
         }
 
-        String storedSecret = authenticationCache.getSessionSecret(sessionId);
-        if (!storedSecret.equals(encryptedSecret)) {
-            return Session.invalid();
+        Session session = authenticationCache.getSession(sessionId);
+        if (session.isValidSecret(encryptedSecret)) {
+            return session;
         }
 
-        return Session.valid(sessionId, secretKey);
+        return Session.invalid();
 
     }
 
@@ -164,7 +178,9 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
         }
     }
 
-    private void startSession(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+    private void startSession(HttpServletRequest httpRequest,
+                              HttpServletResponse httpResponse,
+                              UserIdentity user) {
 
         String sessionId = generateSessionId();
         String cookieSecret = generateSecret(sessionId, httpRequest);
@@ -173,15 +189,17 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
         log.info("I'm going to send the secret: " + cookieSecret);
 
         Cookie sessionIdCookie = new Cookie("_id", sessionId);
+        sessionIdCookie.setPath("/");
         sessionIdCookie.setMaxAge(60000);
 
         Cookie secretCookie = new Cookie("_token", encryptedSecret);
+        secretCookie.setPath("/");
         secretCookie.setMaxAge(60000);
 
         httpResponse.addCookie(sessionIdCookie);
         httpResponse.addCookie(secretCookie);
 
-        authenticationCache.setSessionSecret(sessionId, encryptedSecret);
+        authenticationCache.createSession(sessionId, encryptedSecret, user);
 
     }
 
@@ -219,38 +237,18 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
         return true;
     }
 
-    private static class Session {
-        private final SessionValidity validity;
-        private final String sessionId;
-        private final String secret;
-
-        public static Session invalid() {
-            return new Session(SessionValidity.INVALID);
+    public static class FormAuthentication extends UserAuthentication implements Authentication.ResponseSent
+    {
+        public FormAuthentication(String method, UserIdentity userIdentity)
+        {
+            super(method,userIdentity);
         }
 
-        public static Session valid(String sessionId, String secret) {
-            return new Session(SessionValidity.VALID, sessionId, secret);
+        @Override
+        public String toString()
+        {
+            return "Form"+super.toString();
         }
-
-        private enum SessionValidity {
-            VALID, INVALID;
-        }
-
-        private Session(SessionValidity validity) {
-            this(validity, null, null);
-        }
-
-        private Session(SessionValidity validity, String sessionId, String secret) {
-            this.validity = validity;
-            this.sessionId = sessionId;
-            this.secret = secret;
-        }
-
-        public boolean isInvalid() {
-            return SessionValidity.INVALID.equals(validity);
-        }
-
     }
-
 
 }
