@@ -38,12 +38,17 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
     private static final Encryption STATIC_AES_ENCRYPTION = new AesEncryption();
 
     private static final String SESSION_KEY = "_token";
-    private static final String SESSION_ID = "_id";
+    private static final String SESSION_ID = "_session";
+    private static final String LOGIN_SOURCE = "_loginSource";
+    public static final String P_USERNAME = "x_username";
+    public static final String P_PASSWORD = "x_password";
 
     private final AuthenticationCache authenticationCache;
     private final Encryption encryption;
 
-    private String loginRedirectPath = "/auth/login";
+    private final String loginRedirectPath = "/cloak/login";
+    private final String logoutPath = "/cloak/logout";
+
 
 
     public SessionFreeFormAuthenticator() {
@@ -68,13 +73,14 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
             log.info("SECURE-CHECK: " + httpRequest.getRequestURI());
 
 
+
             if (isLoginHandler(httpRequest)) {
                 if ("POST".equals(httpRequest.getMethod())) {
                     UserIdentity user = handleLoginSubmission(httpRequest, httpResponse);
                     if (user != null) {
                         startSession(httpRequest, httpResponse, user);
                         redirectToRequestedPage(httpRequest, cookieJar, httpResponse);
-                        return new FormAuthentication("FORM", user);
+                        return new FormAuthentication(getAuthMethod(), user);
                     }
                     redirectToLoginPage(httpRequest, cookieJar, httpResponse);
                     return SEND_CONTINUE;
@@ -89,8 +95,12 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
                 return SEND_CONTINUE;
             }
 
+            if (isLogoutHandler(httpRequest)) {
+                handleLogout(httpRequest, httpResponse);
+                return Authentication.SEND_FAILURE;
+            }
 
-            return new SessionAuthentication("FORM", session.user, session.secret);
+            return new SessionAuthentication(getAuthMethod(), session.user, session.secret);
 
         } catch (Exception e) {
             log.error("Exception trying to validate request", e);
@@ -98,12 +108,43 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
         }
     }
 
+    private void handleLogout(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+        Cookie sessionIdCookie = new Cookie(SESSION_ID, "XXXX");
+        sessionIdCookie.setPath("/");
+        sessionIdCookie.setMaxAge(0);
+
+        Cookie secretCookie = new Cookie(SESSION_KEY, "XXXX");
+        secretCookie.setPath("/");
+        secretCookie.setMaxAge(0);
+
+        httpResponse.addCookie(sessionIdCookie);
+        httpResponse.addCookie(secretCookie);
+
+        httpResponse.setStatus(200);
+        httpResponse.setHeader("Content-Type", "text/html");
+
+        PrintWriter writer = null;
+        try {
+            writer = httpResponse.getWriter();
+            writer.println("<html><body><h1>You are now logged out</h1></body></html>");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            closeQuietly(writer);
+        }
+
+    }
+
+    private boolean isLogoutHandler(HttpServletRequest httpRequest) {
+        return logoutPath.equals(httpRequest.getRequestURI());
+    }
+
     private void redirectToRequestedPage(HttpServletRequest httpRequest, CookieJar cookieJar, HttpServletResponse httpResponse) {
         log.info("Redirecting back to requested page...");
         String redirectPath = "/";
-        if (cookieJar.contains("_loginSource")) {
-            redirectPath = cookieJar.get("_loginSource");
-            Cookie redirectBackToCookie = new Cookie("_loginSource", redirectPath);
+        if (cookieJar.contains(LOGIN_SOURCE)) {
+            redirectPath = cookieJar.get(LOGIN_SOURCE);
+            Cookie redirectBackToCookie = new Cookie(LOGIN_SOURCE, redirectPath);
             redirectBackToCookie.setPath("/");
             redirectBackToCookie.setMaxAge(0);
             httpResponse.addCookie(redirectBackToCookie);
@@ -123,8 +164,8 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
 
         log.info("Redirecting to the the login handler:");
         try {
-            if (!cookieJar.contains("_loginSource")) {
-                Cookie redirectBackToCookie = new Cookie("_loginSource", httpRequest.getRequestURI());
+            if (!cookieJar.contains(LOGIN_SOURCE)) {
+                Cookie redirectBackToCookie = new Cookie(LOGIN_SOURCE, httpRequest.getRequestURI());
                 redirectBackToCookie.setPath("/");
                 httpResponse.addCookie(redirectBackToCookie);
             }
@@ -137,8 +178,8 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
     }
 
     private UserIdentity handleLoginSubmission(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
-        String username = httpRequest.getParameter("x_username");
-        String password = httpRequest.getParameter("x_password");
+        String username = httpRequest.getParameter(P_USERNAME);
+        String password = httpRequest.getParameter(P_PASSWORD);
 
         if (username == null || password == null) {
             throw new RuntimeException("Could not process login request, you need to specify the fields x_username and x_password");
@@ -188,11 +229,11 @@ public class SessionFreeFormAuthenticator extends LoginAuthenticator {
 
         log.info("I'm going to send the secret: " + cookieSecret);
 
-        Cookie sessionIdCookie = new Cookie("_id", sessionId);
+        Cookie sessionIdCookie = new Cookie(SESSION_ID, sessionId);
         sessionIdCookie.setPath("/");
         sessionIdCookie.setMaxAge(60000);
 
-        Cookie secretCookie = new Cookie("_token", encryptedSecret);
+        Cookie secretCookie = new Cookie(SESSION_KEY, encryptedSecret);
         secretCookie.setPath("/");
         secretCookie.setMaxAge(60000);
 
