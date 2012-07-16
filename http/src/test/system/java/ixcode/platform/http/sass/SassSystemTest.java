@@ -58,6 +58,7 @@ public class SassSystemTest {
 
         assertThat(importFileNameFrom("global"), is("_global.scss"));
         assertThat(importFileNameFrom("compass/reset"), is("compass/_reset.scss"));
+        assertThat(importFileNameFrom("some/real/long/path/reset"), is("some/real/long/path/_reset.scss"));
 
     }
 
