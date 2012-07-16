@@ -10,15 +10,12 @@ import org.eclipse.jetty.security.Authenticator;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
-import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.security.authentication.DigestAuthenticator;
-import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
@@ -34,7 +31,6 @@ import static java.lang.System.getProperty;
 import static java.net.InetAddress.getLocalHost;
 import static java.util.Arrays.asList;
 import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
-import static org.eclipse.jetty.servlet.ServletContextHandler.SESSIONS;
 
 public class HttpServer {
     private static final Logger log = Logger.getLogger(HttpServer.class);
@@ -47,7 +43,8 @@ public class HttpServer {
     private int httpPort;
     private String webrootDir;
     private List<Redirection> redirections = new ArrayList<Redirection>();
-    private ConstraintSecurityHandler securityHandler;
+    private ConstraintSecurityHandler securityCloak;
+    private String sassRoot;
 
 
     public HttpServer(Class serverClass, int port, Servlet rootServlet) {
@@ -75,6 +72,11 @@ public class HttpServer {
 
     public HttpServer servingStaticContentFrom(String webrootDir) {
         this.webrootDir = webrootDir;
+        return this;
+    }
+
+    public HttpServer servingSassFrom(String sassRoot) {
+        this.sassRoot = sassRoot;
         return this;
     }
 
@@ -118,14 +120,19 @@ public class HttpServer {
         handlers.setHandlers(new Handler[]{
                 redirectionHandler(),
                 resourceHandler(),
+                sassHandler(),
                 servletHandler()});
 
-        if (securityHandler != null) {
-            securityHandler.setHandler(handlers);
-            return securityHandler;
+        if (securityCloak != null) {
+            securityCloak.setHandler(handlers);
+            return securityCloak;
         }
 
         return handlers;
+    }
+
+    private Handler sassHandler() {
+        return new SassHandler(new File(sassRoot));
     }
 
     private Handler redirectionHandler() {
@@ -135,7 +142,6 @@ public class HttpServer {
     private ResourceHandler resourceHandler() {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setResourceBase(webrootDir);
-
 
         return resourceHandler;
     }
@@ -164,10 +170,6 @@ public class HttpServer {
     }
 
 
-    public HttpServer servingSassFrom(String sassRoom) {
-
-        return this;
-    }
 
     public HttpServer withRedirection(Redirection redirection) {
         this.redirections.add(redirection);
@@ -184,7 +186,7 @@ public class HttpServer {
      * @See http://tools.ietf.org/html/rfc2617
      */
     public HttpServer cloakWithDigestAuth(String filename) {
-        securityHandler = createSecurityHandler(filename, new DigestAuthenticator());
+        securityCloak = createSecurityHandler(filename, new DigestAuthenticator());
 
         return this;
     }
@@ -192,7 +194,7 @@ public class HttpServer {
     public HttpServer cloakWithFormAuth(String filename) {
         SessionFreeFormAuthenticator formAuthenticator = new SessionFreeFormAuthenticator();
 
-        securityHandler = createSecurityHandler(filename, formAuthenticator);
+        securityCloak = createSecurityHandler(filename, formAuthenticator);
 
         return this;
     }
