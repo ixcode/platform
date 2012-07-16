@@ -6,12 +6,17 @@
     transform: scaleY(-1);
     -ms-filter: flipv; /*IE*/
     filter: flipv; /*IE*/
-  } @else {
+  }
+
+/*
+ Else not supported yet
+   @else {
     -moz-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
     -o-transform: scaleX(-1);
     transform: scaleX(-1);
     -ms-filter: fliph; /*IE*/
-    filter: fliph; /*IE*/
-  }
+ /* filter: fliph; /*IE*/
+/*}
+*/
 }

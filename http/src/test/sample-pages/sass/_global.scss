@@ -1,5 +1,5 @@
 .hide {
-  @include hide-text();
+  @include hide-text;
 }
 
 $color_1: #000;
@@ -11,7 +11,7 @@ $color_background: #fff;
 $color_borders: #eaeaea;
 $color_links: #2a9cb3;
 
-$fontstack: helvetica, arial, sans-serif;
+$fontstack: "helvetica, arial, sans-serif";
 $heading_fontstack: $fontstack;
 
 /* ============================================================
@@ -24,7 +24,7 @@ $heading_fontstack: $fontstack;
 
 body, body * {
   @include box-sizing(border-box);
-//  border: 1px solid rgba(255,0,0,0.5);
+/* border: 1px solid rgba(255,0,0,0.5); */
 }
 
 body {
@@ -76,7 +76,7 @@ button, input, select, textarea {
   font-family: $fontstack;
 }
 
-.button, button, input[type=submit] {
+.button, button, input[type="submit"] {
   display: inline-block;
   cursor: pointer;
 }
@@ -98,7 +98,7 @@ hr {
   display: block;
   height: 0;
   padding: 0;
-  font: 600 2em/1 'Akagi SemiBold', 'Helvetica Neue', Arial, sans-serif;
+  font: 600 2em/1 "Akagi SemiBold", "Helvetica Neue", "Arial", "sans-serif";
   text-align: center;
   margin: 1em 0 2em 0;
   border: 0;

@@ -20,6 +20,7 @@ import java.io.FileReader;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import static ixcode.platform.io.IoStreamHandling.closeQuietly;
@@ -27,6 +28,26 @@ import static ixcode.platform.io.IoStreamHandling.readFileAsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+/**
+ * Things that don't work:
+ *
+ * @else blocks
+ * <p/>
+ * Empty parenthesese in mixins, e.g. hello-world() must be hello-world
+ * <p/>
+ * Comma separated lists of things in a variable, e.g. $fontstack: helvetica, arial, sans-serif made it work by putting
+ * quotes around it but not sure if thats good
+ * <p/>
+ * Single line comments. eg // some comment
+ *
+ * Names in parameters , e.g. input[type=submit] - its looking for a string
+ * was able to do input[type="submit"]
+ *
+ * Font sizes with a slash:
+ * font: 600 2em/1 -
+ *
+ * :: behaviours, e.g. hr::after
+ */
 @SystemTest
 public class SassSystemTest {
 
@@ -70,13 +91,15 @@ public class SassSystemTest {
 
         Reader in = null;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
+        String withImports = "Not yet parsed";
 
         try {
             in = new FileReader(file);
-            String withImports = preProcessImports(in, file);
+            withImports = preProcessImports(in, file);
 
             SassParser parser = new SassParser(new StringReader(withImports));
             SassSheet sheet = parser.parse();
+
 
             SassSheetEvaluator evaluator = new SassSheetEvaluator(new JavaStringInterpolator());
             evaluator.addFunction("formatProperty", new IFunction() {
@@ -98,11 +121,36 @@ public class SassSystemTest {
             serializer.render(sheet);
 
             return new String(out.toByteArray());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (Throwable t) {
+            System.out.println(debugSource(withImports));
+            throw new RuntimeException(t);
         } finally {
             closeQuietly(in);
             closeQuietly(out);
+        }
+    }
+
+    private static String debugSource(String withImports) {
+        BufferedReader in = new BufferedReader(new StringReader(withImports));
+
+        DecimalFormat df = new DecimalFormat("0000");
+
+        StringBuilder out = new StringBuilder();
+        int lineNo = 1;
+        try {
+            while (true) {
+                String line = in.readLine();
+                if (line == null) {
+                    break;
+                }
+
+                out.append(df.format(lineNo++)).append("   ").append(line).append("\n");
+
+            }
+
+            return out.toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -138,7 +186,8 @@ public class SassSystemTest {
         String importFileName = importFileNameFrom(splits[1]);
 
 
-        return readFileAsString(new File(parent, importFileName), "UTF8");
+        return "/* from " + importFileName + "*/\n\n"
+                + readFileAsString(new File(parent, importFileName), "UTF8");
     }
 
     private String importFileNameFrom(String importKey) {
