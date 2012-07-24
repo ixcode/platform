@@ -6,6 +6,7 @@ import ixcode.platform.build.BuildTask;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
@@ -54,25 +55,39 @@ public class SystemCommand implements BuildTask {
     public void execute(BuildLog buildLog) {
         buildLog.println("Executing system command [%s] in dir [%s]", command, dir);
 
-        BufferedReader reader = null;
-        Process p = null;
 
+        Process p = null;
         try {
             p = getRuntime().exec(command, new String[0], dir);
-            //p.waitFor();
+            p.waitFor();
 
-            reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line = reader.readLine();
-            while (line != null) {
-                buildLog.printlndirect(line);
-                line = reader.readLine();
+            InputStream in = (p.exitValue() == 0) ? p.getInputStream() : p.getErrorStream();
+
+            if (p.exitValue() == 0) {
+                printProgramOutput(buildLog, in, "[out]");
+            } else {
+                printProgramOutput(buildLog, in, "[err]");
             }
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
-            tryToClose(reader);
             tryToDestroy(p);
+        }
+    }
+
+    private void printProgramOutput(BuildLog buildLog, InputStream in, String prefix) {BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(in));
+            String line = reader.readLine();
+            while (line != null) {
+                buildLog.printlndirect(prefix + " " + line);
+                line = reader.readLine();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            tryToClose(reader);
         }
     }
 

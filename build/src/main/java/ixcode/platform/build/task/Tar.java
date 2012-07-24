@@ -22,7 +22,7 @@ public class Tar implements BuildTask {
 
         String tarCommand = (isCygwin()) ? pathToCygwinExe("tar.exe") : "tar";
 
-        new SystemCommand(dir.asFile(), "%s cfzv %s . -i *",tarCommand,
+        new SystemCommand(dir.asFile(), "%s cfzv %s .",tarCommand,
                           getOsSpecificFilename(tarFile.getAbsolutePath())).execute(buildLog);
     }
 }
