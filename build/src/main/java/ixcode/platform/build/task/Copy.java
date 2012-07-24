@@ -25,7 +25,7 @@ public class Copy implements BuildTask {
     }
 
     public void execute(BuildLog buildLog) {
-        buildLog.println("Coying from [%s] to [%s]", fromFile.getAbsolutePath(), toFile.getAbsolutePath());
+        buildLog.println("Copying from [%s] to [%s]", fromFile.getAbsolutePath(), toFile.getAbsolutePath());
 
         if (!fromFile.exists()) {
             buildLog.println("Nothing to copy");
