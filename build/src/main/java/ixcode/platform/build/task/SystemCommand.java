@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import static java.lang.Runtime.getRuntime;
+import static java.lang.System.getProperty;
 import static java.lang.System.getenv;
 
 public class SystemCommand implements BuildTask {
@@ -24,6 +25,10 @@ public class SystemCommand implements BuildTask {
 
     public static boolean isCygwin() {
         return "cygwin".equals(getenv("TERM"));
+    }
+
+    public static boolean isMac() {
+        return getProperty("os.name").contains("Mac");
     }
 
     public SystemCommand(String command, Object... formatArgs) {

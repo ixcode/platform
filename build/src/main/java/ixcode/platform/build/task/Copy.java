@@ -9,6 +9,7 @@ import java.io.File;
 import static ixcode.platform.build.task.CygwinExecutable.pathToCygwinExe;
 import static ixcode.platform.build.task.SystemCommand.getOsSpecificFilename;
 import static ixcode.platform.build.task.SystemCommand.isCygwin;
+import static ixcode.platform.build.task.SystemCommand.isMac;
 
 public class Copy implements BuildTask {
     private final File fromFile;
