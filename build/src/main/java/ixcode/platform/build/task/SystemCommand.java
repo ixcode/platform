@@ -61,13 +61,8 @@ public class SystemCommand implements BuildTask {
             p = getRuntime().exec(command, new String[0], dir);
             p.waitFor();
 
-            InputStream in = (p.exitValue() == 0) ? p.getInputStream() : p.getErrorStream();
-
-            if (p.exitValue() == 0) {
-                printProgramOutput(buildLog, in, "[out]");
-            } else {
-                printProgramOutput(buildLog, in, "[err]");
-            }
+            printProgramOutput(buildLog, p.getInputStream(), "");
+            printProgramOutput(buildLog, p.getErrorStream(), "");
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -76,7 +71,15 @@ public class SystemCommand implements BuildTask {
         }
     }
 
-    private void printProgramOutput(BuildLog buildLog, InputStream in, String prefix) {BufferedReader reader = null;
+    private void printProgramOutput(BuildLog buildLog, InputStream in, String prefix) {
+        try {
+            if (in.available() <= 0) {
+                return;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(in));
             String line = reader.readLine();
