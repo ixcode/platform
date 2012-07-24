@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Ibex Heroku buildback
+
+if [ -f $1/module.ibx ]; then
+  echo "Found an ibex module file (module.ibx), good stuff!"
+  exit 0
+else
+  exit 1
+fi

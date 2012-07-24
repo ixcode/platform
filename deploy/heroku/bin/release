@@ -1,0 +1,11 @@
+#!/bin/sh
+
+cat << EOF
+---
+addons:
+  - shared-database:5mb
+config_vars:
+  IBX_ENV:production
+  PATH: /usr/local/bin:/usr/bin:/bin
+  JAVA_OPTS: -Xmx384m -Xss512k -XX:+UseCompressedOops
+EOF

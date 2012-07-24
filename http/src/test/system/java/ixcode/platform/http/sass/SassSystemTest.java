@@ -43,8 +43,6 @@ import static org.hamcrest.Matchers.is;
  * Names in parameters , e.g. input[type=submit] - its looking for a string
  * was able to do input[type="submit"]
  *
- * Font sizes with a slash:
- * font: 600 2em/1 -
  *
  * :: behaviours, e.g. hr::after
  */
