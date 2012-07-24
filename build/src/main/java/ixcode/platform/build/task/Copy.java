@@ -41,7 +41,6 @@ public class Copy implements BuildTask {
             out = new BufferedWriter(new FileWriter(f));
 
             out.write(copy2FilesScript);
-            System.out.println("Written to file " + f.getAbsolutePath());
 
             Runtime.getRuntime().exec("chmod +x " + f.getAbsolutePath());
 
@@ -73,7 +72,7 @@ public class Copy implements BuildTask {
         toFile.mkdirs();
 
 
-        String osDirFromCopy = (isCygwin()) ? "\\*" : "/";
+        String osDirFromCopy = (isCygwin()) ? "\\*" : "/*";
         String osDirToCopy = (isCygwin()) ? "\\" : "";
 
         String fromFileString = (fromFile.isDirectory()) ? fromFile.getAbsolutePath() + osDirFromCopy : fromFile.getAbsolutePath();
