@@ -115,20 +115,20 @@ public class HttpServer {
     }
 
     private Handler handler() {
-        HandlerList handlers = new HandlerList();
+        HandlerList handlerList = new HandlerList();
 
-        handlers.setHandlers(new Handler[]{
-                redirectionHandler(),
-                resourceHandler(),
-                sassHandler(),
-                servletHandler()});
+        Handler[] handlers = (sassRoot != null)
+                ? new Handler[]{redirectionHandler(), resourceHandler(), sassHandler(), servletHandler()}
+                : new Handler[]{redirectionHandler(), resourceHandler(), servletHandler()};
+
+        handlerList.setHandlers(handlers);
 
         if (securityCloak != null) {
-            securityCloak.setHandler(handlers);
+            securityCloak.setHandler(handlerList);
             return securityCloak;
         }
 
-        return handlers;
+        return handlerList;
     }
 
     private Handler sassHandler() {
@@ -170,7 +170,6 @@ public class HttpServer {
     }
 
 
-
     public HttpServer withRedirection(Redirection redirection) {
         this.redirections.add(redirection);
         return this;
@@ -178,9 +177,8 @@ public class HttpServer {
 
 
     /**
-     * We are not even going to think about basic auth, although
-     * you could see how to do it.
-     *
+     * We are not even going to think about basic auth, although you could see how to do it.
+     * <p/>
      * At least digest encrypts the password
      *
      * @See http://tools.ietf.org/html/rfc2617
@@ -225,7 +223,6 @@ public class HttpServer {
         handler.setAuthenticator(authenticator);
         handler.setConstraintMappings(asList(root));
         handler.setLoginService(loginService);
-
 
 
         return handler;
