@@ -1,5 +1,6 @@
 package ixcode.platform.http.server;
 
+import ixcode.platform.http.server.authentication.EnvironmentCloakLoginService;
 import ixcode.platform.http.server.authentication.SessionFreeFormAuthenticator;
 import ixcode.platform.http.server.redirection.Redirection;
 import ixcode.platform.io.SystemProcess;
@@ -10,6 +11,7 @@ import org.eclipse.jetty.security.Authenticator;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.authentication.DigestAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -184,7 +186,7 @@ public class HttpServer {
      * @See http://tools.ietf.org/html/rfc2617
      */
     public HttpServer cloakWithDigestAuth(String filename) {
-        securityCloak = createSecurityHandler(filename, new DigestAuthenticator());
+        securityCloak = createFileBasedSecurityCloakHandler(filename, new DigestAuthenticator());
 
         return this;
     }
@@ -192,12 +194,22 @@ public class HttpServer {
     public HttpServer cloakWithFormAuth(String filename) {
         SessionFreeFormAuthenticator formAuthenticator = new SessionFreeFormAuthenticator();
 
-        securityCloak = createSecurityHandler(filename, formAuthenticator);
+        securityCloak = createFileBasedSecurityCloakHandler(filename, formAuthenticator);
 
         return this;
     }
 
-    private ConstraintSecurityHandler createSecurityHandler(String filename, Authenticator authenticator) {
+    public HttpServer cloakWithFormAuthFromEnv() {
+        SessionFreeFormAuthenticator formAuthenticator = new SessionFreeFormAuthenticator();
+
+        EnvironmentCloakLoginService loginService = new EnvironmentCloakLoginService();
+
+        securityCloak = createSecurityHandler(formAuthenticator, loginService);
+
+        return this;
+    }
+
+    private ConstraintSecurityHandler createFileBasedSecurityCloakHandler(String filename, Authenticator authenticator) {
 
         File f = getCannonicalFileFor(filename);
         if (!f.exists()) {
@@ -210,6 +222,11 @@ public class HttpServer {
             throw new RuntimeException(e);
         }
 
+        return createSecurityHandler(authenticator, loginService);
+    }
+
+    private ConstraintSecurityHandler createSecurityHandler(Authenticator authenticator,
+                                                            LoginService loginService) {
         Constraint constraint = new Constraint();
         constraint.setName(Constraint.__BASIC_AUTH);
         constraint.setAuthenticate(true);
@@ -222,10 +239,7 @@ public class HttpServer {
         handler.setRealmName(this.serverName);
         handler.setAuthenticator(authenticator);
         handler.setConstraintMappings(asList(root));
-        handler.setLoginService(loginService);
-
-
-        return handler;
+        handler.setLoginService(loginService); return handler;
     }
 
     private File getCannonicalFileFor(String fileName) {
