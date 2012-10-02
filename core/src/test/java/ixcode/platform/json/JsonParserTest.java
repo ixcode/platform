@@ -90,7 +90,6 @@ public class JsonParserTest {
         JsonObject jsonObject = jsonParser.parse(json);
 
         assertThat(jsonObject.<JsonObject>valueOf("someObject")).isEqualTo(emptyJsonObject());
-        fail("oops");
     }
 
     @Test
