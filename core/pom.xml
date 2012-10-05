@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.ixcode</groupId>
-        <artifactId>maven-pom</artifactId>
+        <groupId>org.ixcode.maven</groupId>
+        <artifactId>library-pom</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
