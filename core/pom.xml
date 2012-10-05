@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.ixcode</groupId>
+    <groupId>org.ixcode.platform</groupId>
     <artifactId>platform-core</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
