@@ -14,7 +14,7 @@ public class IoClasspath {
         return inputStreamFromClasspathEntry(location.getClass(), classpathEntry);
     }
     public static InputStream inputStreamFromClasspathEntry(Class<?> location, String classpathEntry) {
-        return location.getClassLoader().getResourceAsStream(classpathEntry);
+        return location.getResourceAsStream(classpathEntry);
     }
     
 }
