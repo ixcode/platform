@@ -27,6 +27,14 @@ public class ObjectBuilder {
         return new PropertyBuilder(this, propertyName);
     }
 
+    public Object getPropertyValue(String key) {
+        return propertyValues.get(key);
+    }
+
+    public Class<?> getPropertyType(String key) {
+        return objectReflector.getFieldType(key);
+    }
+
     public Class<?> getTypeOfCollectionCalled(String propertyName) {
         return objectReflector.typeOfCollectionField(propertyName);
     }
@@ -38,6 +46,12 @@ public class ObjectBuilder {
     public boolean hasProperty(String propertyName) {
         return objectReflector.hasField(propertyName);
     }
+
+    public boolean isCollection(String propertyName) {
+        return objectReflector.isCollection(propertyName);
+    }
+
+
 
     public static class PropertyBuilder {
 

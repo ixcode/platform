@@ -38,4 +38,8 @@ public class FieldReflector {
     public boolean isCollection() {
         return Collection.class.isAssignableFrom(type);
     }
+
+    public Class<?> type() {
+        return field.getType();
+    }
 }

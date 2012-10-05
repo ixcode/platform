@@ -58,7 +58,7 @@ public class ObjectReflector {
     private Object parseObject(Map<String, Object> valueMap, ParameterSet.Parameter definition) {
         Object source = valueMap.get(definition.name);
         return (source instanceof String)
-                ? parse.fromString((String)source).as(definition.type)
+                ? parse.fromString((String) source).as(definition.type)
                 : source;
     }
 
@@ -71,6 +71,21 @@ public class ObjectReflector {
             return (Class<?>) fieldReflector.genericTypeArguments()[0];
         }
         throw new RuntimeException(format("Oh dear, the field [%s] is not a collection", fieldReflector.type));
+    }
+
+    public Class<?> getFieldType(String fieldName) {
+        if (!fieldMap.containsKey(fieldName)) {
+            throw new RuntimeException("No field called " + fieldName);
+        }
+        return fieldMap.get(fieldName).type();
+    }
+
+    public boolean isCollection(String fieldName) {
+        if (!fieldMap.containsKey(fieldName)) {
+            throw new RuntimeException("No field called " + fieldName);
+        }
+        FieldReflector fieldReflector = fieldMap.get(fieldName);
+        return fieldReflector.isCollection();
     }
 
     public boolean hasField(String propertyName) {
@@ -102,9 +117,9 @@ public class ObjectReflector {
 
         withEachNonTransientField(new Action<FieldReflector>() {
             @Override public void to(FieldReflector item, Collection<FieldReflector> tail) {
-               if (item.hasAnnotation(annotation)) {
-                   withAnnotationList.add(item);
-               }
+                if (item.hasAnnotation(annotation)) {
+                    withAnnotationList.add(item);
+                }
             }
         });
 
@@ -115,7 +130,6 @@ public class ObjectReflector {
     public Format findFormatFor(Class<? extends Object> aClass) {
         return formatRegistry.findFormatFor(aClass);
     }
-
 
 
     private FList<FieldReflector> processFields(Class<?> targetClass) {
@@ -131,6 +145,7 @@ public class ObjectReflector {
         }
         return nonTransientFields;
     }
+
 
 
 }
