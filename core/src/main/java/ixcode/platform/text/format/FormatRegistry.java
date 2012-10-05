@@ -24,6 +24,7 @@ public class FormatRegistry {
         addFormat(Object.class, new ObjectFormat());
         addFormat(String.class, new StringFormat());
         addFormat(Integer.class, new IntegerFormat());
+        addFormat(Long.class, new LongFormat());
         addFormat(int.class, new IntegerFormat());
         addFormat(Date.class, new UtcDateFormat());
         addFormat(URI.class, new UriFormat());
