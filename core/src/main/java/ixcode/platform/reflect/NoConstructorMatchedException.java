@@ -23,8 +23,9 @@ public class NoConstructorMatchedException extends RuntimeException {
                                   Set<String> parameterNames,
                                   Set<ParameterSet> parameterSets) {
 
-        return format("\n    Target Class: [%s]\n    Input parameter names: [%s]\n"
-                              + "    Found these constructors: [\n %s\n    ]",
+        return format("\n    Target Class: [%s]\n" +
+                              "    Input parameter names: [%s]\n" +
+                              "    Found these constructors: [\n %s\n    ]",
                       targetClass.getName(),
                       collectionToString(parameterNames),
                       printConstructors(targetClass, parameterSets));

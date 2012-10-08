@@ -10,7 +10,7 @@ public class CouldNotInvokeConstructorException extends RuntimeException {
     public CouldNotInvokeConstructorException(ParameterSet parameterSet,
                                               List<Object> values,
                                               Exception cause) {
-        super(message(parameterSet, values, cause));
+        super(message(parameterSet, values, cause), cause);
 
     }
 
@@ -19,8 +19,10 @@ public class CouldNotInvokeConstructorException extends RuntimeException {
                                   Exception cause) {
 
         return format("Failed to invoke constructor (See Cause for more details).\n" +
+                              "    Class       : %s\n" +
                               "    Constructor : %s\n" +
                               "    Parameters  : %s",
+                      parameterSet.constructor.getDeclaringClass().getName(),
                       printConstructor(parameterSet),
                       collectionToString(values));
 
