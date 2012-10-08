@@ -92,6 +92,11 @@ public class ParameterSet {
         return parameters.size();
     }
 
+    public boolean isStringConstructor() {
+        return parameters.size() == 1
+                && String.class.isAssignableFrom(parameters.get(0).type);
+    }
+
     public static class Parameter {
         public final String name;
         public final Class<?> type;

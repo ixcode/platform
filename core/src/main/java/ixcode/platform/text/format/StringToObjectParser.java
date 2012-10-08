@@ -1,6 +1,8 @@
 package ixcode.platform.text.format;
 
 
+import static ixcode.platform.reflect.ObjectReflector.reflect;
+
 public class StringToObjectParser {
     public Parser fromString(String value) {
         return new Parser(value);
@@ -15,7 +17,13 @@ public class StringToObjectParser {
         }
 
         public <T> T as(Class<T> targetClass) {
-            return formatRegistry.findFormatFor(targetClass).parseString(value);
+            if (formatRegistry.hasFormatFor(targetClass)) {
+                return formatRegistry.findFormatFor(targetClass)
+                                     .parseString(value);
+            }
+
+            return reflect(targetClass).invokeStringConstructor(value);
+
         }
     }
 }

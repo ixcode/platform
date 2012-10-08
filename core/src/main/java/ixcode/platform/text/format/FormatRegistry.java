@@ -48,4 +48,8 @@ public class FormatRegistry {
         }
         return (Format) formatMap.get(targetClass);
     }
+
+    public <T> boolean hasFormatFor(Class<T> targetClass) {
+        return formatMap.containsKey(targetClass);
+    }
 }

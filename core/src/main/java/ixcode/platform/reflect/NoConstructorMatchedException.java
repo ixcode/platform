@@ -23,7 +23,8 @@ public class NoConstructorMatchedException extends RuntimeException {
                                   Set<String> parameterNames,
                                   Set<ParameterSet> parameterSets) {
 
-        return format("\n    Target Class: [%s]\n" +
+        return format("Could not find a constructor." +
+                              "\n    Target Class: [%s]\n" +
                               "    Input parameter names: [%s]\n" +
                               "    Found these constructors: [\n %s\n    ]",
                       targetClass.getName(),

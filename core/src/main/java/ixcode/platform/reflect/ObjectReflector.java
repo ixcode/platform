@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ixcode.platform.collection.MapBuilder.linkedHashMapWith;
 import static java.lang.String.format;
 import static java.lang.reflect.Modifier.isTransient;
 
@@ -38,11 +39,24 @@ public class ObjectReflector {
         this.nonTransientFields = processFields(targetClass);
     }
 
+    public <T> T invokeStringConstructor(String value) {
+        ParameterSet parameterSet = constructorMatrix.findStringConstructor();
+
+        Map<String, Object> valueMap = linkedHashMapWith()
+                .key(parameterSet.parameterNameSet.iterator().next())
+                .value(value)
+                .build();
+
+        return invokeConstructor(valueMap, parameterSet);
+    }
+
     public <T> T invokeMostSpecificConstructorFor(Map<String, Object> valueMap) {
-        ParameterSet parameterSet = constructorMatrix.findMostSpecificMatchTo(valueMap.keySet());
+        return invokeConstructor(valueMap,
+                                 constructorMatrix.findMostSpecificMatchTo(valueMap.keySet()));
+    }
 
+    private <T> T invokeConstructor(Map<String, Object> valueMap, ParameterSet parameterSet) {
         List<Object> values = new ArrayList<Object>();
-
         for (ParameterSet.Parameter parameter : parameterSet.parameters) {
             values.add(parseObject(valueMap, parameter));
         }
@@ -50,7 +64,7 @@ public class ObjectReflector {
         try {
             parameterSet.constructor.setAccessible(true);
             return (T) parameterSet.constructor.newInstance(values.toArray(new Object[0]));
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new CouldNotInvokeConstructorException(parameterSet, values, e);
         }
     }
@@ -151,7 +165,6 @@ public class ObjectReflector {
         }
         return nonTransientFields;
     }
-
 
 
 }

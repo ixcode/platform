@@ -26,6 +26,16 @@ public class ConstructorMatrix {
         return new ParameterSet(constructor, paranamer);
     }
 
+    public ParameterSet findStringConstructor() {
+        for (ParameterSet parameterSet : matrix.keySet()) {
+            if (parameterSet.isStringConstructor()) {
+                return parameterSet;
+            }
+        }
+
+        throw new NoConstructorMatchedException(String.class, Collections.<String>emptySet(), matrix.keySet());
+    }
+
     public ParameterSet findMostSpecificMatchTo(Set<String> parameterNames) {
         int currentMatchCount = -1;
         ParameterSet mostSpecificParameterSet = null;
@@ -45,5 +55,6 @@ public class ConstructorMatrix {
 
         return mostSpecificParameterSet;
     }
+
 
 }
