@@ -40,7 +40,7 @@ public class ConstructorMatrix {
         }
 
         if (mostSpecificParameterSet == null) {
-            throw new NoConstructorMatchedException(targetClass, parameterNames);
+            throw new NoConstructorMatchedException(targetClass, parameterNames, matrix.keySet());
         }
 
         return mostSpecificParameterSet;
