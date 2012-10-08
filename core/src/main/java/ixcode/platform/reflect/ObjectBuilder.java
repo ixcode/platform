@@ -9,7 +9,7 @@ public class ObjectBuilder {
     private final ObjectReflector objectReflector;
 
 
-    private Map<String, Object> propertyValues = new HashMap<String, Object>();
+    private Map<String, Object> propertyValues = new LinkedHashMap<String, Object>();
 
     public static ObjectBuilder buildA(Class<?> rootEntityClass) {
         return new ObjectBuilder(rootEntityClass);

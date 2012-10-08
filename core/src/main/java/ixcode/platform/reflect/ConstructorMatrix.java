@@ -12,7 +12,7 @@ public class ConstructorMatrix {
 
     private static Paranamer paranamer = new AdaptiveParanamer();
 
-    private Map<ParameterSet, Constructor> matrix = new HashMap<ParameterSet, Constructor>();
+    private Map<ParameterSet, Constructor> matrix = new LinkedHashMap<ParameterSet, Constructor>();
     private final Class<?> targetClass;
 
     public ConstructorMatrix(Class<?> targetClass) {

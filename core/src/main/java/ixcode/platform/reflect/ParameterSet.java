@@ -5,6 +5,7 @@ import com.thoughtworks.paranamer.Paranamer;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ import static java.lang.String.format;
 public class ParameterSet {
     public final Constructor constructor;
     public final List<Parameter> parameters = new ArrayList<Parameter>();
-    public final Set<String> parameterNameSet = new HashSet<String>();
+    public final Set<String> parameterNameSet = new LinkedHashSet<String>();
 
     public ParameterSet(Constructor constructor, Paranamer paranamer) {
         this.constructor = constructor;
