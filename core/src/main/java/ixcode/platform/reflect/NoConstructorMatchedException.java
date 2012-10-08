@@ -22,8 +22,8 @@ public class NoConstructorMatchedException extends RuntimeException {
                                   Set<String> parameterNames,
                                   Set<ParameterSet> parameterSets) {
 
-        return format("Could not find a constructor match!\n    Target Class [%s]\n    Input parameter names [%s].\n"
-                              + "    Found these combinations: [\n %s\n    ]",
+        return format("\n    Target Class: [%s]\n    Input parameter names: [%s]\n"
+                              + "    Found these constructors: [\n %s\n    ]",
                       targetClass.getName(),
                       collectionToString(parameterNames),
                       printConstructors(targetClass, parameterSets));
@@ -38,7 +38,7 @@ public class NoConstructorMatchedException extends RuntimeException {
                   .append(printConstructor(targetClass, item));
 
                 if (!tail.isEmpty()) {
-                    sb.append("\n");
+                    sb.append(",\n");
                 }
             }
         });
