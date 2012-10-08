@@ -51,6 +51,11 @@ public class ObjectBuilder {
         return objectReflector.isCollection(propertyName);
     }
 
+    public boolean isMap(String propertyName) {
+        return objectReflector.isMap(propertyName);
+    }
+
+
 
 
     public static class PropertyBuilder {

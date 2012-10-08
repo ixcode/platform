@@ -84,8 +84,14 @@ public class ObjectReflector {
         if (!fieldMap.containsKey(fieldName)) {
             throw new RuntimeException("No field called " + fieldName);
         }
-        FieldReflector fieldReflector = fieldMap.get(fieldName);
-        return fieldReflector.isCollection();
+        return fieldMap.get(fieldName).isCollection();
+    }
+
+    public boolean isMap(String fieldName) {
+        if (!fieldMap.containsKey(fieldName)) {
+            throw new RuntimeException("No field called " + fieldName);
+        }
+        return fieldMap.get(fieldName).isMap();
     }
 
     public boolean hasField(String propertyName) {
