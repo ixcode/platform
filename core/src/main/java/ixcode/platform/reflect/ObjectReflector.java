@@ -50,8 +50,8 @@ public class ObjectReflector {
         try {
             parameterSet.constructor.setAccessible(true);
             return (T) parameterSet.constructor.newInstance(values.toArray(new Object[0]));
-        } catch (Exception e) {
-            throw new RuntimeException("Could not invoke most specific constructor (See Cause)", e);
+        }  catch (Exception e) {
+            throw new CouldNotInvokeConstructorException(parameterSet, values, e);
         }
     }
 
