@@ -873,7 +873,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/dropwizard.iml" filepath="$PROJECT_DIR$/dropwizard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/platform-dropwizard.iml" filepath="$PROJECT_DIR$/platform-dropwizard.iml" />
     </modules>
   </component>
   <component name="ProjectResources">
@@ -1443,22 +1443,6 @@
         <root url="jar://$MAVEN_REPOSITORY$/org/yaml/snakeyaml/1.10/snakeyaml-1.10-sources.jar!/" />
       </SOURCES>
     </library>
-  </component>
-  <component name="masterDetails">
-    <states>
-      <state key="ProjectJDKs.UI">
-        <settings>
-          <last-edited>1.6</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-    </states>
   </component>
 </project>
 
