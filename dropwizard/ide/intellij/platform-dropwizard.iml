@@ -18,14 +18,15 @@
     <orderEntry type="library" name="Maven: org.antlr:stringtemplate:3.2" level="project" />
     <orderEntry type="library" name="Maven: antlr:antlr:2.7.7" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.4" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.6.6" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.16" level="project" />
+    <orderEntry type="module" module-name="cjimera" />
     <orderEntry type="library" name="Maven: com.yammer.dropwizard:dropwizard-core:0.5.1" level="project" />
     <orderEntry type="library" name="Maven: com.sun.jersey:jersey-core:1.13" level="project" />
     <orderEntry type="library" name="Maven: com.sun.jersey:jersey-server:1.13" level="project" />
     <orderEntry type="library" name="Maven: asm:asm:3.1" level="project" />
     <orderEntry type="library" name="Maven: com.sun.jersey:jersey-servlet:1.13" level="project" />
     <orderEntry type="library" name="Maven: com.yammer.metrics:metrics-core:2.1.3" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.6.6" level="project" />
     <orderEntry type="library" name="Maven: com.yammer.metrics:metrics-servlet:2.1.3" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.9" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.9" level="project" />
