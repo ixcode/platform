@@ -1,17 +1,16 @@
 package ixcode.platform.reflect;
 
-import org.apache.log4j.*;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import static java.lang.Class.forName;
 import static java.lang.String.format;
-import static java.lang.Thread.*;
+import static java.lang.Thread.currentThread;
 
 public class ObjectFactory<T> {
 
-    private static Logger LOG = Logger.getLogger(ObjectFactory.class);
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ObjectFactory.class);
 
     public static boolean isClassAvailable(String fullyQualifiedName) {
         try {
@@ -108,7 +107,7 @@ public class ObjectFactory<T> {
 
     private void logNotInstantiated(String classname, Exception e, boolean shouldLogToError) {
         if (shouldLogToError) {
-            LOG.error("Did not instantiate class of name [" + classname + "]", e);
+            log.error("Did not instantiate class of name [" + classname + "]", e);
         }
     }
 

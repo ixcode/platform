@@ -2,6 +2,7 @@ package ixcode.platform.reflect;
 
 import java.util.*;
 
+import static ixcode.platform.reflect.ObjectFactory.loadClass;
 import static ixcode.platform.reflect.ObjectReflector.reflect;
 
 public class ObjectBuilder {
@@ -10,6 +11,10 @@ public class ObjectBuilder {
 
 
     private Map<String, Object> propertyValues = new LinkedHashMap<String, Object>();
+
+    public static ObjectBuilder buildA(String fqClassName) {
+        return buildA(loadClass(fqClassName));
+    }
 
     public static ObjectBuilder buildA(Class<?> rootEntityClass) {
         return new ObjectBuilder(rootEntityClass);
