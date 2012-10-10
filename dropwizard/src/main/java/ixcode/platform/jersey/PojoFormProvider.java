@@ -7,19 +7,17 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
+import static org.cjimera.Parser.parse;
 
 @Provider
-@Consumes(APPLICATION_FORM_URLENCODED  + ";charset=utf-8")
+@Consumes(APPLICATION_FORM_URLENCODED + ";charset=utf-8")
 public class PojoFormProvider extends AbstractMessageReaderWriterProvider<Object> {
 
     @Override
@@ -38,17 +36,10 @@ public class PojoFormProvider extends AbstractMessageReaderWriterProvider<Object
                            MultivaluedMap<String, String> httpHeaders,
                            InputStream entityStream) throws IOException, WebApplicationException {
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(entityStream, "UTF-8"));
+        return parse().inputStream(entityStream)
+                .from().wwwFormUrlEncoded()
+                .to(type);
 
-        StringBuilder entityBody = new StringBuilder();
-
-        while (reader.ready()) {
-            entityBody.append(reader.readLine()).append("\n");
-        }
-
-        System.out.println("Here is my entity body:\n" + entityBody + "\n");
-
-        return null;
     }
 
     @Override
