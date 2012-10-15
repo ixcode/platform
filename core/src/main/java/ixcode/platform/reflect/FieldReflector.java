@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
@@ -14,6 +15,7 @@ public class FieldReflector {
     public final Class<?> type;
 
     private final Field field;
+
 
     public FieldReflector(Field field) {
         this.field = field;
@@ -46,9 +48,18 @@ public class FieldReflector {
         return Map.class.isAssignableFrom(type);
     }
 
+    public boolean isList() {
+        return List.class.isAssignableFrom(type);
+    }
+
+    public boolean isArray() {
+        return type.isArray();
+    }
+
     public Class<?> type() {
         return field.getType();
     }
+
 
 
 }

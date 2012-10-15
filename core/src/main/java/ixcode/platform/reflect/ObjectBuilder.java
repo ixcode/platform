@@ -60,6 +60,13 @@ public class ObjectBuilder {
         return objectReflector.isMap(propertyName);
     }
 
+    public boolean isList(String propertyName) {
+        return objectReflector.isList(propertyName);
+    }
+
+    public boolean isArray(String propertyName) {
+        return objectReflector.isArray(propertyName);
+    }
 
 
 

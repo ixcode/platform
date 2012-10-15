@@ -23,7 +23,7 @@ public class IoClasspath {
     }
 
     private static String fqClasspathEntry(Class<?> location, String classpathEntry) {
-        return format("%s/%s", location.getName().replaceAll("\\.", "/"), classpathEntry);
+        return format("%s/%s", location.getPackage().getName().replaceAll("\\.", "/"), classpathEntry);
     }
 
 }

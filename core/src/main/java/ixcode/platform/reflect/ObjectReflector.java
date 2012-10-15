@@ -84,6 +84,11 @@ public class ObjectReflector {
         if (fieldReflector.isCollection()) {
             return (Class<?>) fieldReflector.genericTypeArguments()[0];
         }
+
+        if (fieldReflector.isArray()) {
+            return (Class<?>) fieldReflector.type().getComponentType();
+        }
+
         throw new RuntimeException(format("Oh dear, the field [%s] is not a collection", fieldReflector.type));
     }
 
@@ -106,6 +111,20 @@ public class ObjectReflector {
             throw new RuntimeException("No field called " + fieldName);
         }
         return fieldMap.get(fieldName).isMap();
+    }
+
+    public boolean isList(String fieldName) {
+        if (!fieldMap.containsKey(fieldName)) {
+            throw new RuntimeException("No field called " + fieldName);
+        }
+        return fieldMap.get(fieldName).isList();
+    }
+
+    public boolean isArray(String fieldName) {
+        if (!fieldMap.containsKey(fieldName)) {
+            throw new RuntimeException("No field called " + fieldName);
+        }
+        return fieldMap.get(fieldName).isArray();
     }
 
     public boolean hasField(String propertyName) {
@@ -159,12 +178,12 @@ public class ObjectReflector {
             fieldMap.put(field.getName(), fieldReflector);
 
             if (!isTransient(field.getModifiers())) {
-
                 nonTransientFields.add(fieldReflector);
             }
         }
         return nonTransientFields;
     }
+
 
 
 }
