@@ -80,7 +80,7 @@ public abstract class HypermediaRepresentationBuilder<T extends HypermediaRepres
                 .buildMap();
     }
 
-    private T addValuesFrom(Object source) {
+    public T addValuesFrom(Object source) {
         addValuesAndLinksFrom(source);
         return (T) this;
     }
