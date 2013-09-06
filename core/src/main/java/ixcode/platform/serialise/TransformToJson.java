@@ -23,6 +23,8 @@ import static ixcode.platform.reflect.TypeChecks.isList;
 import static ixcode.platform.reflect.TypeChecks.isMap;
 
 public class TransformToJson {
+    private final boolean useHyphens = true;
+
     public <T, R> R from(T object) {
         return (isList(object))
                 ? (R) buildJsonArrayFrom((Collection<?>) object)
@@ -37,12 +39,19 @@ public class TransformToJson {
             @Override public void to(FieldReflector item, Collection<FieldReflector> tail) {
                 Object value = item.valueFrom(object);
                 if (value != null) {
-                    valueMap.put(item.name, jsonValueOf(JsonObject.class, value));
+                    valueMap.put(formatName(item.name), jsonValueOf(JsonObject.class, value));
                 }
             }
         });
 
         return new JsonObject(valueMap);
+    }
+
+    private String formatName(String name) {
+        if (useHyphens) {
+            return name.replace("_", "-");
+        }
+        return name;
     }
 
     protected JsonObject buildJsonObjectFrom(final Map<?, ?> object) {
