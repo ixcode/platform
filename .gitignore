@@ -3,3 +3,6 @@
 target
 out
 lib-ibx
+*.ipr
+*.iml
+

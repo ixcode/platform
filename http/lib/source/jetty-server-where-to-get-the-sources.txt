@@ -1,3 +1,0 @@
-You get them from here:
-
-http://mirrors.ibiblio.org/pub/mirrors/maven2//org/eclipse/jetty/
