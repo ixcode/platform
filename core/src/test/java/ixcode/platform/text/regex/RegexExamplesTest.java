@@ -1,6 +1,8 @@
 package ixcode.platform.text.regex;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 public class RegexExamplesTest {
 
-    private static final Logger log = Logger.getLogger(RegexExamplesTest.class);
+    private static final Logger log = LoggerFactory.getLogger(RegexExamplesTest.class);
 
     @Test
     public void find_multiple_groups() {

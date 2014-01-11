@@ -1,7 +1,9 @@
 package ixcode.platform.di;
 
 import ixcode.platform.reflect.ObjectFactory;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +13,7 @@ import static java.lang.String.format;
 
 public class InjectionContext {
 
-    private static final Logger log = Logger.getLogger(InjectionContext.class);
+    private static final Logger log = LoggerFactory.getLogger(InjectionContext.class);
 
     private Map<Class<?>, Object> context = new HashMap<Class<?>, Object>();
 

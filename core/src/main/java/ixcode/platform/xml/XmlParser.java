@@ -1,18 +1,21 @@
 package ixcode.platform.xml;
 
-import org.apache.log4j.*;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
-import ixcode.platform.io.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.xml.parsers.*;
-import java.io.*;
+import ixcode.platform.io.IoStreamHandling;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.InputStream;
 
 import static ixcode.platform.io.IoStreamHandling.closeQuietly;
 
 public class XmlParser {
 
-    private static final Logger log = Logger.getLogger(XmlParser.class);
+    private static final Logger log = LoggerFactory.getLogger(XmlParser.class);
     private String xml;
 
     public XmlParser parse(String xml) {

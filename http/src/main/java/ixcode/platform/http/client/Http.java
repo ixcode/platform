@@ -5,7 +5,10 @@ import ixcode.platform.http.protocol.request.RequestBuilder;
 import ixcode.platform.http.representation.Hyperlink;
 import ixcode.platform.http.representation.Representation;
 import ixcode.platform.http.representation.RepresentationDecoder;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -25,7 +28,7 @@ import static ixcode.platform.text.format.CollectionFormat.collectionToString;
 
 public class Http {
 
-    private static final Logger log = Logger.getLogger(Http.class);
+    private static final Logger log = LoggerFactory.getLogger(Http.class);
 
     public PostRequest POST(String body) {
         return new PostRequest(body);

@@ -1,6 +1,8 @@
 package ixcode.platform.io;
 
-import org.apache.log4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.io.*;
 import java.lang.management.*;
@@ -10,7 +12,7 @@ import static ixcode.platform.io.IoStreamHandling.*;
 
 public class SystemProcess {
 
-    private static final Logger LOG = Logger.getLogger(SystemProcess.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SystemProcess.class);
 
 
     public SystemProcess() {

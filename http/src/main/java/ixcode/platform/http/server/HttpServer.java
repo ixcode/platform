@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ixcode.platform.logging.ConsoleLog4jLogging.initialiseLog4j;
+import static ixcode.platform.logging.ConsoleLogging.initialise;
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
 import static java.net.InetAddress.getLocalHost;
@@ -83,7 +83,7 @@ public class HttpServer {
     }
 
     public static void main(String args[]) {
-        initialiseLog4j();
+        initialise();
         new HttpServer(args[0], "localhost", "web", 8080, "/", loadServletClass(args[1])).start();
     }
 

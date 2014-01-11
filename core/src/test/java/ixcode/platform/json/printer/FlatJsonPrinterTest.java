@@ -2,7 +2,9 @@ package ixcode.platform.json.printer;
 
 import ixcode.platform.json.JsonArray;
 import ixcode.platform.json.JsonObject;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.junit.Test;
 
 import java.util.Map;
@@ -13,7 +15,7 @@ import static ixcode.platform.json.JsonObjectBuilder.jsonObjectWith;
 import static org.fest.assertions.Assertions.assertThat;
 
 public class FlatJsonPrinterTest {
-    private static final Logger log = Logger.getLogger(FlatJsonPrinterTest.class);
+    private static final Logger log = LoggerFactory.getLogger(FlatJsonPrinterTest.class);
 
     private FlatJsonPrinter printer = new FlatJsonPrinter();
 

@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 
 import static ixcode.platform.http.server.RequestDispatcher.requestDispatcher;
 import static ixcode.platform.http.server.ResourceServerContext.reflectivelyBuildRepositoryMap;
-import static ixcode.platform.logging.ConsoleLog4jLogging.initialiseLog4j;
+import static ixcode.platform.logging.ConsoleLogging.initialise;
 import static java.lang.String.format;
 
 public class ResourceServer {
@@ -23,7 +23,7 @@ public class ResourceServer {
     private final String staticContentRoot;
 
     static {
-        initialiseLog4j();
+        initialise();
     }
 
     public ResourceServer(String serverName,

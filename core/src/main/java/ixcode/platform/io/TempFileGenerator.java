@@ -1,16 +1,17 @@
 package ixcode.platform.io;
 
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 
 import static java.lang.String.format;
-import static org.apache.log4j.Logger.getLogger;
 
 public class TempFileGenerator {
 
-    private static final Logger log = getLogger(TempFileGenerator.class);
+    private static final Logger log = LoggerFactory.getLogger(TempFileGenerator.class);
 
     public static File createNewTempFile(String name) {
         String tempDir = System.getProperty("java.io.tmpdir");
