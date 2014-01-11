@@ -15,6 +15,7 @@ public enum ResponseStatusCodes implements ResponseStatus {
     bad_request(400, "Bad request"),
     not_found(404, "Not found"),
     method_not_supported(405, "Method not supported"),
+    gone(410, "Gone"),
 
     server_error(500, "Server error");
 
@@ -41,31 +42,31 @@ public enum ResponseStatusCodes implements ResponseStatus {
     }
 
 
-    @Override
+
     public int code() {
         return code;
     }
 
-    @Override public String message() {
+    public String message() {
         return message;
     }
 
-    @Override public boolean isError() {
+    public boolean isError() {
         return isResponseAnError(this);
     }
 
 
     public static ResponseStatus customStatus(final int code, final String message) {
         ResponseStatus status = new ResponseStatus() {
-            @Override public int code() {
+            public int code() {
                 return code;
             }
 
-            @Override public String message() {
+            public String message() {
                 return message;
             }
 
-            @Override public boolean isError() {
+            public boolean isError() {
                 return isResponseAnError(this);
             }
         };

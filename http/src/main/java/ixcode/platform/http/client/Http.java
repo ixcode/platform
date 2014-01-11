@@ -58,7 +58,7 @@ public class Http {
         public Representation from(URI uri) {
             try {
                 if (log.isInfoEnabled()) {
-                    log.info("\nGET " + uri.toURL().toExternalForm() + " HTTP/1.1");
+                    log.info("GET " + uri.toURL().toExternalForm() + " HTTP/1.1");
                     logHeaders();
                 }
 
