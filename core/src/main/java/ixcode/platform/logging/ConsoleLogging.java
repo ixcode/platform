@@ -10,6 +10,9 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.util.StatusPrinter;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class ConsoleLogging {
 
@@ -19,6 +22,15 @@ public class ConsoleLogging {
 
     public static void initialise() {
         initialise(Level.INFO, LOG_PATTERN);
+    }
+
+    private static Map<String, String> createJodaPatternRules() {
+        Map<String, String> rules = new HashMap<String, String>();
+
+        rules.put("d" , JodaTimeDateConverter.class.getName());
+        rules.put("date" , JodaTimeDateConverter.class.getName());
+
+        return rules;
     }
 
     public static void initialise(Level level, String pattern) {
