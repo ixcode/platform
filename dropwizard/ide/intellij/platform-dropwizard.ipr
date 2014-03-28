@@ -29,6 +29,9 @@
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
     <file url="file://$PROJECT_DIR$/../.." charset="UTF-8" />
   </component>
+  <component name="GradleSettings">
+    <option name="gradleHome" value="/usr/local/Cellar/gradle/1.6/libexec" />
+  </component>
   <component name="IdProvider" IDEtalkID="965F466FEA998184BA19F39C4FEBD8DC" />
   <component name="InspectionProjectProfileManager">
     <profiles>
@@ -1177,6 +1180,17 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/org/antlr/stringtemplate/3.2/stringtemplate-3.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="Maven: org.cjimera:cjimera:1.0-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/cjimera/cjimera/1.0-SNAPSHOT/cjimera-1.0-SNAPSHOT.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$MAVEN_REPOSITORY$/org/cjimera/cjimera/1.0-SNAPSHOT/cjimera-1.0-SNAPSHOT-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/org/cjimera/cjimera/1.0-SNAPSHOT/cjimera-1.0-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.9">
